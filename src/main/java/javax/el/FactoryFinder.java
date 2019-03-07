@@ -35,9 +35,7 @@ class FactoryFinder {
 	 *                if the given class could not be found or could not be
 	 *                instantiated
 	 */
-	private static Object newInstance(String className,
-			ClassLoader classLoader,
-			Properties properties) {
+	private static Object newInstance(String className, ClassLoader classLoader, Properties properties) {
 		try {
 			Class<?> spiClass;
 			if (classLoader == null) {
@@ -47,7 +45,7 @@ class FactoryFinder {
 				spiClass = classLoader.loadClass(className);
 			}
 			if (properties != null) {
-				Constructor constr = null;
+				Constructor<?> constr = null;
 				try {
 					constr = spiClass.getConstructor(Properties.class);
 				}
@@ -87,8 +85,7 @@ class FactoryFinder {
 	 * @exception ELException
 	 *                if there is an error
 	 */
-	static Object find(String factoryId, String fallbackClassName,
-			Properties properties) {
+	static Object find(String factoryId, String fallbackClassName, Properties properties) {
 		ClassLoader classLoader;
 		try {
 			classLoader = Thread.currentThread().getContextClassLoader();

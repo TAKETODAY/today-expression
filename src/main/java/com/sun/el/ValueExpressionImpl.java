@@ -40,11 +40,6 @@
 
 package com.sun.el;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-
 import javax.el.ELContext;
 import javax.el.ELException;
 import javax.el.ELResolver;
@@ -55,13 +50,9 @@ import javax.el.PropertyNotFoundException;
 import javax.el.PropertyNotWritableException;
 import javax.el.ValueExpression;
 import javax.el.ValueReference;
-import javax.el.VariableMapper;
 
-import com.sun.el.lang.EvaluationContext;
-import com.sun.el.lang.ExpressionBuilder;
 import com.sun.el.parser.AstLiteralExpression;
 import com.sun.el.parser.Node;
-import com.sun.el.util.ReflectionUtil;
 
 /**
  * An <code>Expression</code> that can get or set a value.
@@ -113,40 +104,20 @@ import com.sun.el.util.ReflectionUtil;
  * @author Jacob Hookom [jacob@hookom.net]
  * @version $Change: 181177 $$DateTime: 2001/06/26 08:45:09 $$Author: dochez $
  */
-public final class ValueExpressionImpl extends ValueExpression implements Externalizable {
+@SuppressWarnings("serial")
+public final class ValueExpressionImpl extends ValueExpression {
 
-	private Class<?> expectedType;
-
-	private String expr;
-
-	private FunctionMapper fnMapper;
-
-	private VariableMapper varMapper;
-
+	private final String expr;
 	private transient Node node;
+	private final Class<?> expectedType;
 
-	public ValueExpressionImpl() {
-
-	}
-
-	/**
-	 * 
-	 */
-	public ValueExpressionImpl(String expr, Node node, FunctionMapper fnMapper, VariableMapper varMapper, //
-			Class<?> expectedType) //
-	{
+	public ValueExpressionImpl(String expr, Node node, Class<?> expectedType) {
 		this.expr = expr;
 		this.node = node;
-		this.fnMapper = fnMapper;
-		this.varMapper = varMapper;
 		this.expectedType = expectedType;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof ValueExpressionImpl) {
 			return getNode().equals(((ValueExpressionImpl) obj).getNode());
@@ -154,11 +125,7 @@ public final class ValueExpressionImpl extends ValueExpression implements Extern
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.el.ValueExpression#getExpectedType()
-	 */
+	@Override
 	public Class<?> getExpectedType() {
 		return this.expectedType;
 	}
@@ -173,6 +140,7 @@ public final class ValueExpressionImpl extends ValueExpression implements Extern
 	 * 
 	 * @see javax.el.Expression#getExpressionString()
 	 */
+	@Override
 	public String getExpressionString() {
 		return this.expr;
 	}
@@ -183,64 +151,47 @@ public final class ValueExpressionImpl extends ValueExpression implements Extern
 	 */
 	private Node getNode() throws ELException {
 		if (this.node == null) {
-			this.node = ExpressionBuilder.createNode(this.expr);
+			this.node = ExpressionFactoryImpl.createNode(this.expr);
 		}
 		return this.node;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.el.ValueExpression#getType(javax.el.ELContext)
-	 */
+	@Override
 	public Class<?> getType(ELContext context) throws PropertyNotFoundException, ELException {
-		return this.getNode().getType(new EvaluationContext(context, this.fnMapper, this.varMapper));
+		return this.getNode().getType(context);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.el.ValueExpression#getValueReference(javax.el.ELContext)
-	 */
+	@Override
 	public ValueReference getValueReference(ELContext context) throws PropertyNotFoundException, ELException {
-		return this.getNode().getValueReference(new EvaluationContext(context, this.fnMapper, this.varMapper));
+		return this.getNode().getValueReference(context);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.el.ValueExpression#getValue(javax.el.ELContext)
-	 */
-	public Object getValue(ELContext context) throws PropertyNotFoundException, ELException {
-		final EvaluationContext ctx = new EvaluationContext(context, this.fnMapper, this.varMapper);
-		ctx.notifyBeforeEvaluation(this.expr);
-		Object value = this.getNode().getValue(ctx);
-		if (this.expectedType != null) {
+	@Override
+	public Object getValue(final ELContext context) throws PropertyNotFoundException, ELException {
+
+		context.notifyBeforeEvaluation(this.expr);
+		Object value = this.getNode().getValue(context);
+
+		if (value != null && expectedType != null) {
 			try {
-				value = ctx.convertToType(value, this.expectedType);
+				if (!expectedType.isInstance(value)) {
+					value = context.convertToType(value, expectedType);
+				}
 			}
 			catch (IllegalArgumentException ex) {
 				throw new ELException(ex);
 			}
 		}
-		ctx.notifyAfterEvaluation(this.expr);
+		context.notifyAfterEvaluation(this.expr);
 		return value;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
+	@Override
 	public int hashCode() {
 		return getNode().hashCode();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.el.ValueExpression#isLiteralText()
-	 */
+	@Override
 	public boolean isLiteralText() {
 		try {
 			return this.getNode() instanceof AstLiteralExpression;
@@ -250,41 +201,16 @@ public final class ValueExpressionImpl extends ValueExpression implements Extern
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.el.ValueExpression#isReadOnly(javax.el.ELContext)
-	 */
+	@Override
 	public boolean isReadOnly(ELContext context) throws PropertyNotFoundException, ELException {
-		return this.getNode().isReadOnly(new EvaluationContext(context, this.fnMapper, this.varMapper));
+		return this.getNode().isReadOnly(context);
 	}
 
-	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-		this.expr = in.readUTF();
-		String type = in.readUTF();
-		if (!"".equals(type)) {
-			this.expectedType = ReflectionUtil.forName(type);
-		}
-		this.fnMapper = (FunctionMapper) in.readObject();
-		this.varMapper = (VariableMapper) in.readObject();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.el.ValueExpression#setValue(javax.el.ELContext, java.lang.Object)
-	 */
+	@Override
 	public void setValue(ELContext context, Object value)
 			throws PropertyNotFoundException, PropertyNotWritableException, ELException //
 	{
-		this.getNode().setValue(new EvaluationContext(context, this.fnMapper, this.varMapper), value);
-	}
-
-	public void writeExternal(ObjectOutput out) throws IOException {
-		out.writeUTF(this.expr);
-		out.writeUTF((this.expectedType != null) ? this.expectedType.getName() : "");
-		out.writeObject(this.fnMapper);
-		out.writeObject(this.varMapper);
+		this.getNode().setValue(context, value);
 	}
 
 	public String toString() {

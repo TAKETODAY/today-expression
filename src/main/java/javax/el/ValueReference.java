@@ -47,7 +47,7 @@ import java.io.Serializable;
  *
  * @since EL 2.2
  */
-
+@SuppressWarnings("serial")
 public class ValueReference implements Serializable {
 
 	private Object base;

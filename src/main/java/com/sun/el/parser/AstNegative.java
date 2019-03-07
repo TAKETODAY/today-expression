@@ -43,9 +43,8 @@ package com.sun.el.parser;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import javax.el.ELContext;
 import javax.el.ELException;
-
-import com.sun.el.lang.EvaluationContext;
 
 /**
  * @author Jacob Hookom [jacob@hookom.net]
@@ -56,11 +55,11 @@ public final class AstNegative extends SimpleNode {
 		super(id);
 	}
 
-	public Class<?> getType(EvaluationContext ctx) throws ELException {
+	public Class<?> getType(ELContext ctx) throws ELException {
 		return Number.class;
 	}
 
-	public Object getValue(EvaluationContext ctx) throws ELException {
+	public Object getValue(ELContext ctx) throws ELException {
 		Object obj = this.children[0].getValue(ctx);
 
 		if (obj == null) {

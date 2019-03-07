@@ -40,28 +40,20 @@
 
 package com.sun.el;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-
 import javax.el.ELContext;
 import javax.el.ELException;
 import javax.el.MethodExpression;
 import javax.el.MethodInfo;
 
-import com.sun.el.util.ReflectionUtil;
+@SuppressWarnings("serial")
+public class MethodExpressionLiteral extends MethodExpression {
 
-public class MethodExpressionLiteral extends MethodExpression implements Externalizable {
-
-	private Class<?> expectedType;
-
-	private String expr;
-
-	private Class<?>[] paramTypes;
+	private final String expr;
+	private final Class<?> expectedType;
+	private final Class<?>[] paramTypes;
 
 	public MethodExpressionLiteral() {
-		// do nothing
+		this(null, null, null);
 	}
 
 	public MethodExpressionLiteral(String expr, Class<?> expectedType, Class<?>[] paramTypes) {
@@ -75,11 +67,13 @@ public class MethodExpressionLiteral extends MethodExpression implements Externa
 	}
 
 	public Object invoke(ELContext context, Object[] params) throws ELException {
+		
 		if (this.expectedType == null) {
 			return this.expr;
 		}
-
+		
 		try {
+			
 			return context.convertToType(this.expr, this.expectedType);
 		}
 		catch (Exception ex) {
@@ -103,18 +97,4 @@ public class MethodExpressionLiteral extends MethodExpression implements Externa
 		return true;
 	}
 
-	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-		this.expr = in.readUTF();
-		String type = in.readUTF();
-		if (!"".equals(type)) {
-			this.expectedType = ReflectionUtil.forName(type);
-		}
-		this.paramTypes = ReflectionUtil.toTypeArray(((String[]) in.readObject()));
-	}
-
-	public void writeExternal(ObjectOutput out) throws IOException {
-		out.writeUTF(this.expr);
-		out.writeUTF((this.expectedType != null) ? this.expectedType.getName() : "");
-		out.writeObject(ReflectionUtil.toTypeNameArray(this.paramTypes));
-	}
 }

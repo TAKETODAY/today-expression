@@ -40,9 +40,8 @@
 
 package com.sun.el.parser;
 
+import javax.el.ELContext;
 import javax.el.ELException;
-
-import com.sun.el.lang.EvaluationContext;
 
 /**
  * @author Jacob Hookom [jacob@hookom.net]
@@ -54,11 +53,11 @@ public final class AstNull extends SimpleNode {
 		super(id);
 	}
 
-	public Class<?> getType(EvaluationContext ctx) throws ELException {
+	public Class<?> getType(ELContext ctx) throws ELException {
 		return null;
 	}
 
-	public Object getValue(EvaluationContext ctx)
+	public Object getValue(ELContext ctx)
 			throws ELException {
 		return null;
 	}

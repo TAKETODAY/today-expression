@@ -114,10 +114,8 @@ public class ListELResolver extends ELResolver {
 	 */
 	public Class<?> getType(ELContext context, Object base, Object property) {
 
-		Objects.requireNonNull(context);
-
 		if (base instanceof List) {
-			context.setPropertyResolved(true);
+			Objects.requireNonNull(context).setPropertyResolved(true);
 			final int index = toInteger(property);
 			if (index < 0 || index >= ((List<?>) base).size()) {
 				throw new PropertyNotFoundException();
@@ -165,10 +163,8 @@ public class ListELResolver extends ELResolver {
 	 */
 	public Object getValue(ELContext context, Object base, Object property) {
 
-		Objects.requireNonNull(context);
-
 		if (base instanceof List) {
-			context.setPropertyResolved(base, property);
+			Objects.requireNonNull(context).setPropertyResolved(base, property);
 			final int index = toInteger(property);
 			final List<?> list = (List<?>) base;
 			if (index < 0 || index >= list.size()) {
@@ -241,10 +237,8 @@ public class ListELResolver extends ELResolver {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void setValue(ELContext context, Object base, Object property, Object val) {
 
-		Objects.requireNonNull(context);
-
 		if (base instanceof List) {
-			context.setPropertyResolved(base, property);
+			Objects.requireNonNull(context).setPropertyResolved(base, property);
 			int index = toInteger(property);
 			if (isReadOnly) {
 				throw new PropertyNotWritableException();
@@ -317,10 +311,8 @@ public class ListELResolver extends ELResolver {
 	 */
 	public boolean isReadOnly(ELContext context, Object base, Object property) {
 
-		Objects.requireNonNull(context);
-
 		if (base instanceof List) {
-			context.setPropertyResolved(true);
+			Objects.requireNonNull(context).setPropertyResolved(true);
 
 			final List<?> list = (List<?>) base;
 			final int index = toInteger(property);

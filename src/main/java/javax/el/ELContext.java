@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -91,10 +92,14 @@ import java.util.Stack;
 public abstract class ELContext {
 
 	private boolean resolved;
-	private HashMap<Class<?>, Object> map = new HashMap<Class<?>, Object>();
-	private transient List<EvaluationListener> listeners = new ArrayList<EvaluationListener>();
+	private HashMap<Class<?>, Object> map;
+	private List<EvaluationListener> listeners;
 	private Stack<Map<String, Object>> lambdaArgs;
-	private ImportHandler importHandler;
+
+	/**
+	 * Holds value of property locale.
+	 */
+	private Locale locale;
 
 	/**
 	 * Called to indicate that a <code>ELResolver</code> has successfully resolved a
@@ -178,8 +183,12 @@ public abstract class ELContext {
 	 *             if key is null or contextObject is null.
 	 */
 	public void putContext(Class<?> key, Object contextObject) {
-		if ((key == null) || (contextObject == null)) {
+
+		if (key == null || contextObject == null) {
 			throw new NullPointerException();
+		}
+		if (map == null) {
+			map = new HashMap<>();
 		}
 		map.put(key, contextObject);
 	}
@@ -209,10 +218,10 @@ public abstract class ELContext {
 	 *             if key is null.
 	 */
 	public Object getContext(Class<?> key) {
-		if (key == null) {
-			throw new NullPointerException();
+		if (map == null) {
+			return null;
 		}
-		return map.get(key);
+		return map.get(Objects.requireNonNull(key));
 	}
 
 	/**
@@ -243,10 +252,7 @@ public abstract class ELContext {
 	 * @since EL 3.0
 	 */
 	public ImportHandler getImportHandler() {
-		if (importHandler == null) {
-			importHandler = new ImportHandler();
-		}
-		return importHandler;
+		return ImportHandler.getInstance();
 	}
 
 	/**
@@ -259,11 +265,6 @@ public abstract class ELContext {
 	public abstract FunctionMapper getFunctionMapper();
 
 	/**
-	 * Holds value of property locale.
-	 */
-	private Locale locale;
-
-	/**
 	 * Get the <code>Locale</code> stored by a previous invocation to
 	 * {@link #setLocale}. If this method returns non <code>null</code>, this
 	 * <code>Locale</code> must be used for all localization needs in the
@@ -273,9 +274,7 @@ public abstract class ELContext {
 	 * @return The <code>Locale</code> in which this instance is operating. Used
 	 *         primarily for message localization.
 	 */
-
 	public Locale getLocale() {
-
 		return this.locale;
 	}
 
@@ -287,7 +286,6 @@ public abstract class ELContext {
 	 * by <code>Locale.getDefault( )</code>.
 	 */
 	public void setLocale(Locale locale) {
-
 		this.locale = locale;
 	}
 
@@ -309,6 +307,9 @@ public abstract class ELContext {
 	 * @since EL 3.0
 	 */
 	public void addEvaluationListener(EvaluationListener listener) {
+		if (listeners == null) {
+			listeners = new ArrayList<>();
+		}
 		listeners.add(listener);
 	}
 
@@ -316,10 +317,12 @@ public abstract class ELContext {
 	 * Returns the list of registered evaluation listeners.
 	 * 
 	 * @return The list of registered evaluation listeners.
-	 *
 	 * @since EL 3.0
 	 */
 	public List<EvaluationListener> getEvaluationListeners() {
+		if (listeners == null) {
+			return new ArrayList<>();
+		}
 		return listeners;
 	}
 
@@ -330,8 +333,10 @@ public abstract class ELContext {
 	 *            The EL expression string to be evaluated
 	 */
 	public void notifyBeforeEvaluation(String expr) {
-		for (EvaluationListener listener : getEvaluationListeners()) {
-			listener.beforeEvaluation(this, expr);
+		if (listeners != null) {
+			for (EvaluationListener listener : listeners) {
+				listener.beforeEvaluation(this, expr);
+			}
 		}
 	}
 
@@ -342,8 +347,10 @@ public abstract class ELContext {
 	 *            The EL expression string that has been evaluated
 	 */
 	public void notifyAfterEvaluation(String expr) {
-		for (EvaluationListener listener : getEvaluationListeners()) {
-			listener.afterEvaluation(this, expr);
+		if (listeners != null) {
+			for (EvaluationListener listener : listeners) {
+				listener.afterEvaluation(this, expr);
+			}
 		}
 	}
 
@@ -356,8 +363,10 @@ public abstract class ELContext {
 	 *            The property Object
 	 */
 	public void notifyPropertyResolved(Object base, Object property) {
-		for (EvaluationListener listener : getEvaluationListeners()) {
-			listener.propertyResolved(this, base, property);
+		if (listeners != null) {
+			for (EvaluationListener listener : listeners) {
+				listener.propertyResolved(this, base, property);
+			}
 		}
 	}
 
@@ -374,9 +383,9 @@ public abstract class ELContext {
 			return false;
 		}
 
-		for (int i = lambdaArgs.size() - 1; i >= 0; i--) {
-			Map<String, Object> lmap = lambdaArgs.elementAt(i);
-			if (lmap.containsKey(arg)) {
+		final int size = lambdaArgs.size();
+		for (int i = size - 1; i >= 0; i--) {
+			if (lambdaArgs.elementAt(i).containsKey(arg)) {
 				return true;
 			}
 		}
@@ -401,9 +410,9 @@ public abstract class ELContext {
 			return null;
 		}
 
-		for (int i = lambdaArgs.size() - 1; i >= 0; i--) {
-			Map<String, Object> lmap = lambdaArgs.elementAt(i);
-			Object v = lmap.get(arg);
+		final int size = lambdaArgs.size();
+		for (int i = size - 1; i >= 0; i--) {
+			final Object v = lambdaArgs.elementAt(i).get(arg);
 			if (v != null) {
 				return v;
 			}
@@ -422,7 +431,7 @@ public abstract class ELContext {
 	 */
 	public void enterLambdaScope(Map<String, Object> args) {
 		if (lambdaArgs == null) {
-			lambdaArgs = new Stack<Map<String, Object>>();
+			lambdaArgs = new Stack<>();
 		}
 		lambdaArgs.push(args);
 	}
@@ -460,30 +469,21 @@ public abstract class ELContext {
 	 */
 	public Object convertToType(Object obj, Class<?> targetType) {
 
-		boolean propertyResolvedSave = isPropertyResolved();
+		final boolean propertyResolvedSave = isPropertyResolved();
 		try {
+
 			setPropertyResolved(false);
-			ELResolver elResolver = getELResolver();
+			final ELResolver elResolver = getELResolver();
 			if (elResolver != null) {
 				Object res = elResolver.convertToType(this, obj, targetType);
 				if (isPropertyResolved()) {
 					return res;
 				}
 			}
-		}
-		catch (ELException ex) {
-			throw ex;
-		}
-		catch (Exception ex) {
-			throw new ELException(ex);
 		} finally {
 			setPropertyResolved(propertyResolvedSave);
 		}
 
-		ExpressionFactory exprFactory = (ExpressionFactory) getContext(ExpressionFactory.class);
-		if (exprFactory == null) {
-			exprFactory = ELUtil.getExpressionFactory();
-		}
-		return exprFactory.coerceToType(obj, targetType);
+		return ELUtil.getExpressionFactory().coerceToType(obj, targetType);
 	}
 }

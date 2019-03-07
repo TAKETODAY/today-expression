@@ -105,7 +105,6 @@ import java.util.Properties;
  *
  * @since JSP 2.1
  */
-
 public abstract class ExpressionFactory {
 
 	/**

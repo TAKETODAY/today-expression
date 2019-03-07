@@ -46,6 +46,7 @@ import static org.junit.Assert.fail;
 
 import javax.el.ELContext;
 import javax.el.ELException;
+import javax.el.ELManager;
 import javax.el.ELProcessor;
 import javax.el.ExpressionFactory;
 import javax.el.MethodExpression;
@@ -68,11 +69,11 @@ public class OverloadedMethodTest {
 	@Before
 	public void setUp() {
 		elp = new ELProcessor();
-		exprFactory = elp.getELManager().getExpressionFactory();
+		exprFactory = ELManager.getExpressionFactory();
 		elContext = elp.getELManager().getELContext();
 
 		elp.defineBean("foo", new MyBean());
-
+		
 		elp.defineBean("i1", new I1Impl());
 		elp.defineBean("i2", new I2Impl());
 		elp.defineBean("i12", new I1AndI2Impl());
@@ -176,11 +177,14 @@ public class OverloadedMethodTest {
 				new Class<?>[]
 				{ String.class });
 
-		assertNull(methodExpr.invoke(elContext, new Object[0]));
+		Object invoke = methodExpr.invoke(elContext, new Object[0]);
+		System.err.println(invoke);
+		assertNull(invoke);
 	}
 
 	@Test
 	public void testMethodExprInvoking() {
+		
 		MethodExpression methodExpr = exprFactory.createMethodExpression(
 				elContext,
 				"${foo.methodForMethodExpr2}",
@@ -189,7 +193,8 @@ public class OverloadedMethodTest {
 				{ Runnable.class });
 		assertEquals("Runnable", methodExpr.invoke(elContext, new Object[] { Thread.currentThread() }));
 		try {
-			methodExpr.invoke(elContext, new Object[] { "foo" });
+			Object invoke = methodExpr.invoke(elContext, new Object[] { "foo" });
+			System.err.println(invoke);
 			fail("testMethodExprInvoking Failed");
 		}
 		catch (ELException e) {

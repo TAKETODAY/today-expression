@@ -25,6 +25,7 @@ package javax.el;
  * @see ELContextListener
  * @since JSP 2.1
  */
+@SuppressWarnings("serial")
 public class ELContextEvent extends java.util.EventObject {
 
 	/**

@@ -25,6 +25,10 @@ package javax.el;
  */
 public class MethodInfo {
 
+	private final String name;
+	private final Class<?> returnType;
+	private final Class<?>[] paramTypes;
+
 	/**
 	 * Creates a new instance of <code>MethodInfo</code> with the given information.
 	 *
@@ -68,7 +72,4 @@ public class MethodInfo {
 		return this.paramTypes;
 	}
 
-	private String name;
-	private Class<?> returnType;
-	private Class<?>[] paramTypes;
 }

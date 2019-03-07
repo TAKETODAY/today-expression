@@ -77,11 +77,11 @@ public class ELProcessorTest {
 		MethodExpression meth = null;
 		ELContext ctxt = elm.getELContext();
 		try {
-			meth = factory.createMethodExpression(
-					ctxt, "#{str.length}", Object.class, null);
+			meth = factory.createMethodExpression(ctxt, "#{str.length}", Object.class, null);
 		}
 		catch (NullPointerException ex) {
 			// Do nothing
+			
 		}
 		assertTrue(meth == null);
 		meth = factory.createMethodExpression(

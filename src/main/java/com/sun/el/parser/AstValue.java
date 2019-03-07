@@ -42,7 +42,7 @@ package com.sun.el.parser;
 
 import java.lang.reflect.Method;
 
-import javax.el.ELClass;
+import javax.el.ELContext;
 import javax.el.ELException;
 import javax.el.ELResolver;
 import javax.el.ImportHandler;
@@ -52,7 +52,6 @@ import javax.el.PropertyNotWritableException;
 import javax.el.ValueReference;
 
 import com.sun.el.lang.ELSupport;
-import com.sun.el.lang.EvaluationContext;
 import com.sun.el.util.MessageFactory;
 import com.sun.el.util.ReflectionUtil;
 
@@ -81,22 +80,21 @@ public final class AstValue extends SimpleNode {
 		super(id);
 	}
 
-	public Class getType(EvaluationContext ctx) throws ELException {
+	public Class<?> getType(ELContext ctx) throws ELException {
 		Target t = getTarget(ctx);
 		if (t.isMethodCall()) {
 			return null;
 		}
 		Object property = t.suffixNode.getValue(ctx);
 		ctx.setPropertyResolved(false);
-		Class ret = ctx.getELResolver().getType(ctx, t.base, property);
+		Class<?> ret = ctx.getELResolver().getType(ctx, t.base, property);
 		if (!ctx.isPropertyResolved()) {
 			ELSupport.throwUnhandled(t.base, property);
 		}
 		return ret;
 	}
 
-	public ValueReference getValueReference(EvaluationContext ctx)
-			throws ELException {
+	public ValueReference getValueReference(ELContext ctx) throws ELException {
 		Target t = getTarget(ctx);
 		if (t.isMethodCall()) {
 			return null;
@@ -106,6 +104,7 @@ public final class AstValue extends SimpleNode {
 	}
 
 	private static AstMethodArguments getArguments(Node n) {
+		
 		if (n instanceof AstDotSuffix && n.jjtGetNumChildren() > 0) {
 			return (AstMethodArguments) n.jjtGetChild(0);
 		}
@@ -115,38 +114,31 @@ public final class AstValue extends SimpleNode {
 		return null;
 	}
 
-	private Object getValue(Object base, Node child, EvaluationContext ctx)
-			throws ELException {
+	private Object getValue(Object base, Node child, ELContext ctx) throws ELException {
 
-		Object value = null;
-		ELResolver resolver = ctx.getELResolver();
-		Object property = child.getValue(ctx);
-		AstMethodArguments args = getArguments(child);
+		final ELResolver resolver = ctx.getELResolver();
+		final Object property = child.getValue(ctx);
+		final AstMethodArguments args = getArguments(child);
 		if (args != null) {
 			// This is a method call
-			if (!(property instanceof String)) {
-				throw new ELException(MessageFactory.get(
-						"error.method.name", property));
-			}
-			Class<?>[] paramTypes = args.getParamTypes();
-			Object[] params = args.getParameters(ctx);
-
-			ctx.setPropertyResolved(false);
-			value = resolver.invoke(ctx, base, property, paramTypes, params);
-		}
-		else {
-			if (property != null) {
+			if (property instanceof String) {
 				ctx.setPropertyResolved(false);
-				value = resolver.getValue(ctx, base, property);
-				if (!ctx.isPropertyResolved()) {
-					ELSupport.throwUnhandled(base, property);
-				}
+				return resolver.invoke(ctx, base, property, args.getParamTypes(), args.getParameters(ctx));
+			}
+			throw new ELException(MessageFactory.get("error.method.name", property));
+		}
+		Object value = null;
+		if (property != null) {
+			ctx.setPropertyResolved(false);
+			value = resolver.getValue(ctx, base, property);
+			if (!ctx.isPropertyResolved()) {
+				ELSupport.throwUnhandled(base, property);
 			}
 		}
 		return value;
 	}
 
-	private final Object getBase(EvaluationContext ctx) {
+	private final Object getBase(ELContext ctx) {
 		try {
 			return this.children[0].getValue(ctx);
 		}
@@ -158,7 +150,7 @@ public final class AstValue extends SimpleNode {
 				if (importHandler != null) {
 					Class<?> c = importHandler.resolveClass(name);
 					if (c != null) {
-						return new ELClass(c);
+						return c;
 					}
 				}
 			}
@@ -166,7 +158,7 @@ public final class AstValue extends SimpleNode {
 		}
 	}
 
-	private final Target getTarget(EvaluationContext ctx) throws ELException {
+	private final Target getTarget(ELContext ctx) throws ELException {
 		// evaluate expr-a to value-a
 		Object base = getBase(ctx);
 
@@ -190,14 +182,13 @@ public final class AstValue extends SimpleNode {
 			// if we are in this block, we have more properties to resolve,
 			// but our base was null
 			if (base == null) {
-				throw new PropertyNotFoundException(MessageFactory.get(
-						"error.unreachable.property", property));
+				throw new PropertyNotFoundException(MessageFactory.get("error.unreachable.property", property));
 			}
 		}
 		return new Target(base, this.children[propCount]);
 	}
 
-	public Object getValue(EvaluationContext ctx) throws ELException {
+	public Object getValue(ELContext ctx) throws ELException {
 		Object base = getBase(ctx);
 		int propCount = this.jjtGetNumChildren();
 		int i = 1;
@@ -208,7 +199,7 @@ public final class AstValue extends SimpleNode {
 		return base;
 	}
 
-	public boolean isReadOnly(EvaluationContext ctx) throws ELException {
+	public boolean isReadOnly(ELContext ctx) throws ELException {
 		Target t = getTarget(ctx);
 		if (t.isMethodCall()) {
 			return true;
@@ -222,8 +213,7 @@ public final class AstValue extends SimpleNode {
 		return ret;
 	}
 
-	public void setValue(EvaluationContext ctx, Object value)
-			throws ELException {
+	public void setValue(ELContext ctx, Object value) throws ELException {
 		Target t = getTarget(ctx);
 		if (t.isMethodCall()) {
 			throw new PropertyNotWritableException(MessageFactory.get("error.syntax.set"));
@@ -259,8 +249,7 @@ public final class AstValue extends SimpleNode {
 		}
 	}
 
-	public MethodInfo getMethodInfo(EvaluationContext ctx, Class[] paramTypes)
-			throws ELException {
+	public MethodInfo getMethodInfo(ELContext ctx, Class<?>[] paramTypes) throws ELException {
 		Target t = getTarget(ctx);
 		if (t.isMethodCall()) {
 			return null;
@@ -270,8 +259,7 @@ public final class AstValue extends SimpleNode {
 		return new MethodInfo(m.getName(), m.getReturnType(), m.getParameterTypes());
 	}
 
-	public Object invoke(EvaluationContext ctx, Class[] paramTypes,
-			Object[] paramValues) throws ELException {
+	public Object invoke(ELContext ctx, Class<?>[] paramTypes, Object[] paramValues) throws ELException {
 		Target t = getTarget(ctx);
 		if (t.isMethodCall()) {
 			AstMethodArguments args = getArguments(t.suffixNode);

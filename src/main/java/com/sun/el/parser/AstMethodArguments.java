@@ -40,14 +40,14 @@
 
 package com.sun.el.parser;
 
+import javax.el.ELContext;
 import javax.el.ELException;
-
-import com.sun.el.lang.EvaluationContext;
 
 /**
  * @author Kin-man Chung
  */
 public class AstMethodArguments extends SimpleNode {
+
 	public AstMethodArguments(int id) {
 		super(id);
 	}
@@ -56,12 +56,13 @@ public class AstMethodArguments extends SimpleNode {
 		return null;
 	}
 
-	public Object[] getParameters(EvaluationContext ctx) throws ELException {
+	public Object[] getParameters(ELContext ctx) throws ELException {
 
-		if (this.children == null)
-			return new Object[] {};
+		if (this.children == null) {
+			return new Object[0];
+		}
 
-		Object[] obj = new Object[this.children.length];
+		final Object[] obj = new Object[this.children.length];
 		for (int i = 0; i < obj.length; i++) {
 			obj[i] = this.children[i].getValue(ctx);
 		}

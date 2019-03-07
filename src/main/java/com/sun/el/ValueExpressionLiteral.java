@@ -40,34 +40,26 @@
 
 package com.sun.el;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-
 import javax.el.ELContext;
 import javax.el.ELException;
 import javax.el.PropertyNotWritableException;
 import javax.el.ValueExpression;
 
 import com.sun.el.util.MessageFactory;
-import com.sun.el.util.ReflectionUtil;
 
 /**
  * 
  * @author TODAY <br>
  *         2019-02-18 20:36
  */
-public final class ValueExpressionLiteral extends ValueExpression implements Externalizable {
+@SuppressWarnings("serial")
+public final class ValueExpressionLiteral extends ValueExpression {
 
-	private static final long serialVersionUID = 1L;
-
-	private Object value;
-
-	private Class<?> expectedType;
+	private final Object value;
+	private final Class<?> expectedType;
 
 	public ValueExpressionLiteral() {
-		super();
+		this(null, null);
 	}
 
 	public ValueExpressionLiteral(Object value, Class<?> expectedType) {
@@ -88,8 +80,7 @@ public final class ValueExpressionLiteral extends ValueExpression implements Ext
 	}
 
 	public void setValue(ELContext context, Object value) {
-		throw new PropertyNotWritableException(MessageFactory.get(
-				"error.value.literal.write", this.value));
+		throw new PropertyNotWritableException(MessageFactory.get("error.value.literal.write", this.value));
 	}
 
 	public boolean isReadOnly(ELContext context) {
@@ -124,16 +115,4 @@ public final class ValueExpressionLiteral extends ValueExpression implements Ext
 		return true;
 	}
 
-	public void writeExternal(ObjectOutput out) throws IOException {
-		out.writeObject(this.value);
-		out.writeUTF((this.expectedType != null) ? this.expectedType.getName() : "");
-	}
-
-	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-		this.value = in.readObject();
-		String type = in.readUTF();
-		if (!"".equals(type)) {
-			this.expectedType = ReflectionUtil.forName(type);
-		}
-	}
 }

@@ -42,9 +42,8 @@ package com.sun.el.parser;
 
 import java.math.BigInteger;
 
+import javax.el.ELContext;
 import javax.el.ELException;
-
-import com.sun.el.lang.EvaluationContext;
 
 /**
  * @author Jacob Hookom [jacob@hookom.net]
@@ -70,11 +69,11 @@ public final class AstInteger extends SimpleNode {
 		return number;
 	}
 
-	public Class<?> getType(EvaluationContext ctx) throws ELException {
+	public Class<?> getType(ELContext ctx) throws ELException {
 		return this.getInteger().getClass();
 	}
 
-	public Object getValue(EvaluationContext ctx) throws ELException {
+	public Object getValue(ELContext ctx) throws ELException {
 		return this.getInteger();
 	}
 }

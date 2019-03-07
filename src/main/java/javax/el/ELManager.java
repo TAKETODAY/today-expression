@@ -87,8 +87,13 @@ public class ELManager {
 	 * @return The previous ELContext, null if none.
 	 */
 	public ELContext setELContext(ELContext context) {
-		ELContext prev = elContext;
-		elContext = new StandardELContext(context);
+		final ELContext prev = elContext;
+		if (context instanceof StandardELContext) {
+			elContext = (StandardELContext) context;
+		}
+		else {
+			elContext = new StandardELContext(context);
+		}
 		return prev;
 	}
 
@@ -195,9 +200,7 @@ public class ELManager {
 	 *            bean is removed.
 	 */
 	public Object defineBean(String name, Object bean) {
-		Object ret = getELContext().getBeans().get(name);
-		getELContext().getBeans().put(name, bean);
-		return ret;
+		return getELContext().getBeans().put(name, bean);
 	}
 
 	/**

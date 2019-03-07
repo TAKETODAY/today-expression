@@ -22,15 +22,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 /**
  *
@@ -65,131 +59,6 @@ class ELUtil {
 	 * properties.setProperty("javax.el.bc2.2", "true"); }
 	 */
 	public static ExpressionFactory exprFactory = ExpressionFactory.newInstance(/* properties */);
-
-	/**
-	 * <p>
-	 * The <code>ThreadLocal</code> variable used to record the
-	 * {@link javax.faces.context.FacesContext} instance for each processing thread.
-	 * </p>
-	 */
-	private static ThreadLocal<Map<String, ResourceBundle>> instance = new ThreadLocal<Map<String, ResourceBundle>>() {
-		protected Map<String, ResourceBundle> initialValue() {
-			return (null);
-		}
-	};
-
-	/**
-	 * @return a Map stored in ThreadLocal storage. This may be used by methods of
-	 *         this class to minimize the performance impact for operations that may
-	 *         take place multiple times on a given Thread instance.
-	 */
-
-	private static Map<String, ResourceBundle> getCurrentInstance() {
-		Map<String, ResourceBundle> result = instance.get();
-		if (null == result) {
-			result = new HashMap<String, ResourceBundle>();
-			setCurrentInstance(result);
-		}
-		return result;
-
-	}
-
-	/**
-	 * <p>
-	 * Replace the Map with the argument context.
-	 * </p>
-	 *
-	 * @param context
-	 *            the Map to be stored in ThreadLocal storage.
-	 */
-	private static void setCurrentInstance(Map<String, ResourceBundle> context) {
-		instance.set(context);
-	}
-
-	/**
-	 * <p>
-	 * Convenience method, calls through to
-	 * {@link #getExceptionMessageString(javax.el.ELContext,java.lang.String,Object
-	 * []). </p>
-	 *
-	 * @param context
-	 *            the ELContext from which the Locale for this message is extracted.
-	 *
-	 * @param messageId
-	 *            the messageId String in the ResourceBundle
-	 *
-	 * @return a localized String for the argument messageId
-	 */
-	public static String getExceptionMessageString(ELContext context, String messageId) {
-		return getExceptionMessageString(context, messageId, null);
-	}
-
-	/**
-	 * <p>
-	 * Return a Localized message String suitable for use as an Exception message.
-	 * Examine the argument <code>context</code> for a <code>Locale</code>. If not
-	 * present, use <code>Locale.getDefault()</code>. Load the
-	 * <code>ResourceBundle</code> "javax.el.Messages" using that locale. Get the
-	 * message string for argument <code>messageId</code>. If not found return
-	 * "Missing Resource in EL implementation ??? messageId ???" with messageId
-	 * substituted with the runtime value of argument <code>messageId</code>. If
-	 * found, and argument <code>params</code> is non-null, format the message using
-	 * the params. If formatting fails, return a sensible message including the
-	 * <code>messageId</code>. If argument <code>params</code> is <code>null</code>,
-	 * skip formatting and return the message directly, otherwise return the
-	 * formatted message.
-	 * </p>
-	 *
-	 * @param context
-	 *            the ELContext from which the Locale for this message is extracted.
-	 *
-	 * @param messageId
-	 *            the messageId String in the ResourceBundle
-	 *
-	 * @param params
-	 *            parameters to the message
-	 *
-	 * @return a localized String for the argument messageId
-	 */
-	public static String getExceptionMessageString(ELContext context, String messageId, Object[] params) {
-		String result = "";
-		Locale locale = null;
-
-		if (null == context || null == messageId) {
-			return result;
-		}
-
-		if (null == (locale = context.getLocale())) {
-			locale = Locale.getDefault();
-		}
-		if (null != locale) {
-			Map<String, ResourceBundle> threadMap = getCurrentInstance();
-			ResourceBundle rb = null;
-			if (null == (rb = (ResourceBundle) threadMap.get(locale.toString()))) {
-				rb = ResourceBundle.getBundle("javax.el.PrivateMessages", locale);
-				threadMap.put(locale.toString(), rb);
-			}
-			if (null != rb) {
-				try {
-					result = rb.getString(messageId);
-					if (null != params) {
-						result = MessageFormat.format(result, params);
-					}
-				}
-				catch (IllegalArgumentException iae) {
-					result = "Can't get localized message: parameters to message appear to be incorrect.  Message to format: " + messageId;
-				}
-				catch (MissingResourceException mre) {
-					result = "Missing Resource in EL implementation: ???" + messageId + "???";
-				}
-				catch (Exception e) {
-					result = "Exception resolving message in EL implementation: ???" + messageId + "???";
-				}
-			}
-		}
-
-		return result;
-	}
 
 	static ExpressionFactory getExpressionFactory() {
 		return exprFactory;
@@ -233,16 +102,13 @@ class ELUtil {
 		}
 	}
 
-	static Method findMethod(Class<?> klass,
-			String method,
-			Class<?>[] paramTypes,
-			Object[] params,
-			boolean staticOnly) {
+	static Method findMethod(Class<?> klass, String method, Class<?>[] paramTypes, Object[] params, boolean staticOnly) {
+		
 		Method m = findMethod(klass, method, paramTypes, params);
 		if (staticOnly && !Modifier.isStatic(m.getModifiers())) {
 			throw new MethodNotFoundException("Method " + method + "for class " + klass + " not found or accessible");
 		}
-
+		
 		return m;
 	}
 
@@ -250,18 +116,13 @@ class ELUtil {
 	 * This method duplicates code in com.sun.el.util.ReflectionUtil. When making
 	 * changes keep the code in sync.
 	 */
-	static Object invokeMethod(ELContext context,
-			Method m, Object base, Object[] params) {
+	static Object invokeMethod(ELContext context, Method m, Object base, Object[] params) {
 
-		Object[] parameters = buildParameters(
-				context, m.getParameterTypes(), m.isVarArgs(), params);
 		try {
-			return m.invoke(base, parameters);
+
+			return m.invoke(base, buildParameters(context, m.getParameterTypes(), m.isVarArgs(), params));
 		}
-		catch (IllegalAccessException iae) {
-			throw new ELException(iae);
-		}
-		catch (IllegalArgumentException iae) {
+		catch (IllegalAccessException | IllegalArgumentException iae) {
 			throw new ELException(iae);
 		}
 		catch (InvocationTargetException ite) {
@@ -273,14 +134,23 @@ class ELUtil {
 	 * This method duplicates code in com.sun.el.util.ReflectionUtil. When making
 	 * changes keep the code in sync.
 	 */
-	static Method findMethod(Class<?> clazz, String methodName,
-			Class<?>[] paramTypes, Object[] paramValues) {
+	static Method findMethod(Class<?> clazz, String methodName, Class<?>[] paramTypes, Object[] paramValues) {
 
 		if (clazz == null || methodName == null) {
-			throw new MethodNotFoundException("Method not found: " + clazz + "." + methodName + "(" + paramString(paramTypes) + ")");
+			throw new MethodNotFoundException("Method not found: " + clazz + "." //
+					+ methodName + "(" + paramString(paramTypes) + ")");
 		}
 
-		if (paramTypes == null) {
+		if (paramTypes != null) {
+			try {
+				return clazz.getMethod(methodName, paramTypes);
+			}
+			catch (NoSuchMethodException | SecurityException e) {
+				throw new MethodNotFoundException("Method not found: " + clazz + "." //
+						+ methodName + "(" + paramString(paramTypes) + ")", e);
+			}
+		}
+		else {
 			paramTypes = getTypesFromValues(paramValues);
 		}
 
@@ -288,8 +158,7 @@ class ELUtil {
 
 		List<Wrapper> wrappers = Wrapper.wrap(methods, methodName);
 
-		Wrapper result = findWrapper(
-				clazz, wrappers, methodName, paramTypes, paramValues);
+		Wrapper result = findWrapper(clazz, wrappers, methodName, paramTypes, paramValues);
 
 		if (result == null) {
 			return null;

@@ -42,6 +42,7 @@
 package com.sun.el.parser;
 
 public interface ELParserTreeConstants {
+
 	public int JJTCOMPOSITEEXPRESSION = 0;
 	public int JJTLITERALEXPRESSION = 1;
 	public int JJTDEFERREDEXPRESSION = 2;
@@ -77,7 +78,7 @@ public interface ELParserTreeConstants {
 	public int JJTMAPENTRY = 32;
 	public int JJTLISTDATA = 33;
 	public int JJTIDENTIFIER = 34;
-	public int JJTFUNCTION = 35;
+	public int FUNCTION = 35;
 	public int JJTTRUE = 36;
 	public int JJTFALSE = 37;
 	public int JJTFLOATINGPOINT = 38;
@@ -85,10 +86,48 @@ public interface ELParserTreeConstants {
 	public int JJTSTRING = 40;
 	public int JJTNULL = 41;
 
-	public String[] jjtNodeName = { "CompositeExpression", "LiteralExpression", "DeferredExpression", "DynamicExpression", "void", "SemiColon", "Assign", "LambdaExpression", "LambdaParameters", "Choice", "Or", "And", "Equal", "NotEqual", "LessThan", "GreaterThan", "LessThanEqual", "GreaterThanEqual", "Concat", "Plus", "Minus", "Mult", "Div", "Mod", "Negative", "Not", "Empty", "Value", "DotSuffix", "BracketSuffix", "MethodArguments", "MapData", "MapEntry", "ListData", "Identifier", "Function", "True", "False", "FloatingPoint", "Integer", "String", "Null",
+	public String[] jjtNodeName = { //
+			"CompositeExpression", //
+			"LiteralExpression", //
+			"DeferredExpression", //
+			"DynamicExpression", //
+			"void", //
+			"SemiColon", //
+			"Assign", //
+			"LambdaExpression", //
+			"LambdaParameters", //
+			"Choice", //
+			"Or", //
+			"And", //
+			"Equal", //
+			"NotEqual", //
+			"LessThan", //
+			"GreaterThan", //
+			"LessThanEqual", //
+			"GreaterThanEqual", //
+			"Concat", //
+			"Plus", //
+			"Minus", //
+			"Mult", //
+			"Div", //
+			"Mod", //
+			"Negative", //
+			"Not", //
+			"Empty", //
+			"Value", //
+			"DotSuffix", //
+			"BracketSuffix", //
+			"MethodArguments", //
+			"MapData", //
+			"MapEntry", //
+			"ListData", //
+			"Identifier", //
+			"Function", //
+			"True", //
+			"False", //
+			"FloatingPoint", //
+			"Integer", //
+			"String", //
+			"Null",//
 	};
 }
-/*
- * JavaCC - OriginalChecksum=295bae338407e43a1d349f1ce802614a (do not edit this
- * line)
- */

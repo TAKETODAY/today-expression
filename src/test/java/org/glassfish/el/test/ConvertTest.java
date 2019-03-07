@@ -116,6 +116,7 @@ public class ConvertTest {
 
 	@Test
 	public void testVoid() {
+		
 		MyBean bean = new MyBean();
 		elp.defineBean("bean", bean);
 		// Assig null to int is 0;

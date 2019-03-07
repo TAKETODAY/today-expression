@@ -164,10 +164,8 @@ public class MapELResolver extends ELResolver {
 	@SuppressWarnings("rawtypes")
 	public Object getValue(ELContext context, Object base, Object property) {
 
-		Objects.requireNonNull(context);
-
 		if (base instanceof Map) {
-			context.setPropertyResolved(base, property);
+			Objects.requireNonNull(context).setPropertyResolved(base, property);
 			return ((Map) base).get(property);
 		}
 		return null;

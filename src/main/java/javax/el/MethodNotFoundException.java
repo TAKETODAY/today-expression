@@ -24,6 +24,7 @@ package javax.el;
  * @see MethodExpression
  * @since JSP 2.1
  */
+@SuppressWarnings("serial")
 public class MethodNotFoundException extends ELException {
 
 	/**

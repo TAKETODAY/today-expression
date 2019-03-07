@@ -40,11 +40,6 @@
 
 package com.sun.el;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-
 import javax.el.ELContext;
 import javax.el.ELException;
 import javax.el.ELResolver;
@@ -55,12 +50,8 @@ import javax.el.MethodExpression;
 import javax.el.MethodInfo;
 import javax.el.MethodNotFoundException;
 import javax.el.PropertyNotFoundException;
-import javax.el.VariableMapper;
 
-import com.sun.el.lang.EvaluationContext;
-import com.sun.el.lang.ExpressionBuilder;
 import com.sun.el.parser.Node;
-import com.sun.el.util.ReflectionUtil;
 
 /**
  * An <code>Expression</code> that refers to a method on an object.
@@ -102,78 +93,30 @@ import com.sun.el.util.ReflectionUtil;
  * @author Jacob Hookom [jacob@hookom.net]
  * @version $Change: 181177 $$DateTime: 2001/06/26 08:45:09 $$Author: kchung $
  */
-public final class MethodExpressionImpl extends MethodExpression implements Externalizable {
+@SuppressWarnings("serial")
+public final class MethodExpressionImpl extends MethodExpression {
 
-	private Class<?> expectedType;
+	private Node node;
+	private final String expr;
+	private final Class<?>[] paramTypes;
+	private final Class<?> expectedType;
 
-	private String expr;
-
-	private FunctionMapper fnMapper;
-
-	private VariableMapper varMapper;
-
-	private transient Node node;
-
-	private Class<?>[] paramTypes;
-
-	/**
-	 * 
-	 */
 	public MethodExpressionImpl() {
-		super();
+		this(null, null, null, null);
 	}
 
 	/**
+	 * 
 	 * @param expr
 	 * @param node
-	 * @param fnMapper
-	 * @param expectedType
 	 * @param paramTypes
 	 */
-	public MethodExpressionImpl(String expr, Node node, FunctionMapper fnMapper, VariableMapper varMapper, Class<?> expectedType,
-			Class<?>[] paramTypes) //
-	{
+	public MethodExpressionImpl(String expr, Node node, Class<?>[] paramTypes, Class<?> expectedType) {
 		super();
 		this.expr = expr;
 		this.node = node;
-		this.fnMapper = fnMapper;
-		this.varMapper = varMapper;
-		this.expectedType = expectedType;
 		this.paramTypes = paramTypes;
-	}
-
-	/**
-	 * Determines whether the specified object is equal to this
-	 * <code>Expression</code>.
-	 * 
-	 * <p>
-	 * The result is <code>true</code> if and only if the argument is not
-	 * <code>null</code>, is an <code>Expression</code> object that is the of the
-	 * same type (<code>ValueExpression</code> or <code>MethodExpression</code>),
-	 * and has an identical parsed representation.
-	 * </p>
-	 * 
-	 * <p>
-	 * Note that two expressions can be equal if their expression Strings are
-	 * different. For example, <code>${fn1:foo()}</code> and
-	 * <code>${fn2:foo()}</code> are equal if their corresponding
-	 * <code>FunctionMapper</code>s mapped <code>fn1:foo</code> and
-	 * <code>fn2:foo</code> to the same method.
-	 * </p>
-	 * 
-	 * @param obj
-	 *            the <code>Object</code> to test for equality.
-	 * @return <code>true</code> if <code>obj</code> equals this
-	 *         <code>Expression</code>; <code>false</code> otherwise.
-	 * @see java.util.Hashtable
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(Object obj) {
-		if (obj instanceof MethodExpressionImpl) {
-			MethodExpressionImpl me = (MethodExpressionImpl) obj;
-			return getNode().equals(me.getNode());
-		}
-		return false;
+		this.expectedType = expectedType;
 	}
 
 	/**
@@ -225,9 +168,7 @@ public final class MethodExpressionImpl extends MethodExpression implements Exte
 	public MethodInfo getMethodInfo(ELContext context) throws PropertyNotFoundException, //
 			MethodNotFoundException, ELException //
 	{
-		final Node n = this.getNode();
-		EvaluationContext ctx = new EvaluationContext(context, this.fnMapper, this.varMapper);
-		return n.getMethodInfo(ctx, this.paramTypes);
+		return this.getNode().getMethodInfo(context, this.paramTypes);
 	}
 
 	/**
@@ -236,7 +177,7 @@ public final class MethodExpressionImpl extends MethodExpression implements Exte
 	 */
 	private Node getNode() throws ELException {
 		if (this.node == null) {
-			this.node = ExpressionBuilder.createNode(this.expr);
+			this.node = ExpressionFactoryImpl.createNode(this.expr);
 		}
 		return this.node;
 	}
@@ -291,44 +232,27 @@ public final class MethodExpressionImpl extends MethodExpression implements Exte
 	 *             constructor.
 	 * @see javax.el.MethodExpression#invoke(javax.el.ELContext, java.lang.Object[])
 	 */
-	public Object invoke(ELContext context, Object[] params)
-			throws PropertyNotFoundException, MethodNotFoundException,
-			ELException {
-		EvaluationContext ctx = new EvaluationContext(context, this.fnMapper, this.varMapper);
-		ctx.notifyBeforeEvaluation(this.expr);
-		Object obj = this.getNode().invoke(ctx, this.paramTypes, params);
-		ctx.notifyAfterEvaluation(this.expr);
-		return obj;
-	}
+	public Object invoke(final ELContext context, Object[] params) throws PropertyNotFoundException, //
+			MethodNotFoundException, ELException //
+	{
+		context.notifyBeforeEvaluation(this.expr);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
-	 */
-	public void readExternal(ObjectInput in) throws IOException,
-			ClassNotFoundException {
-		this.expr = in.readUTF();
-		String type = in.readUTF();
-		if (!"".equals(type)) {
-			this.expectedType = ReflectionUtil.forName(type);
+		Object value = this.getNode().invoke(context, this.paramTypes, params);
+		
+		if (value != null && expectedType != null) {
+			if (!expectedType.isInstance(value)) {
+				try {
+					value = context.convertToType(value, expectedType);
+				}
+				catch (IllegalArgumentException ex) {
+					throw new ELException(ex);
+				}
+			}
 		}
-		this.paramTypes = ReflectionUtil.toTypeArray(((String[]) in.readObject()));
-		this.fnMapper = (FunctionMapper) in.readObject();
-		this.varMapper = (VariableMapper) in.readObject();
-	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
-	 */
-	public void writeExternal(ObjectOutput out) throws IOException {
-		out.writeUTF(this.expr);
-		out.writeUTF((this.expectedType != null) ? this.expectedType.getName() : "");
-		out.writeObject(ReflectionUtil.toTypeNameArray(this.paramTypes));
-		out.writeObject(this.fnMapper);
-		out.writeObject(this.varMapper);
+		context.notifyAfterEvaluation(this.expr);
+
+		return value;
 	}
 
 	public boolean isLiteralText() {
@@ -339,4 +263,39 @@ public final class MethodExpressionImpl extends MethodExpression implements Exte
 	public boolean isParametersProvided() {
 		return this.getNode().isParametersProvided();
 	}
+
+	/**
+	 * Determines whether the specified object is equal to this
+	 * <code>Expression</code>.
+	 * 
+	 * <p>
+	 * The result is <code>true</code> if and only if the argument is not
+	 * <code>null</code>, is an <code>Expression</code> object that is the of the
+	 * same type (<code>ValueExpression</code> or <code>MethodExpression</code>),
+	 * and has an identical parsed representation.
+	 * </p>
+	 * 
+	 * <p>
+	 * Note that two expressions can be equal if their expression Strings are
+	 * different. For example, <code>${fn1:foo()}</code> and
+	 * <code>${fn2:foo()}</code> are equal if their corresponding
+	 * <code>FunctionMapper</code>s mapped <code>fn1:foo</code> and
+	 * <code>fn2:foo</code> to the same method.
+	 * </p>
+	 * 
+	 * @param obj
+	 *            the <code>Object</code> to test for equality.
+	 * @return <code>true</code> if <code>obj</code> equals this
+	 *         <code>Expression</code>; <code>false</code> otherwise.
+	 * @see java.util.Hashtable
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj) {
+		if (obj instanceof MethodExpressionImpl) {
+			MethodExpressionImpl me = (MethodExpressionImpl) obj;
+			return getNode().equals(me.getNode());
+		}
+		return false;
+	}
+
 }

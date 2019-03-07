@@ -64,8 +64,12 @@ import java.util.Objects;
 public class CompositeELResolver extends ELResolver {
 
 	public CompositeELResolver() {
+		this(6);
+	}
+
+	public CompositeELResolver(int init) {
 		this.size = 0;
-		this.elResolvers = new ELResolver[8];
+		this.elResolvers = new ELResolver[init];
 	}
 
 	/**
@@ -85,7 +89,7 @@ public class CompositeELResolver extends ELResolver {
 		Objects.requireNonNull(elResolver);
 
 		if (size >= elResolvers.length) {
-			ELResolver[] newResolvers = new ELResolver[size + 2];
+			ELResolver[] newResolvers = new ELResolver[size + 1];
 			System.arraycopy(elResolvers, 0, newResolvers, 0, size);
 			elResolvers = newResolvers;
 		}
@@ -159,7 +163,7 @@ public class CompositeELResolver extends ELResolver {
 	public Object getValue(ELContext context, Object base, Object property) {
 
 		context.setPropertyResolved(false);
-
+		
 		Object value = null;
 		for (int i = 0; i < size; i++) {
 			value = elResolvers[i].getValue(context, base, property);

@@ -40,6 +40,7 @@
 
 package javax.el;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
@@ -101,11 +102,19 @@ import java.lang.reflect.Modifier;
  * 
  * @since EL 3.0
  */
-
 public class ELProcessor {
 
-	private ELManager elManager = new ELManager();
-	private ExpressionFactory factory = ELManager.getExpressionFactory();
+	private final ELManager elManager;
+	private final ExpressionFactory factory;
+
+	public ELProcessor(ELManager elManager) {
+		this.elManager = elManager;
+		this.factory = ELManager.getExpressionFactory();
+	}
+
+	public ELProcessor() {
+		this(new ELManager());
+	}
 
 	/**
 	 * Return the ELManager used for EL processing.
@@ -123,7 +132,7 @@ public class ELProcessor {
 	 *            The EL expression to be evaluated.
 	 * @return The result of the expression evaluation.
 	 */
-	public Object eval(String expression) {
+	public Object eval(final String expression) {
 		return getValue(expression, Object.class);
 	}
 
@@ -137,9 +146,11 @@ public class ELProcessor {
 	 *            to.
 	 * @return The result of the expression evaluation.
 	 */
-	public Object getValue(String expression, Class<?> expectedType) {
-		ValueExpression exp = factory.createValueExpression(elManager.getELContext(), bracket(expression), expectedType);
-		return exp.getValue(elManager.getELContext());
+	@SuppressWarnings("unchecked")
+	public <T> T getValue(final String expression, final Class<T> expectedType) {
+		final StandardELContext elContext = elManager.getELContext();
+		return (T) factory.createValueExpression(elContext, bracket(expression), expectedType)//
+				.getValue(elContext);
 	}
 
 	/**
@@ -162,10 +173,10 @@ public class ELProcessor {
 	 *             or variable. The thrown exception must be included as the cause
 	 *             property of this exception, if available.
 	 */
-	public void setValue(String expression, Object value) {
-
-		factory.createValueExpression(elManager.getELContext(), bracket(expression), Object.class)//
-				.setValue(elManager.getELContext(), value);
+	public void setValue(final String expression, final Object value) {
+		final StandardELContext elContext = elManager.getELContext();
+		factory.createValueExpression(elContext, bracket(expression), Object.class)//
+				.setValue(elContext, value);
 	}
 
 	/**
@@ -180,7 +191,7 @@ public class ELProcessor {
 	 * @param expression
 	 *            The EL expression to be assigned to the variable.
 	 */
-	public void setVariable(String var, String expression) {
+	public void setVariable(final String var, final String expression) {
 		elManager.setVariable(var, factory.createValueExpression(elManager.getELContext(), bracket(expression), Object.class));
 	}
 
@@ -211,7 +222,7 @@ public class ELProcessor {
 	 *             method of the class, or if the method signature is not valid, or
 	 *             if the method is not a static method.
 	 */
-	public void defineFunction(String prefix, String function, String className, String method) //
+	public void defineFunction(final String prefix, String function, final String className, String method) //
 			throws ClassNotFoundException, NoSuchMethodException //
 	{
 
@@ -224,8 +235,9 @@ public class ELProcessor {
 		if (loader == null) {
 			loader = getClass().getClassLoader();
 		}
-		Class<?> klass = Class.forName(className, false, loader);
-		int j = method.indexOf('(');
+		final Class<?> klass = Class.forName(className, false, loader);
+		final int j = method.indexOf('(');
+
 		if (j < 0) {
 			// Just a name is given
 			for (Method m : klass.getDeclaredMethods()) {
@@ -282,7 +294,7 @@ public class ELProcessor {
 	 * @throws NoSuchMethodException
 	 *             if the method is not a static method
 	 */
-	public void defineFunction(String prefix, String function, Method method)
+	public void defineFunction(final String prefix, String function, final Method method)
 			throws NoSuchMethodException //
 	{
 		if (prefix == null || function == null || method == null) {
@@ -307,7 +319,7 @@ public class ELProcessor {
 	 *            The bean instance to be defined. If <code>null</code>, the name
 	 *            will be removed from the local bean repository.
 	 */
-	public void defineBean(String name, Object bean) {
+	public void defineBean(final String name, final Object bean) {
 		elManager.defineBean(name, bean);
 	}
 
@@ -318,7 +330,6 @@ public class ELProcessor {
 	private static Class<?> toClass(String type, ClassLoader loader)
 			throws ClassNotFoundException //
 	{
-
 		Class<?> c = null;
 		int i0 = type.indexOf('[');
 		int dims = 0;
@@ -352,15 +363,20 @@ public class ELProcessor {
 
 		if (dims == 0)
 			return c;
-
 		if (dims == 1)
-			return java.lang.reflect.Array.newInstance(c, 1).getClass();
-
+			return Array.newInstance(c, 1).getClass();
 		// Array of more than i dimension
-		return java.lang.reflect.Array.newInstance(c, new int[dims]).getClass();
+		return Array.newInstance(c, new int[dims]).getClass();
 	}
 
-	private String bracket(String expression) {
+	private final String bracket(String expression) {
+		if (expression == null) {
+			return "${null}";
+		}
+		final char firstChar = expression.charAt(0);
+		if (firstChar == '#' || firstChar == '$') {
+			return expression;
+		}
 		return "${" + expression + '}';
 	}
 }

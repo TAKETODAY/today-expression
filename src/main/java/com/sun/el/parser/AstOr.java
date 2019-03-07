@@ -40,9 +40,8 @@
 
 package com.sun.el.parser;
 
+import javax.el.ELContext;
 import javax.el.ELException;
-
-import com.sun.el.lang.EvaluationContext;
 
 /**
  * @author Jacob Hookom [jacob@hookom.net]
@@ -54,7 +53,7 @@ public final class AstOr extends BooleanNode {
 		super(id);
 	}
 
-	public Object getValue(EvaluationContext ctx) throws ELException {
+	public Object getValue(ELContext ctx) throws ELException {
 		Object obj = this.children[0].getValue(ctx);
 		Boolean b = coerceToBoolean(obj);
 		if (b.booleanValue()) {

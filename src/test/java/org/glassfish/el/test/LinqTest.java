@@ -9,8 +9,10 @@ import javax.el.ELProcessor;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class LinqTest {
 
 	static ELProcessor elp;

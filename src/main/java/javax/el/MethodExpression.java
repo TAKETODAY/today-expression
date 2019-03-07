@@ -54,6 +54,7 @@ package javax.el;
  * @see ExpressionFactory
  * @since JSP 2.1
  */
+@SuppressWarnings("serial")
 public abstract class MethodExpression extends Expression {
 	// Evaluation
 
@@ -139,11 +140,4 @@ public abstract class MethodExpression extends Expression {
 		return false;
 	}
 
-	/**
-	 * Use isParametersProvided instead.
-	 */
-	@Deprecated
-	public boolean isParmetersProvided() {
-		return isParametersProvided();
-	}
 }

@@ -98,28 +98,23 @@ public class StaticFieldELResolver extends ELResolver {
 	@Override
 	public Object getValue(ELContext context, Object base, Object property) {
 
-		Objects.requireNonNull(context);
+		if (base instanceof Class && property instanceof String) {
 
-		if (base instanceof ELClass && property instanceof String) {
-			final Class<?> klass = ((ELClass) base).getKlass();
-			final String fieldName = (String) property;
 			try {
-				context.setPropertyResolved(base, property);
-				final Field field = klass.getField(fieldName);
+
+				Objects.requireNonNull(context).setPropertyResolved(base, property);
+
+				final Field field = ((Class<?>) base).getField((String) property);
+
 				final int mod = field.getModifiers();
 				if (Modifier.isPublic(mod) && Modifier.isStatic(mod)) {
 					return field.get(null);
 				}
 			}
-			catch (NoSuchFieldException ex) {
+			catch (NoSuchFieldException | IllegalAccessException ex) {
+				throw new PropertyNotFoundException("Either '" + ((Class<?>) base).getName()//
+						+ "' is not a public static field of the class '" + property + "' or field is inaccessible");
 			}
-			catch (IllegalAccessException ex) {
-			}
-
-			throw new PropertyNotFoundException(ELUtil.getExceptionMessageString(context, "staticFieldReadError", //
-					new Object[]
-					{ klass.getName(), fieldName }//
-			));
 		}
 		return null;
 	}
@@ -148,15 +143,12 @@ public class StaticFieldELResolver extends ELResolver {
 	@Override
 	public void setValue(ELContext context, Object base, Object property, Object value) {
 
-		Objects.requireNonNull(context);
+		if (base instanceof Class && property instanceof String) {
 
-		if (base instanceof ELClass && property instanceof String) {
-			Class<?> klass = ((ELClass) base).getKlass();
+			Class<?> klass = ((Class<?>) base);
 			String fieldName = (String) property;
-			throw new PropertyNotWritableException(ELUtil.getExceptionMessageString(context,
-					"staticFieldWriteError",
-					new Object[]
-					{ klass.getName(), fieldName }));
+
+			throw new PropertyNotWritableException("Cannot write to the field '" + klass.getName() + "' of the class '" + fieldName + "'");
 		}
 	}
 
@@ -212,13 +204,13 @@ public class StaticFieldELResolver extends ELResolver {
 	@Override
 	public Object invoke(ELContext context, Object base, Object method, Class<?>[] paramTypes, Object[] params) {
 
-		Objects.requireNonNull(context);
-
-		if (!(base instanceof ELClass && method instanceof String)) {
+		if (!(base instanceof Class && method instanceof String)) {
 			return null;
 		}
 
-		Class<?> klass = ((ELClass) base).getKlass();
+		Objects.requireNonNull(context);
+
+		Class<?> klass = ((Class<?>) base);
 		String name = (String) method;
 
 		Object ret;
@@ -268,27 +260,17 @@ public class StaticFieldELResolver extends ELResolver {
 	@Override
 	public Class<?> getType(ELContext context, Object base, Object property) {
 
-		if (context == null) {
-			throw new NullPointerException();
-		}
-
-		if (base instanceof ELClass && property instanceof String) {
-			Class<?> klass = ((ELClass) base).getKlass();
-			String fieldName = (String) property;
+		if (base instanceof Class && property instanceof String) {
 			try {
-				context.setPropertyResolved(true);
-				Field field = klass.getField(fieldName);
-				int mod = field.getModifiers();
-				if (Modifier.isPublic(mod) && Modifier.isStatic(mod)) {
-					return field.getType();
-				}
+
+				Objects.requireNonNull(context).setPropertyResolved(true);
+				final Field field = ((Class<?>) base).getField((String) property);
+				return field.getType();
 			}
 			catch (NoSuchFieldException ex) {
+				throw new PropertyNotFoundException("Either '" + ((Class<?>) base).getName() + //
+						"' is not a public static field of the class '" + property + "' or field is inaccessible");
 			}
-			throw new PropertyNotFoundException(ELUtil.getExceptionMessageString(context,
-					"staticFieldReadError",
-					new Object[]
-					{ klass.getName(), fieldName }));
 		}
 		return null;
 	}
@@ -323,11 +305,8 @@ public class StaticFieldELResolver extends ELResolver {
 	@Override
 	public boolean isReadOnly(ELContext context, Object base, Object property) {
 
-		Objects.requireNonNull(context);
-
-		if (base instanceof ELClass && property instanceof String) {
-//			Class<?> klass = ((ELClass) base).getKlass();
-			context.setPropertyResolved(true);
+		if (base instanceof Class && property instanceof String) {
+			Objects.requireNonNull(context).setPropertyResolved(true);
 		}
 		return true;
 	}

@@ -43,9 +43,8 @@ package com.sun.el.parser;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import javax.el.ELContext;
 import javax.el.ELException;
-
-import com.sun.el.lang.EvaluationContext;
 
 /**
  * @author Kin-man Chung
@@ -55,7 +54,7 @@ public class AstMapData extends SimpleNode {
 		super(id);
 	}
 
-	public Object getValue(EvaluationContext ctx) {
+	public Object getValue(ELContext ctx) {
 		HashSet<Object> set = new HashSet<Object>();
 		HashMap<Object, Object> map = new HashMap<Object, Object>();
 

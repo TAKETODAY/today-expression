@@ -110,12 +110,11 @@ public class ArrayELResolver extends ELResolver {
 	 */
 	public Class<?> getType(ELContext context, Object base, Object property) {
 
-		Objects.requireNonNull(context);
-
 		if (base != null) {
 			final Class<? extends Object> beanClass = base.getClass();
 			if (beanClass.isArray()) {
-				context.setPropertyResolved(true);
+
+				Objects.requireNonNull(context).setPropertyResolved(true);
 				final int index = toInteger(property);
 				if (index < 0 || index >= Array.getLength(base)) {
 					throw new PropertyNotFoundException();
@@ -167,7 +166,8 @@ public class ArrayELResolver extends ELResolver {
 		Objects.requireNonNull(context);
 
 		if (base != null && base.getClass().isArray()) {
-			context.setPropertyResolved(base, property);
+			Objects.requireNonNull(context).setPropertyResolved(base, property);
+			
 			final int index = toInteger(property);
 			if (index >= 0 && index < Array.getLength(base)) {
 				return Array.get(base, index);
@@ -226,11 +226,10 @@ public class ArrayELResolver extends ELResolver {
 	 */
 	public void setValue(ELContext context, Object base, Object property, Object val) {
 
-		Objects.requireNonNull(context);
 		if (base != null) {
 			final Class<? extends Object> beanClass = base.getClass();
 			if (beanClass.isArray()) {
-				context.setPropertyResolved(base, property);
+				Objects.requireNonNull(context).setPropertyResolved(base, property);
 				if (isReadOnly) {
 					throw new PropertyNotWritableException();
 				}
@@ -289,10 +288,8 @@ public class ArrayELResolver extends ELResolver {
 	 */
 	public boolean isReadOnly(ELContext context, Object base, Object property) {
 
-		Objects.requireNonNull(context);
-
 		if (base != null && base.getClass().isArray()) {
-			context.setPropertyResolved(true);
+			Objects.requireNonNull(context).setPropertyResolved(true);
 			int index = toInteger(property);
 			if (index < 0 || index >= Array.getLength(base)) {
 				throw new PropertyNotFoundException();

@@ -91,10 +91,8 @@ public class ResourceBundleELResolver extends ELResolver {
 	 */
 	public Object getValue(ELContext context, Object base, Object property) {
 
-		Objects.requireNonNull(context);
-
 		if (base instanceof ResourceBundle) {
-			context.setPropertyResolved(true);
+			Objects.requireNonNull(context).setPropertyResolved(true);
 			if (property != null) {
 				try {
 					return ((ResourceBundle) base).getObject(property.toString());
@@ -133,10 +131,8 @@ public class ResourceBundleELResolver extends ELResolver {
 	 */
 	public Class<?> getType(ELContext context, Object base, Object property) {
 
-		Objects.requireNonNull(context);
-
 		if (base instanceof ResourceBundle) {
-			context.setPropertyResolved(true);
+			Objects.requireNonNull(context).setPropertyResolved(true);
 		}
 		return null;
 	}
@@ -161,10 +157,8 @@ public class ResourceBundleELResolver extends ELResolver {
 	 */
 	public void setValue(ELContext context, Object base, Object property, Object value) {
 
-		Objects.requireNonNull(context);
-
 		if (base instanceof ResourceBundle) {
-			context.setPropertyResolved(true);
+			Objects.requireNonNull(context).setPropertyResolved(true);
 			throw new PropertyNotWritableException("ResourceBundles are immutable");
 		}
 	}
@@ -188,10 +182,8 @@ public class ResourceBundleELResolver extends ELResolver {
 	 */
 	public boolean isReadOnly(ELContext context, Object base, Object property) {
 
-		Objects.requireNonNull(context);
-
 		if (base instanceof ResourceBundle) {
-			context.setPropertyResolved(true);
+			Objects.requireNonNull(context).setPropertyResolved(true);
 			return true;
 		}
 		return false;

@@ -164,19 +164,16 @@ public abstract class ReflectionUtil {
 		catch (IntrospectionException ie) {
 			throw new ELException(ie);
 		}
-		throw new PropertyNotFoundException(MessageFactory.get(
-				"error.property.notfound", base, name));
+		throw new PropertyNotFoundException(MessageFactory.get("error.property.notfound", base, name));
 	}
 
 	/*
 	 * This method duplicates code in javax.el.ELUtil. When making changes keep the
 	 * code in sync.
 	 */
-	public static Object invokeMethod(ELContext context,
-			Method m, Object base, Object[] params) {
+	public static Object invokeMethod(ELContext context, Method m, Object base, Object[] params) {
 
-		Object[] parameters = buildParameters(
-				context, m.getParameterTypes(), m.isVarArgs(), params);
+		Object[] parameters = buildParameters(context, m.getParameterTypes(), m.isVarArgs(), params);
 		try {
 			return m.invoke(base, parameters);
 		}

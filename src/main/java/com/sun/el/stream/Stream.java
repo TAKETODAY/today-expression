@@ -56,29 +56,32 @@ import javax.el.LambdaExpression;
 import com.sun.el.lang.ELArithmetic;
 import com.sun.el.lang.ELSupport;
 
-/*
+/**
+ * @author TODAY <br>
+ *         2019-02-20 16:48
  */
-
 public class Stream {
 
-	private Iterator<Object> source;
-	private Stream upstream;
-	private Operator op;
+	private final Operator op;
+	private final Stream upstream;
+	private final Iterator<Object> source;
 
 	Stream(Iterator<Object> source) {
+		this.op = null;
 		this.source = source;
+		this.upstream = null;
 	}
 
 	Stream(Stream upstream, Operator op) {
-		this.upstream = upstream;
 		this.op = op;
+		this.source = null;
+		this.upstream = upstream;
 	}
 
 	public Iterator<Object> iterator() {
 		if (source != null) {
 			return source;
 		}
-
 		return op.iterator(upstream.iterator());
 	}
 
@@ -192,26 +195,25 @@ public class Stream {
 		});
 	}
 
+	private static final Comparator<Object> COMPARATOR = new Comparator<Object>() {
+		@Override
+		@SuppressWarnings("unchecked")
+		public int compare(Object o1, Object o2) {
+			return ((Comparable<Object>) o1).compareTo(o2);
+		}
+	};
+
 	public Stream sorted() {
 		return new Stream(this, new Operator() {
 
-			private PriorityQueue<Object> queue = null;
+			private final PriorityQueue<Object> queue = new PriorityQueue<Object>(16, COMPARATOR);
 
 			@Override
 			public Iterator<Object> iterator(final Iterator<Object> up) {
-				if (queue == null) {
-					queue = new PriorityQueue<Object>(16, new Comparator<Object>() {
-						@Override
-						public int compare(Object o1, Object o2) {
-							return ((Comparable) o1).compareTo(o2);
-						}
-					});
 
-					while (up.hasNext()) {
-						queue.add(up.next());
-					}
+				while (up.hasNext()) {
+					queue.add(up.next());
 				}
-
 				return new Iterator0() {
 					@Override
 					public boolean hasNext() {
@@ -238,9 +240,7 @@ public class Stream {
 					queue = new PriorityQueue<Object>(16, new Comparator<Object>() {
 						@Override
 						public int compare(Object o1, Object o2) {
-							return (Integer) ELSupport.coerceToType(
-									comparator.invoke(o1, o2),
-									Integer.class);
+							return (Integer) ELSupport.coerceToType(comparator.invoke(o1, o2), Integer.class);
 						}
 					});
 
@@ -306,7 +306,7 @@ public class Stream {
 	}
 
 	public Object reduce(Object base, LambdaExpression op) {
-		Iterator<Object> iter = iterator();
+		final Iterator<Object> iter = iterator();
 		while (iter.hasNext()) {
 			base = op.invoke(base, iter.next());
 		}
@@ -314,7 +314,7 @@ public class Stream {
 	}
 
 	public Optional<?> reduce(LambdaExpression op) {
-		Iterator<Object> iter = iterator();
+		final Iterator<Object> iter = iterator();
 		if (iter.hasNext()) {
 			Object base = iter.next();
 			while (iter.hasNext()) {
@@ -336,7 +336,7 @@ public class Stream {
 	 */
 
 	public void forEach(LambdaExpression comsumer) {
-		Iterator<Object> iter = iterator();
+		final Iterator<Object> iter = iterator();
 		while (iter.hasNext()) {
 			comsumer.invoke(iter.next());
 		}
@@ -353,7 +353,7 @@ public class Stream {
 	 * map; }
 	 */
 	public boolean anyMatch(LambdaExpression predicate) {
-		Iterator<Object> iter = iterator();
+		final Iterator<Object> iter = iterator();
 		while (iter.hasNext()) {
 			if ((Boolean) predicate.invoke(iter.next())) {
 				return true;
@@ -363,7 +363,7 @@ public class Stream {
 	}
 
 	public boolean allMatch(LambdaExpression predicate) {
-		Iterator<Object> iter = iterator();
+		final Iterator<Object> iter = iterator();
 		while (iter.hasNext()) {
 			if (!(Boolean) predicate.invoke(iter.next())) {
 				return false;
@@ -373,7 +373,7 @@ public class Stream {
 	}
 
 	public boolean noneMatch(LambdaExpression predicate) {
-		Iterator<Object> iter = iterator();
+		final Iterator<Object> iter = iterator();
 		while (iter.hasNext()) {
 			if ((Boolean) predicate.invoke(iter.next())) {
 				return false;
@@ -383,8 +383,8 @@ public class Stream {
 	}
 
 	public Object[] toArray() {
-		Iterator<Object> iter = iterator();
-		ArrayList<Object> al = new ArrayList<Object>();
+		final Iterator<Object> iter = iterator();
+		final ArrayList<Object> al = new ArrayList<>();
 		while (iter.hasNext()) {
 			al.add(iter.next());
 		}
@@ -392,23 +392,16 @@ public class Stream {
 	}
 
 	public Object toList() {
-		Iterator<Object> iter = iterator();
-		ArrayList<Object> al = new ArrayList<Object>();
+		final Iterator<Object> iter = iterator();
+		final ArrayList<Object> al = new ArrayList<>();
 		while (iter.hasNext()) {
 			al.add(iter.next());
 		}
 		return al;
 	}
 
-	/*
-	 * public Object into(Object target) { if (! (target instanceof Collection)) {
-	 * throw new
-	 * ELException("The argument type for into operation mush be a Collection"); }
-	 * Collection<Object> c = (Collection<Object>) target; Iterator<Object> iter =
-	 * iterator(); while (iter.hasNext()) { c.add(iter.next()); } return c; }
-	 */
 	public Optional<?> findFirst() {
-		Iterator<Object> iter = iterator();
+		final Iterator<Object> iter = iterator();
 		if (iter.hasNext()) {
 			return Optional.of(iter.next());
 		}
@@ -417,7 +410,7 @@ public class Stream {
 
 	public Object sum() {
 		Number sum = Long.valueOf(0);
-		Iterator<Object> iter = iterator();
+		final Iterator<Object> iter = iterator();
 		while (iter.hasNext()) {
 			sum = ELArithmetic.add(sum, iter.next());
 		}
@@ -426,7 +419,7 @@ public class Stream {
 
 	public Object count() {
 		long count = 0;
-		Iterator<Object> iter = iterator();
+		final Iterator<Object> iter = iterator();
 		while (iter.hasNext()) {
 			count++;
 			iter.next();
@@ -436,62 +429,51 @@ public class Stream {
 
 	public Optional<?> min() {
 		Object min = null;
-		Iterator<Object> iter = iterator();
+		final Iterator<Object> iter = iterator();
 		while (iter.hasNext()) {
 			Object item = iter.next();
 			if (min == null || ELSupport.compare(min, item) > 0) {
 				min = item;
 			}
 		}
-		if (min == null) {
-			return Optional.empty();
-		}
-		return Optional.of(min);
+		return Optional.ofNullable(min);
 	}
 
 	public Optional<?> max() {
 		Object max = null;
-		Iterator<Object> iter = iterator();
+		final Iterator<Object> iter = iterator();
 		while (iter.hasNext()) {
 			Object item = iter.next();
 			if (max == null || ELSupport.compare(max, item) < 0) {
 				max = item;
 			}
 		}
-		if (max == null) {
-			return Optional.empty();
-		}
-		return Optional.of(max);
+		return Optional.ofNullable(max);
 	}
 
 	public Optional<?> min(final LambdaExpression comparator) {
 		Object min = null;
-		Iterator<Object> iter = iterator();
+		final Iterator<Object> iter = iterator();
 		while (iter.hasNext()) {
 			Object item = iter.next();
 			if (min == null || ELSupport.compare(comparator.invoke(item, min), Long.valueOf(0)) < 0) {
 				min = item;
 			}
 		}
-		if (min == null) {
-			return Optional.empty();
-		}
-		return Optional.of(min);
+
+		return Optional.ofNullable(min);
 	}
 
-	public Optional max(final LambdaExpression comparator) {
+	public Optional<?> max(final LambdaExpression comparator) {
 		Object max = null;
-		Iterator<Object> iter = iterator();
+		final Iterator<Object> iter = iterator();
 		while (iter.hasNext()) {
-			Object item = iter.next();
+			final Object item = iter.next();
 			if (max == null || ELSupport.compare(comparator.invoke(max, item), Long.valueOf(0)) < 0) {
 				max = item;
 			}
 		}
-		if (max == null) {
-			return Optional.empty();
-		}
-		return Optional.of(max);
+		return Optional.ofNullable(max);
 	}
 
 	public Optional<?> average() {
@@ -517,9 +499,9 @@ public class Stream {
 
 	abstract class Iterator1 extends Iterator0 {
 
-		Iterator iter;
+		final Iterator<Object> iter;
 
-		Iterator1(Iterator iter) {
+		Iterator1(Iterator<Object> iter) {
 			this.iter = iter;
 		}
 
@@ -533,7 +515,7 @@ public class Stream {
 		private Object current;
 		private boolean yielded;
 
-		Iterator2(Iterator upstream) {
+		Iterator2(Iterator<Object> upstream) {
 			super(upstream);
 		}
 

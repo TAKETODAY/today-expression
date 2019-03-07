@@ -44,6 +44,8 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sun.el.lang.LocalBeanNameResolver;
+
 /**
  * A standard ELContext suitable for use in a stand alone environment. This
  * class provides a default implementation of an ELResolver that contains a
@@ -52,106 +54,20 @@ import java.util.Map;
  *
  * @since EL 3.0
  */
-
 public class StandardELContext extends ELContext {
 
-	/*
-	 * The ELResolver for this ELContext.
-	 */
-	private ELResolver elResolver;
+	private final ELResolver elResolver;
+	private final CompositeELResolver customResolvers;
 
-	/*
-	 * The list of the custom ELResolvers added to the ELResolvers. An ELResolver is
-	 * added to the list when addELResolver is called.
-	 */
-	private CompositeELResolver customResolvers;
+	private final FunctionMapper functionMapper;
+	private final VariableMapper variableMapper;
 
-	/*
-	 * The ELResolver implementing the query operators.
-	 */
-	private ELResolver streamELResolver;
+	private final Map<String, Object> beans = new HashMap<>(8, 1.0f);
 
-	/*
-	 * The FunctionMapper for this ELContext.
-	 */
-	private FunctionMapper functionMapper;
-
-	/*
-	 * The pre-confured init function map;
-	 */
-	private Map<String, Method> initFunctionMap;
-
-	/*
-	 * The VariableMapper for this ELContext.
-	 */
-	private VariableMapper variableMapper;
-
-	/*
-	 * If non-null, indicates the presence of a delegate ELContext. When a Standard
-	 * is constructed from another ELContext, there is no easy way to get its
-	 * private context map, therefore delegation is needed.
-	 */
-	private ELContext delegate = null;
-
-	/**
-	 * A bean repository local to this context
-	 */
-	private Map<String, Object> beans = new HashMap<String, Object>();
+	private final ELContext delegate;
 
 	/**
 	 * Construct a default ELContext for a stand-alone environment.
-	 * 
-	 * @param factory
-	 *            The ExpressionFactory
-	 */
-	public StandardELContext(ExpressionFactory factory) {
-		this.streamELResolver = factory.getStreamELResolver();
-		initFunctionMap = factory.getInitFunctionMap();
-	}
-
-	/**
-	 * Construct a StandardELContext from another ELContext.
-	 * 
-	 * @param context
-	 *            The ELContext that acts as a delegate in most cases
-	 */
-	public StandardELContext(ELContext context) {
-		this.delegate = context;
-		// Copy all attributes except map and resolved
-		CompositeELResolver elr = new CompositeELResolver();
-		elr.add(new BeanNameELResolver(new LocalBeanNameResolver()));
-		customResolvers = new CompositeELResolver();
-		elr.add(customResolvers);
-		elr.add(context.getELResolver());
-		elResolver = elr;
-
-		functionMapper = context.getFunctionMapper();
-		variableMapper = context.getVariableMapper();
-		setLocale(context.getLocale());
-	}
-
-	@Override
-	public void putContext(Class key, Object contextObject) {
-		if (delegate != null) {
-			delegate.putContext(key, contextObject);
-		}
-		else {
-			super.putContext(key, contextObject);
-		}
-	}
-
-	@Override
-	public Object getContext(Class key) {
-		if (delegate != null) {
-			return delegate.getContext(key);
-		}
-		else {
-			return super.getContext(key);
-		}
-	}
-
-	/**
-	 * Construct (if needed) and return a default ELResolver.
 	 * <p>
 	 * Retrieves the <code>ELResolver</code> associated with this context. This is a
 	 * <code>CompositeELResover</code> consists of an ordered list of
@@ -170,26 +86,83 @@ public class StandardELContext extends ELContext {
 	 * </ol>
 	 * </p>
 	 * 
+	 * @param factory
+	 *            The ExpressionFactory
+	 */
+	public StandardELContext(ExpressionFactory factory) {
+
+		delegate = null;
+		variableMapper = new DefaultVariableMapper();
+		functionMapper = new DefaultFunctionMapper(factory.getInitFunctionMap());
+
+		customResolvers = new CompositeELResolver(2);
+
+		CompositeELResolver resolver = new CompositeELResolver();
+
+		resolver.add(customResolvers);
+		resolver.add(new BeanNameELResolver(new LocalBeanNameResolver(beans)));
+
+		resolver.add(new StaticFieldELResolver());
+		resolver.add(new MapELResolver());
+		resolver.add(new ResourceBundleELResolver());
+		resolver.add(new ListELResolver());
+		resolver.add(new ArrayELResolver());
+
+		ELResolver streamELResolver = factory.getStreamELResolver();
+		if (streamELResolver != null) {
+			resolver.add(streamELResolver);
+		}
+		resolver.add(new BeanELResolver());
+
+		this.elResolver = resolver;
+	}
+
+	/**
+	 * Construct a StandardELContext from another ELContext.
+	 * 
+	 * @param context
+	 *            The ELContext that acts as a delegate in most cases
+	 */
+	public StandardELContext(ELContext context) {
+		this.delegate = context;
+		// Copy all attributes except map and resolved
+		CompositeELResolver elr = new CompositeELResolver();
+		customResolvers = new CompositeELResolver();
+
+		elr.add(customResolvers);
+		elr.add(new BeanNameELResolver(new LocalBeanNameResolver(beans)));
+		elr.add(context.getELResolver());
+
+		elResolver = elr;
+
+		functionMapper = context.getFunctionMapper();
+		variableMapper = context.getVariableMapper();
+		setLocale(context.getLocale());
+	}
+
+	@Override
+	public void putContext(Class<?> key, Object contextObject) {
+		if (delegate != null) {
+			delegate.putContext(key, contextObject);
+		}
+		else {
+			super.putContext(key, contextObject);
+		}
+	}
+
+	@Override
+	public Object getContext(Class<?> key) {
+		if (delegate == null) {
+			return super.getContext(key);
+		}
+		return delegate.getContext(key);
+	}
+
+	/**
 	 * @return The ELResolver for this context.
 	 */
 	@Override
 	public ELResolver getELResolver() {
-		if (elResolver == null) {
-			CompositeELResolver resolver = new CompositeELResolver();
-			customResolvers = new CompositeELResolver();
-			resolver.add(customResolvers);
-			resolver.add(new BeanNameELResolver(new LocalBeanNameResolver()));
-			if (streamELResolver != null) {
-				resolver.add(streamELResolver);
-			}
-			resolver.add(new StaticFieldELResolver());
-			resolver.add(new MapELResolver());
-			resolver.add(new ResourceBundleELResolver());
-			resolver.add(new ListELResolver());
-			resolver.add(new ArrayELResolver());
-			resolver.add(new BeanELResolver());
-			elResolver = resolver;
-		}
 		return elResolver;
 	}
 
@@ -202,7 +175,6 @@ public class StandardELContext extends ELContext {
 	 *            The new ELResolver to be added to the context
 	 */
 	public void addELResolver(ELResolver cELResolver) {
-		getELResolver(); // make sure elResolver is constructed
 		customResolvers.add(cELResolver);
 	}
 
@@ -211,42 +183,39 @@ public class StandardELContext extends ELContext {
 	 * 
 	 * @return the bean repository
 	 */
-	Map<String, Object> getBeans() {
+	public Map<String, Object> getBeans() {
 		return beans;
 	}
 
 	/**
-	 * Construct (if needed) and return a default FunctionMapper.
+	 * Define a bean in the local bean repository
 	 * 
-	 * @return The default FunctionMapper
+	 * @param name
+	 *            The name of the bean
+	 * @param bean
+	 *            The bean instance to be defined. If null, the definition of the
+	 *            bean is removed.
 	 */
+	public Object defineBean(String name, Object bean) {
+		return beans.put(name, bean);
+	}
+
 	@Override
 	public FunctionMapper getFunctionMapper() {
-		if (functionMapper == null) {
-			functionMapper = new DefaultFunctionMapper(initFunctionMap);
-		}
 		return functionMapper;
 	}
 
-	/**
-	 * Construct (if needed) and return a default VariableMapper() {
-	 * 
-	 * @return The default Variable
-	 */
 	@Override
 	public VariableMapper getVariableMapper() {
-		if (variableMapper == null) {
-			variableMapper = new DefaultVariableMapper();
-		}
 		return variableMapper;
 	}
 
-	private static class DefaultFunctionMapper extends FunctionMapper {
+	private final static class DefaultFunctionMapper extends FunctionMapper {
 
-		private Map<String, Method> functions = null;
+		private final Map<String, Method> functions;
 
 		DefaultFunctionMapper(Map<String, Method> initMap) {
-			functions = (initMap == null) ? new HashMap<String, Method>() : new HashMap<String, Method>(initMap);
+			functions = (initMap == null) ? new HashMap<String, Method>(16, 1.0f) : initMap;
 		}
 
 		@Override
@@ -260,60 +229,22 @@ public class StandardELContext extends ELContext {
 		}
 	}
 
-	private static class DefaultVariableMapper extends VariableMapper {
+	private final static class DefaultVariableMapper extends VariableMapper {
 
-		private Map<String, ValueExpression> variables = null;
+		private final Map<String, ValueExpression> variables = new HashMap<>(16, 1.0f);
 
 		@Override
 		public ValueExpression resolveVariable(String variable) {
-			if (variables == null) {
-				return null;
-			}
 			return variables.get(variable);
 		}
 
 		@Override
-		public ValueExpression setVariable(String variable,
-				ValueExpression expression) {
-			if (variables == null) {
-				variables = new HashMap<String, ValueExpression>();
-			}
-			ValueExpression prev = null;
+		public ValueExpression setVariable(String variable, ValueExpression expression) {
 			if (expression == null) {
-				prev = variables.remove(variable);
+				return variables.remove(variable);
 			}
-			else {
-				prev = variables.put(variable, expression);
-			}
-			return prev;
+			return variables.put(variable, expression);
 		}
 	}
 
-	private class LocalBeanNameResolver extends BeanNameResolver {
-
-		@Override
-		public boolean isNameResolved(String beanName) {
-			return beans.containsKey(beanName);
-		}
-
-		@Override
-		public Object getBean(String beanName) {
-			return beans.get(beanName);
-		}
-
-		@Override
-		public void setBeanValue(String beanName, Object value) {
-			beans.put(beanName, value);
-		}
-
-		@Override
-		public boolean isReadOnly(String beanName) {
-			return false;
-		}
-
-		@Override
-		public boolean canCreateBean(String beanName) {
-			return true;
-		}
-	}
 }

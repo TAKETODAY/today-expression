@@ -40,9 +40,8 @@
 
 package com.sun.el.parser;
 
+import javax.el.ELContext;
 import javax.el.ELException;
-
-import com.sun.el.lang.EvaluationContext;
 
 /**
  * @author Jacob Hookom [jacob@hookom.net]
@@ -54,19 +53,19 @@ public final class AstDeferredExpression extends SimpleNode {
 		super(id);
 	}
 
-	public Class<?> getType(EvaluationContext ctx) throws ELException {
+	public Class<?> getType(ELContext ctx) throws ELException {
 		return this.children[0].getType(ctx);
 	}
 
-	public Object getValue(EvaluationContext ctx) throws ELException {
+	public Object getValue(ELContext ctx) throws ELException {
 		return this.children[0].getValue(ctx);
 	}
 
-	public boolean isReadOnly(EvaluationContext ctx) throws ELException {
+	public boolean isReadOnly(ELContext ctx) throws ELException {
 		return this.children[0].isReadOnly(ctx);
 	}
 
-	public void setValue(EvaluationContext ctx, Object value) throws ELException {
+	public void setValue(ELContext ctx, Object value) throws ELException {
 		this.children[0].setValue(ctx, value);
 	}
 }

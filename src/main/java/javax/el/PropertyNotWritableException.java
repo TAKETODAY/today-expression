@@ -28,6 +28,7 @@ package javax.el;
  *
  * @since JSP 2.1
  */
+@SuppressWarnings("serial")
 public class PropertyNotWritableException extends ELException {
 
 	// -------------------------------------

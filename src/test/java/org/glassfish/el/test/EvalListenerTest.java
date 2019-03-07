@@ -121,9 +121,7 @@ public class EvalListenerTest {
 		elp.eval("x = 10");
 		elp.eval("[1,2,3][2]");
 		elp.eval("'abcd'.length()");
-		elp.eval("'xyz'.class");
-		String[] expected = { "Resolved: null x", "Resolved: [1, 2, 3] 2", "Resolved: abcd length", "Resolved: xyz class"
-		};
+		String[] expected = { "Resolved: null x", "Resolved: [1, 2, 3] 2", "Resolved: abcd length"};
 		for (int i = 0; i < expected.length; i++) {
 			assertEquals(expected[i], msgs.get(i));
 		}

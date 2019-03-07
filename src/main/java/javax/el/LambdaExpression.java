@@ -40,10 +40,10 @@
 
 package javax.el;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * <p>
@@ -75,14 +75,13 @@ import java.util.Map;
  * @see ELContext#enterLambdaScope
  * @see ELContext#exitLambdaScope
  */
-
 public class LambdaExpression {
 
-	private List<String> formalParameters = new ArrayList<String>();
-	private ValueExpression expression;
-	private ELContext context;
+	private final ELContext context;
+	private final ValueExpression expression;
+	private final List<String> formalParameters;
 	// Arguments from nesting lambdas, when the body is another lambda
-	private Map<String, Object> envirArgs = null;
+	private final Map<String, Object> envirArgs;
 
 	/**
 	 * Creates a new LambdaExpression.
@@ -91,24 +90,14 @@ public class LambdaExpression {
 	 *            The list of String representing the formal parameters.
 	 * @param expression
 	 *            The <code>ValueExpression</code> representing the body.
+	 * @param context
+	 *            {@link EvaluationContext}
 	 */
-	public LambdaExpression(List<String> formalParameters,
-			ValueExpression expression) {
+	public LambdaExpression(List<String> formalParameters, ValueExpression expression, ELContext context) {
 		this.formalParameters = formalParameters;
 		this.expression = expression;
-		this.envirArgs = new HashMap<String, Object>();
-	}
-
-	/**
-	 * Set the ELContext to use in evaluating the LambdaExpression. The ELContext
-	 * must to be set prior to the invocation of the LambdaExpression, unless it is
-	 * supplied with {@link LambdaExpression#invoke}.
-	 * 
-	 * @param context
-	 *            The ELContext to use in evaluating the LambdaExpression.
-	 */
-	public void setELContext(ELContext context) {
 		this.context = context;
+		this.envirArgs = new HashMap<>();
 	}
 
 	/**
@@ -139,10 +128,9 @@ public class LambdaExpression {
 	 * @throws NullPointerException
 	 *             is elContext is null
 	 */
-	public Object invoke(ELContext elContext, Object... args)
-			throws ELException {
+	public Object invoke(ELContext elContext, Object... args) throws ELException {
 		int i = 0;
-		Map<String, Object> lambdaArgs = new HashMap<String, Object>();
+		final Map<String, Object> lambdaArgs = new HashMap<String, Object>();
 
 		// First get arguments injected from the outter lambda, if any
 		lambdaArgs.putAll(envirArgs);
@@ -155,7 +143,7 @@ public class LambdaExpression {
 		}
 
 		elContext.enterLambdaScope(lambdaArgs);
-		Object ret = expression.getValue(elContext);
+		final Object ret = expression.getValue(elContext);
 
 		// If the result of evaluating the body is another LambdaExpression,
 		// whose body has not been evaluated yet. (A LambdaExpression is

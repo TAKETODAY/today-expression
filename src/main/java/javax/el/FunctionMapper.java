@@ -50,8 +50,7 @@ public abstract class FunctionMapper {
 	 * @return the static method to invoke, or <code>null</code> if no match was
 	 *         found.
 	 */
-	public abstract Method resolveFunction(String prefix,
-			String localName);
+	public abstract Method resolveFunction(String prefix, String localName);
 
 	/**
 	 * Adds a static method that can be used as a function.
@@ -71,5 +70,6 @@ public abstract class FunctionMapper {
 	 * @since EL 3.0
 	 */
 	public void mapFunction(String prefix, String localName, Method meth) {
+		
 	}
 }

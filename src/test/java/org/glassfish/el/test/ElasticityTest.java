@@ -146,7 +146,6 @@ public class ElasticityTest {
 		elp.defineBean("c", clusters);
 	}
 
-	@Test
 	public void testElaticity() {
 		init();
 		Object obj = elp.eval("c.values().select(" + "v->v.list.where(d->d.s>1 && d.s<10)." + "average(d->d.d)).toList()");

@@ -41,6 +41,8 @@
 package com.sun.el;
 
 import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -49,12 +51,24 @@ import javax.el.ELContext;
 import javax.el.ELException;
 import javax.el.ELResolver;
 import javax.el.ExpressionFactory;
+import javax.el.FunctionMapper;
 import javax.el.MethodExpression;
 import javax.el.ValueExpression;
+import javax.el.VariableMapper;
 
 import com.sun.el.lang.ELSupport;
-import com.sun.el.lang.ExpressionBuilder;
+import com.sun.el.parser.AstDeferredExpression;
+import com.sun.el.parser.AstDynamicExpression;
+import com.sun.el.parser.AstFunction;
+import com.sun.el.parser.AstIdentifier;
+import com.sun.el.parser.AstLiteralExpression;
+import com.sun.el.parser.AstMethodArguments;
+import com.sun.el.parser.AstValue;
+import com.sun.el.parser.ELParser;
+import com.sun.el.parser.Node;
+import com.sun.el.parser.NodeVisitor;
 import com.sun.el.stream.StreamELResolver;
+import com.sun.el.util.ConcurrentCache;
 import com.sun.el.util.MessageFactory;
 
 /**
@@ -64,17 +78,17 @@ import com.sun.el.util.MessageFactory;
  * @author Kin-man Chung
  * @version $Change: 181177 $$DateTime: 2001/06/26 08:45:09 $$Author: kchung $
  */
-public class ExpressionFactoryImpl extends ExpressionFactory {
+public class ExpressionFactoryImpl extends ExpressionFactory implements NodeVisitor {
 
-	/**
-	 * 
-	 */
+	private final Properties properties;
+	private final boolean isBackwardCompatible22;
+	private final Map<String, Method> functionMap = new HashMap<String, Method>(16, 1.0f);
+
 	public ExpressionFactoryImpl() {
-		super();
+		this(null);
 	}
 
 	public ExpressionFactoryImpl(Properties properties) {
-		super();
 		this.properties = properties;
 		this.isBackwardCompatible22 = "true".equals(getProperty("javax.el.bc2.2"));
 	}
@@ -82,6 +96,7 @@ public class ExpressionFactoryImpl extends ExpressionFactory {
 	@Override
 	public Object coerceToType(Object obj, Class<?> type) {
 		try {
+
 			return ELSupport.coerceToType(obj, type, isBackwardCompatible22);
 		}
 		catch (IllegalArgumentException ex) {
@@ -89,58 +104,187 @@ public class ExpressionFactoryImpl extends ExpressionFactory {
 		}
 	}
 
+	private Node build(final String expression, ELContext context) throws ELException {
+		final Node n = createNode(expression);
+		this.prepare(n, context);
+		return n;
+	}
+
 	@Override
 	public MethodExpression createMethodExpression(ELContext context, String expression, Class<?> expectedReturnType, //
 			Class<?>[] expectedParamTypes)//
 	{
-		ExpressionBuilder builder = new ExpressionBuilder(expression, context);
-		MethodExpression me = builder.createMethodExpression(expectedReturnType,
-				expectedParamTypes);
-		if (expectedParamTypes == null && !me.isParametersProvided()) {
+		MethodExpression methodExpression;
+
+		final Node node = this.build(expression, context);
+
+		if (node instanceof AstValue || node instanceof AstIdentifier) {
+			methodExpression = new MethodExpressionImpl(expression, node, expectedParamTypes, expectedReturnType);
+		}
+		else if (node instanceof AstLiteralExpression) {
+			methodExpression = new MethodExpressionLiteral(expression, expectedReturnType, expectedParamTypes);
+		}
+		else {
+			throw new ELException("Not a Valid Method Expression: " + expression);
+		}
+
+		if (expectedParamTypes == null && !methodExpression.isParametersProvided()) {
 			throw new NullPointerException(MessageFactory.get("error.method.nullParms"));
 		}
-		return me;
+		return methodExpression;
 	}
 
 	@Override
-	public ValueExpression createValueExpression(ELContext context,
-			String expression, Class<?> expectedType) //
-	{
-
-		if (expectedType == null) {
-			throw new NullPointerException(MessageFactory.get("error.value.expectedType"));
-		}
-		ExpressionBuilder builder = new ExpressionBuilder(expression, context);
-		return builder.createValueExpression(expectedType);
+	public ValueExpression createValueExpression(ELContext context, String expression, Class<?> expectedType) {
+		// if expectedType == null will not convert object
+		return new ValueExpressionImpl(expression, build(expression, context), expectedType);
 	}
 
 	@Override
 	public ValueExpression createValueExpression(Object instance, Class<?> expectedType) {
-		
-		if (expectedType == null) {
-			throw new NullPointerException(MessageFactory.get("error.value.expectedType"));
-		}
-		
+		// if expectedType == null will not convert object
 		return new ValueExpressionLiteral(instance, expectedType);
 	}
 
 	public String getProperty(String key) {
-		if (properties == null)
+		if (properties == null) {
 			return null;
+		}
 		return properties.getProperty(key);
 	}
 
 	@Override
 	public ELResolver getStreamELResolver() {
-		return new StreamELResolver();
+		return StreamELResolver.getInstance();
 	}
 
 	@Override
 	public Map<String, Method> getInitFunctionMap() {
-		Map<String, Method> funcs = new HashMap<String, Method>();
-		return funcs;
+		return this.functionMap;
 	}
 
-	private Properties properties;
-	private boolean isBackwardCompatible22;
+	// -----------------------build
+
+	private static final String CACHE_SIZE_PROP = "javax.el.expression.cache.size";
+
+	private static final ConcurrentCache<String, Node> EXPRESSION_CACHE;
+	static {
+
+		String cacheSizeStr;
+		if (System.getSecurityManager() == null) {
+			cacheSizeStr = System.getProperty(CACHE_SIZE_PROP, "2048");
+		}
+		else {
+			cacheSizeStr = AccessController.doPrivileged(new PrivilegedAction<String>() {
+				@Override
+				public String run() {
+					return System.getProperty(CACHE_SIZE_PROP, "2048");
+				}
+			});
+		}
+
+		EXPRESSION_CACHE = new ConcurrentCache<>(Integer.parseInt(cacheSizeStr));
+	}
+
+	public final static Node createNode(final String expr) throws ELException {
+
+		if (expr == null) {
+			throw new ELException(MessageFactory.get("error.null"));
+		}
+
+		Node node = EXPRESSION_CACHE.get(expr);
+
+		if (node == null) {
+			node = ELParser.parse(expr);
+			// validate composite expression
+			int numChildren = node.jjtGetNumChildren();
+			if (numChildren == 1) {
+				node = node.jjtGetChild(0);
+			}
+			else {
+				Class<?> type = null;
+				Node child = null;
+				for (int i = 0; i < numChildren; i++) {
+					child = node.jjtGetChild(i);
+					if (child instanceof AstLiteralExpression) {
+						continue;
+					}
+					if (type == null) {
+						type = child.getClass();
+					}
+					else {
+						if (!type.equals(child.getClass())) {
+							throw new ELException(MessageFactory.get("error.mixed", expr));
+						}
+					}
+				}
+			}
+
+			if (node instanceof AstDynamicExpression || node instanceof AstDeferredExpression) {
+				node = node.jjtGetChild(0);
+			}
+			EXPRESSION_CACHE.put(expr, node);
+		}
+		return node;
+	}
+
+	/**
+	 * Scan the expression nodes and captures the functions and variables used in
+	 * this expression. This ensures that any changes to the functions or variables
+	 * mappings during the expression will not affect the evaluation of this
+	 * expression, as the functions and variables are bound and resolved at parse
+	 * time, as specified in the spec.
+	 */
+	private void prepare(Node node, ELContext context) throws ELException {
+		node.accept(this, context);
+	}
+
+	// ------------------------NodeVisitor
+
+	@Override
+	public void visit(Node node, ELContext context) throws ELException {
+
+		if (node instanceof AstFunction) {
+
+			FunctionMapper fnMapper = context.getFunctionMapper();
+			VariableMapper varMapper = context.getVariableMapper();
+
+			AstFunction funcNode = (AstFunction) node;
+			if ((funcNode.getPrefix().length() == 0) && //
+					(fnMapper == null || fnMapper.resolveFunction(funcNode.getPrefix(), funcNode.getLocalName()) == null)) //
+			{
+				// This can be a call to a LambdaExpression. The target
+				// of the call is a bean or an EL variable. Capture
+				// the variable name in the variable mapper if it is an
+				// variable. The decision to invoke the static method or
+				// the LambdaExpression will be made at runtime.
+				if (varMapper != null) {
+					varMapper.resolveVariable(funcNode.getLocalName());
+				}
+				return;
+			}
+
+			if (fnMapper == null) {
+				throw new ELException(MessageFactory.get("error.fnMapper.null"));
+			}
+			Method m = fnMapper.resolveFunction(funcNode.getPrefix(), funcNode.getLocalName());
+			if (m == null) {
+				throw new ELException(MessageFactory.get("error.fnMapper.method", funcNode.getOutputName()));
+			}
+			int pcnt = m.getParameterTypes().length;
+			int acnt = ((AstMethodArguments) node.jjtGetChild(0)).getParameterCount();
+			if (acnt != pcnt) {
+				throw new ELException(MessageFactory.get("error.fnMapper.paramcount", funcNode.getOutputName(), "" + pcnt, "" + acnt));
+			}
+		}
+		else if (node instanceof AstIdentifier) {
+
+			final VariableMapper varMapper = context.getVariableMapper();
+			if (varMapper != null) {
+				// simply capture it
+				varMapper.resolveVariable(((AstIdentifier) node).getImage());
+			}
+		}
+	}
+
 }

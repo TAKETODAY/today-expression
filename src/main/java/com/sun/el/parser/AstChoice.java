@@ -40,9 +40,8 @@
 
 package com.sun.el.parser;
 
+import javax.el.ELContext;
 import javax.el.ELException;
-
-import com.sun.el.lang.EvaluationContext;
 
 /**
  * @author Jacob Hookom [jacob@hookom.net]
@@ -54,33 +53,31 @@ public final class AstChoice extends SimpleNode {
 		super(id);
 	}
 
-	public Class<?> getType(EvaluationContext ctx) throws ELException {
+	public Class<?> getType(ELContext ctx) throws ELException {
 		Object obj0 = this.children[0].getValue(ctx);
 		Boolean b0 = coerceToBoolean(obj0);
 		return this.children[((b0.booleanValue() ? 1 : 2))].getType(ctx);
 	}
 
-	public Object getValue(EvaluationContext ctx) throws ELException {
-		Object obj0 = this.children[0].getValue(ctx);
-		Boolean b0 = coerceToBoolean(obj0);
+	public Object getValue(ELContext ctx) throws ELException {
+		Boolean b0 = coerceToBoolean(this.children[0].getValue(ctx));
 		return this.children[((b0.booleanValue() ? 1 : 2))].getValue(ctx);
 	}
 
-	public boolean isReadOnly(EvaluationContext ctx) throws ELException {
+	public boolean isReadOnly(ELContext ctx) throws ELException {
 		Object obj0 = this.children[0].getValue(ctx);
 		Boolean b0 = coerceToBoolean(obj0);
 		return this.children[((b0.booleanValue() ? 1 : 2))].isReadOnly(ctx);
 	}
 
-	public void setValue(EvaluationContext ctx, Object value) throws ELException {
+	public void setValue(ELContext ctx, Object value) throws ELException {
 		Object obj0 = this.children[0].getValue(ctx);
 		Boolean b0 = coerceToBoolean(obj0);
 		this.children[((b0.booleanValue() ? 1 : 2))].setValue(ctx, value);
 	}
 
-	public Object invoke(EvaluationContext ctx, Class[] paramTypes, Object[] paramValues) throws ELException {
-		Object obj0 = this.children[0].getValue(ctx);
-		Boolean b0 = coerceToBoolean(obj0);
+	public Object invoke(ELContext ctx, Class<?>[] paramTypes, Object[] paramValues) throws ELException {
+		Boolean b0 = coerceToBoolean(this.children[0].getValue(ctx));
 		return this.children[((b0.booleanValue() ? 1 : 2))].invoke(ctx, paramTypes, paramValues);
 	}
 

@@ -51,29 +51,35 @@ import java.util.Objects;
 import javax.el.ELContext;
 import javax.el.ELResolver;
 
-/*
- * This ELResolver intercepts method calls to a Collections, to provide
- * support for collection operations. 
+/**
+ * This ELResolver intercepts method calls to a Collections, to provide support
+ * for collection operations.
+ * 
+ * @author TODAY <br>
+ *         2019-02-20 17:21
  */
-
 public class StreamELResolver extends ELResolver {
 
-	public Object invoke(final ELContext context, final Object base, final Object method, final Class<?>[] paramTypes,
-			final Object[] params) //
-	{
+	private static final StreamELResolver INSTANCE = new StreamELResolver();
 
-		Objects.requireNonNull(context);
+	public final static StreamELResolver getInstance() {
+		return INSTANCE;
+	}
+
+	public Object invoke(final ELContext context, final Object base, final Object method, //
+			final Class<?>[] paramTypes, final Object[] params) //
+	{
 
 		if (base instanceof Collection) {
 			@SuppressWarnings("unchecked") Collection<Object> c = (Collection<Object>) base;
 			if ("stream".equals(method) && params.length == 0) {
-				context.setPropertyResolved(true);
+				Objects.requireNonNull(context).setPropertyResolved(true);
 				return new Stream(c.iterator());
 			}
 		}
 		if (base.getClass().isArray()) {
 			if ("stream".equals(method) && params.length == 0) {
-				context.setPropertyResolved(true);
+				Objects.requireNonNull(context).setPropertyResolved(true);
 				return new Stream(arrayIterator(base));
 			}
 		}
@@ -83,9 +89,10 @@ public class StreamELResolver extends ELResolver {
 	private static Iterator<Object> arrayIterator(final Object base) {
 		final int size = Array.getLength(base);
 		return new Iterator<Object>() {
-			int index = 0;
-			boolean yielded;
-			Object current;
+
+			private int index = 0;
+			private boolean yielded;
+			private Object current;
 
 			@Override
 			public boolean hasNext() {

@@ -53,16 +53,23 @@ import java.util.Map;
  * imported can be used without its package name. The name is resolved to its
  * full (package and class) name at evaluation time.
  */
-public class ImportHandler {
+public enum ImportHandler {
 
-	private Map<String, String> classNameMap = new HashMap<String, String>();
-	private Map<String, Class<?>> classMap = new HashMap<String, Class<?>>();
-	private Map<String, String> staticNameMap = new HashMap<String, String>();
-	private HashSet<String> notAClass = new HashSet<String>();
-	private List<String> packages = new ArrayList<String>();
+	INSTANCE;
+
+	private final Map<String, Class<?>> classMap = new HashMap<>();
+	private final Map<String, String> classNameMap = new HashMap<>();
+	private final Map<String, String> staticNameMap = new HashMap<>();
+
+	private final List<String> packages = new ArrayList<>();
+	private final HashSet<String> notAClass = new HashSet<>();
 
 	{
 		importPackage("java.lang");
+	}
+	
+	public static final ImportHandler getInstance() {
+		return INSTANCE;
 	}
 
 	/**

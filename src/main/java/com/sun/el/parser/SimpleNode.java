@@ -40,13 +40,13 @@
 
 package com.sun.el.parser;
 
+import javax.el.ELContext;
 import javax.el.ELException;
 import javax.el.MethodInfo;
 import javax.el.PropertyNotWritableException;
 import javax.el.ValueReference;
 
 import com.sun.el.lang.ELSupport;
-import com.sun.el.lang.EvaluationContext;
 import com.sun.el.util.MessageFactory;
 
 /**
@@ -107,7 +107,6 @@ public abstract class SimpleNode extends ELSupport implements Node {
 	 * than one line you should override toString(String), otherwise overriding
 	 * toString() is probably all you need to do.
 	 */
-
 	public String toString() {
 		if (this.image != null) {
 			return ELParserTreeConstants.jjtNodeName[id] + "[" + this.image + "]";
@@ -119,11 +118,10 @@ public abstract class SimpleNode extends ELSupport implements Node {
 		return prefix + toString();
 	}
 
-	/*
+	/**
 	 * Override this method if you want to customize how the node dumps out its
 	 * children.
 	 */
-
 	public void dump(String prefix) {
 		System.out.println(toString(prefix));
 		if (children != null) {
@@ -144,44 +142,41 @@ public abstract class SimpleNode extends ELSupport implements Node {
 		this.image = image;
 	}
 
-	public Class<?> getType(EvaluationContext ctx) throws ELException {
+	public Class<?> getType(ELContext ctx) throws ELException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Object getValue(EvaluationContext ctx)
-			throws ELException {
+	public Object getValue(ELContext ctx) throws ELException {
 		throw new UnsupportedOperationException();
 	}
 
-	public ValueReference getValueReference(EvaluationContext ctx)
-			throws ELException {
+	public ValueReference getValueReference(ELContext ctx) throws ELException {
 		return null;
 	}
 
-	public boolean isReadOnly(EvaluationContext ctx)
-			throws ELException {
+	public boolean isReadOnly(ELContext ctx) throws ELException {
 		return true;
 	}
 
-	public void setValue(EvaluationContext ctx, Object value)
-			throws ELException {
+	public void setValue(ELContext ctx, Object value) throws ELException {
 		throw new PropertyNotWritableException(MessageFactory.get("error.syntax.set"));
 	}
 
-	public void accept(NodeVisitor visitor) throws ELException {
-		visitor.visit(this);
-		if (this.children != null && this.children.length > 0) {
-			for (int i = 0; i < this.children.length; i++) {
-				this.children[i].accept(visitor);
+	public void accept(NodeVisitor visitor, ELContext context) throws ELException {
+		visitor.visit(this, context);
+		final Node[] children = this.children;
+		if (children != null && children.length > 0) {
+			for (int i = 0; i < children.length; i++) {
+				this.children[i].accept(visitor, context);
 			}
 		}
 	}
 
-	public Object invoke(EvaluationContext ctx, Class<?>[] paramTypes, Object[] paramValues) throws ELException {
+	public Object invoke(ELContext ctx, Class<?>[] paramTypes, Object[] paramValues) throws ELException {
 		throw new UnsupportedOperationException();
 	}
 
-	public MethodInfo getMethodInfo(EvaluationContext ctx, Class<?>[] paramTypes) throws ELException {
+	public MethodInfo getMethodInfo(ELContext ctx, Class<?>[] paramTypes) throws ELException {
 		throw new UnsupportedOperationException();
 	}
 

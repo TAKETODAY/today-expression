@@ -57,7 +57,7 @@ import com.sun.el.util.MessageFactory;
  * @author Kin-man Chung
  * @version $Change: 181177 $$DateTime: 2001/06/26 08:45:09 $$Author: kchung $
  */
-public class ELSupport {
+public abstract class ELSupport {
 
 	private final static Long ZERO = Long.valueOf(0L);
 
@@ -107,13 +107,13 @@ public class ELSupport {
 		if (obj0 instanceof Comparable) {
 			// Safe cast
 			@SuppressWarnings("unchecked") //
-			Comparable<Object> cobj0 = (Comparable) obj0;
+			Comparable<Object> cobj0 = (Comparable<Object>) obj0;
 			return (obj1 != null) ? cobj0.compareTo(obj1) : 1;
 		}
 		if (obj1 instanceof Comparable) {
 			// Safe cast
 			@SuppressWarnings("unchecked") //
-			Comparable<Object> cobj1 = (Comparable) obj1;
+			Comparable<Object> cobj1 = (Comparable<Object>) obj1;
 			return (obj0 != null) ? -(cobj1.compareTo(obj0)) : -1;
 		}
 		throw new ELException(MessageFactory.get("error.compare", obj0, obj1));
@@ -185,8 +185,7 @@ public class ELSupport {
 			return Boolean.valueOf((String) obj);
 		}
 
-		throw new IllegalArgumentException(MessageFactory.get("error.convert",
-				obj, obj.getClass(), Boolean.class));
+		throw new IllegalArgumentException(MessageFactory.get("error.convert", obj, obj.getClass(), Boolean.class));
 	}
 
 	// Enum types are hard construct. We can declare this as
@@ -194,6 +193,7 @@ public class ELSupport {
 	// but this makes it harder to get the calls right.
 	@SuppressWarnings("unchecked")
 	public final static Enum coerceToEnum(final Object obj, Class type) {
+
 		if (obj == null || "".equals(obj)) {
 			return null;
 		}
@@ -237,16 +237,18 @@ public class ELSupport {
 		}
 	}
 
-	protected final static Number coerceToNumber(final Number number,
-			final Class type) throws IllegalArgumentException {
-		if (Long.TYPE == type || Long.class.equals(type)) {
+	protected final static Number coerceToNumber(final Number number, final Class<?> type) throws IllegalArgumentException {
+
+		if (Long.TYPE == type || Long.class == type) {
 			return Long.valueOf(number.longValue());
 		}
-		if (Double.TYPE == type || Double.class.equals(type)) {
-			return Double.valueOf(number.doubleValue());
+
+		if (Double.TYPE == type || Double.class == type) {
+			return number.doubleValue();
 		}
-		if (Integer.TYPE == type || Integer.class.equals(type)) {
-			return Integer.valueOf(number.intValue());
+
+		if (Integer.TYPE == type || Integer.class == type) {
+			return number.intValue();
 		}
 		if (BigInteger.class.equals(type)) {
 			if (number instanceof BigDecimal) {
@@ -283,14 +285,15 @@ public class ELSupport {
 				number, number.getClass(), type));
 	}
 
-	public final static Number coerceToNumber(final Object obj, final Class type)
-			throws IllegalArgumentException {
+	public final static Number coerceToNumber(final Object obj, final Class<?> type) throws IllegalArgumentException {
 		if (obj == null || "".equals(obj)) {
 			return coerceToNumber(ZERO, type);
 		}
+
 		if (obj instanceof String) {
 			return coerceToNumber((String) obj, type);
 		}
+
 		if (ELArithmetic.isNumber(obj)) {
 			if (obj.getClass().equals(type)) {
 				return (Number) obj;
@@ -306,7 +309,7 @@ public class ELSupport {
 				obj, obj.getClass(), type));
 	}
 
-	protected final static Number coerceToNumber(final String val, final Class type) throws IllegalArgumentException {
+	protected final static Number coerceToNumber(final String val, final Class<?> type) throws IllegalArgumentException {
 		if (Long.TYPE == type || Long.class.equals(type)) {
 			return Long.valueOf(val);
 		}
@@ -379,7 +382,7 @@ public class ELSupport {
 	public final static Object coerceToType(final Object obj, final Class<?> type, boolean isEL22Compatible)
 			throws IllegalArgumentException //
 	{
-		if (type == null || Object.class.equals(type) || (obj != null && type.isAssignableFrom(obj.getClass()))) {
+		if (type == null || Object.class.equals(type) || type.isInstance(obj)) {
 			return obj;
 		}
 
@@ -447,8 +450,10 @@ public class ELSupport {
 	}
 
 	public final static boolean isDoubleStringOp(final Object obj0, final Object obj1) {
-		return (isDoubleOp(obj0, obj1) || (obj0 instanceof String && isStringFloat(
-				(String) obj0)) || (obj1 instanceof String && isStringFloat((String) obj1)));
+		return (isDoubleOp(obj0, obj1) //
+				|| (obj0 instanceof String && isStringFloat((String) obj0)) //
+				|| (obj1 instanceof String && isStringFloat((String) obj1))//
+		);
 	}
 
 	public final static boolean isLongOp(final Object obj0, final Object obj1) {
@@ -456,15 +461,13 @@ public class ELSupport {
 	}
 
 	public final static boolean isStringFloat(final String str) {
-		int len = str.length();
+		final int len = str.length();
 		if (len > 1) {
 			for (int i = 0; i < len; i++) {
 				switch (str.charAt(i))
 				{
 					case 'E' :
-						return true;
 					case 'e' :
-						return true;
 					case '.' :
 						return true;
 				}
@@ -499,10 +502,4 @@ public class ELSupport {
 		}
 	}
 
-	/**
-	 * 
-	 */
-	public ELSupport() {
-		super();
-	}
 }

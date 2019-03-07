@@ -40,36 +40,32 @@
 
 package com.sun.el.parser;
 
+import javax.el.ELContext;
 import javax.el.ELException;
-
-import com.sun.el.lang.EvaluationContext;
 
 /**
  * @author Jacob Hookom [jacob@hookom.net]
  * @version $Change: 181177 $$DateTime: 2001/06/26 08:45:09 $$Author: kchung $
  */
 public final class AstDynamicExpression extends SimpleNode {
+
 	public AstDynamicExpression(int id) {
 		super(id);
 	}
 
-	public Class getType(EvaluationContext ctx)
-			throws ELException {
+	public Class<?> getType(ELContext ctx) throws ELException {
 		return this.children[0].getType(ctx);
 	}
 
-	public Object getValue(EvaluationContext ctx)
-			throws ELException {
+	public Object getValue(ELContext ctx) throws ELException {
 		return this.children[0].getValue(ctx);
 	}
 
-	public boolean isReadOnly(EvaluationContext ctx)
-			throws ELException {
+	public boolean isReadOnly(ELContext ctx) throws ELException {
 		return this.children[0].isReadOnly(ctx);
 	}
 
-	public void setValue(EvaluationContext ctx, Object value)
-			throws ELException {
+	public void setValue(ELContext ctx, Object value) throws ELException {
 		this.children[0].setValue(ctx, value);
 	}
 }
