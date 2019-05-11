@@ -303,7 +303,7 @@ public class ELProcessor {
 		if (!Modifier.isStatic(method.getModifiers())) {
 			throw new NoSuchMethodException("The method specified in defineFunction must be static: " + method);
 		}
-		if (function.equals("")) {
+		if ("".equals(function)) {
 			function = method.getName();
 		}
 		elManager.mapFunction(prefix, function, method);

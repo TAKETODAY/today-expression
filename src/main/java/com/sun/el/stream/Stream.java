@@ -121,7 +121,7 @@ public class Stream {
 			public Iterator<Object> iterator(final Iterator<Object> up) {
 				return new Iterator2(up) {
 					@Override
-					void doItem(Object item) {
+					protected void doItem(Object item) {
 						comsumer.invoke(item);
 						yield(item);
 					}
@@ -499,9 +499,9 @@ public class Stream {
 
 	abstract class Iterator1 extends Iterator0 {
 
-		final Iterator<Object> iter;
+		protected final Iterator<Object> iter;
 
-		Iterator1(Iterator<Object> iter) {
+		protected Iterator1(Iterator<Object> iter) {
 			this.iter = iter;
 		}
 
@@ -515,7 +515,7 @@ public class Stream {
 		private Object current;
 		private boolean yielded;
 
-		Iterator2(Iterator<Object> upstream) {
+		protected Iterator2(Iterator<Object> upstream) {
 			super(upstream);
 		}
 
@@ -538,6 +538,6 @@ public class Stream {
 			yielded = true;
 		}
 
-		abstract void doItem(Object item);
+		protected abstract void doItem(Object item);
 	}
 }

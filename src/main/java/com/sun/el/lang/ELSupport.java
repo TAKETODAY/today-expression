@@ -351,7 +351,7 @@ public abstract class ELSupport {
 			return (String) obj;
 		}
 		else if (obj instanceof Enum) {
-			return ((Enum) obj).name();
+			return ((Enum<?>) obj).name();
 		}
 		return obj.toString();
 	}

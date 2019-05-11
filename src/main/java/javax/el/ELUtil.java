@@ -227,8 +227,8 @@ class ELUtil {
 						}
 					}
 				}
-				else if (mParamTypes[i].equals(paramTypes[i])) {
-				}
+//				else if (mParamTypes[i].equals(paramTypes[i])) {
+//				}
 				else if (isAssignableFrom(paramTypes[i], mParamTypes[i])) {
 					assignable = true;
 				}
@@ -449,9 +449,7 @@ class ELUtil {
 				return Double.class;
 			}
 		}
-		else {
-			return clazz;
-		}
+		return clazz;
 
 	}
 

@@ -276,8 +276,8 @@ public abstract class ReflectionUtil {
 						}
 					}
 				}
-				else if (mParamTypes[i].equals(paramTypes[i])) {
-				}
+//				else if (mParamTypes[i].equals(paramTypes[i])) {
+//				}
 				else if (isAssignableFrom(paramTypes[i], mParamTypes[i])) {
 					assignable = true;
 				}

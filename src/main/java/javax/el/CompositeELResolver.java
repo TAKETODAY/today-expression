@@ -610,12 +610,12 @@ public class CompositeELResolver extends ELResolver {
 
 	private static class CompositeIterator implements Iterator<FeatureDescriptor> {
 
-		ELResolver[] resolvers;
-		int size;
-		int index = 0;
-		Iterator<FeatureDescriptor> propertyIter = null;
-		ELContext context;
-		Object base;
+		private ELResolver[] resolvers;
+		private int size;
+		private int index = 0;
+		private Iterator<FeatureDescriptor> propertyIter = null;
+		private ELContext context;
+		private Object base;
 
 		CompositeIterator(ELResolver[] resolvers, int size, ELContext context, Object base) {
 			this.resolvers = resolvers;
