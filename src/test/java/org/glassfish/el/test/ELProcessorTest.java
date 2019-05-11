@@ -81,7 +81,6 @@ public class ELProcessorTest {
 		}
 		catch (NullPointerException ex) {
 			// Do nothing
-			
 		}
 		assertTrue(meth == null);
 		meth = factory.createMethodExpression(

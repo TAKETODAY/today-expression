@@ -103,12 +103,12 @@ class ELUtil {
 	}
 
 	static Method findMethod(Class<?> klass, String method, Class<?>[] paramTypes, Object[] params, boolean staticOnly) {
-		
+
 		Method m = findMethod(klass, method, paramTypes, params);
 		if (staticOnly && !Modifier.isStatic(m.getModifiers())) {
 			throw new MethodNotFoundException("Method " + method + "for class " + klass + " not found or accessible");
 		}
-		
+
 		return m;
 	}
 
@@ -641,7 +641,8 @@ class ELUtil {
 					Class<?> varArgClass = parameterTypes[varArgIndex].getComponentType();
 					final Object varargs = Array.newInstance(
 							varArgClass,
-							(paramCount - varArgIndex));
+							(paramCount - varArgIndex)//
+					);
 					for (int i = (varArgIndex); i < paramCount; i++) {
 						Array.set(varargs, i - varArgIndex,
 								context.convertToType(params[i], varArgClass));

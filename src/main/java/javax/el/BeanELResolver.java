@@ -22,6 +22,7 @@ import java.beans.FeatureDescriptor;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
@@ -527,8 +528,11 @@ public class BeanELResolver extends ELResolver {
 		private final Map<String, Field> propertyMap = new HashMap<>();
 
 		public BeanProperties(Class<?> baseClass) {
+			
 			for (final Field field : baseClass.getDeclaredFields()) {
-				field.setAccessible(true);
+				if (!Modifier.isPublic(field.getModifiers())) {
+					field.setAccessible(true);
+				}
 				propertyMap.put(field.getName(), field);
 			}
 		}
@@ -592,7 +596,6 @@ public class BeanELResolver extends ELResolver {
 			}
 			this.eden.put(key, value);
 		}
-
 	}
 
 }
