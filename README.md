@@ -5,8 +5,8 @@
 
 ```xml
 <dependency>
-	<groupId>cn.taketoday</groupId>
-	<artifactId>today-expression</artifactId>
+    <groupId>cn.taketoday</groupId>
+    <artifactId>today-expression</artifactId>
     <version>0.0.1.RELEASE</version>
 </dependency>
 ```
