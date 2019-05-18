@@ -60,88 +60,88 @@ import javax.el.ELResolver;
  */
 public class StreamELResolver extends ELResolver {
 
-	private static final StreamELResolver INSTANCE = new StreamELResolver();
+    private static final StreamELResolver INSTANCE = new StreamELResolver();
 
-	public final static StreamELResolver getInstance() {
-		return INSTANCE;
-	}
+    public final static StreamELResolver getInstance() {
+        return INSTANCE;
+    }
 
-	public Object invoke(final ELContext context, final Object base, final Object method, //
-			final Class<?>[] paramTypes, final Object[] params) //
-	{
+    public Object invoke(final ELContext context, final Object base, final Object method, //
+            final Class<?>[] paramTypes, final Object[] params) //
+    {
 
-		if (base instanceof Collection) {
-			@SuppressWarnings("unchecked") Collection<Object> c = (Collection<Object>) base;
-			if ("stream".equals(method) && params.length == 0) {
-				Objects.requireNonNull(context).setPropertyResolved(true);
-				return new Stream(c.iterator());
-			}
-		}
-		if (base.getClass().isArray()) {
-			if ("stream".equals(method) && params.length == 0) {
-				Objects.requireNonNull(context).setPropertyResolved(true);
-				return new Stream(arrayIterator(base));
-			}
-		}
-		return null;
-	}
+        if (base instanceof Collection) {
+            @SuppressWarnings("unchecked") Collection<Object> c = (Collection<Object>) base;
+            if ("stream".equals(method) && params.length == 0) {
+                Objects.requireNonNull(context).setPropertyResolved(true);
+                return new Stream(c.iterator());
+            }
+        }
+        if (base.getClass().isArray()) {
+            if ("stream".equals(method) && params.length == 0) {
+                Objects.requireNonNull(context).setPropertyResolved(true);
+                return new Stream(arrayIterator(base));
+            }
+        }
+        return null;
+    }
 
-	private static Iterator<Object> arrayIterator(final Object base) {
-		final int size = Array.getLength(base);
-		return new Iterator<Object>() {
+    private static Iterator<Object> arrayIterator(final Object base) {
+        final int size = Array.getLength(base);
+        return new Iterator<Object>() {
 
-			private int index = 0;
-			private boolean yielded;
-			private Object current;
+            private int index = 0;
+            private boolean yielded;
+            private Object current;
 
-			@Override
-			public boolean hasNext() {
-				if ((!yielded) && index < size) {
-					current = Array.get(base, index++);
-					yielded = true;
-				}
-				return yielded;
-			}
+            @Override
+            public boolean hasNext() {
+                if ((!yielded) && index < size) {
+                    current = Array.get(base, index++);
+                    yielded = true;
+                }
+                return yielded;
+            }
 
-			@Override
-			public Object next() {
-				yielded = false;
-				return current;
-			}
+            @Override
+            public Object next() {
+                yielded = false;
+                return current;
+            }
 
-			@Override
-			public void remove() {
-				throw new UnsupportedOperationException();
-			}
-		};
-	}
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
 
-	/*
-	 * private LambdaExpression getLambda(Object obj, String method) { if (obj ==
-	 * null || ! (obj instanceof LambdaExpression)) { throw new ELException
-	 * ("When calling " + method + ", expecting an " +
-	 * "EL lambda expression, but found " + obj); } return (LambdaExpression) obj; }
-	 */
-	public Object getValue(ELContext context, Object base, Object property) {
-		return null;
-	}
+    /*
+     * private LambdaExpression getLambda(Object obj, String method) { if (obj ==
+     * null || ! (obj instanceof LambdaExpression)) { throw new ELException
+     * ("When calling " + method + ", expecting an " +
+     * "EL lambda expression, but found " + obj); } return (LambdaExpression) obj; }
+     */
+    public Object getValue(ELContext context, Object base, Object property) {
+        return null;
+    }
 
-	public Class<?> getType(ELContext context, Object base, Object property) {
-		return null;
-	}
+    public Class<?> getType(ELContext context, Object base, Object property) {
+        return null;
+    }
 
-	public void setValue(ELContext context, Object base, Object property, Object value) {
-	}
+    public void setValue(ELContext context, Object base, Object property, Object value) {
+    }
 
-	public boolean isReadOnly(ELContext context, Object base, Object property) {
-		return false;
-	}
+    public boolean isReadOnly(ELContext context, Object base, Object property) {
+        return false;
+    }
 
-	public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context, Object base) {
-		return null;
-	}
+    public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context, Object base) {
+        return null;
+    }
 
-	public Class<?> getCommonPropertyType(ELContext context, Object base) {
-		return String.class;
-	}
+    public Class<?> getCommonPropertyType(ELContext context, Object base) {
+        return String.class;
+    }
 }

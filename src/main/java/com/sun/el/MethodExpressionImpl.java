@@ -96,206 +96,206 @@ import com.sun.el.parser.Node;
 @SuppressWarnings("serial")
 public final class MethodExpressionImpl extends MethodExpression {
 
-	private Node node;
-	private final String expr;
-	private final Class<?>[] paramTypes;
-	private final Class<?> expectedType;
+    private Node node;
+    private final String expr;
+    private final Class<?>[] paramTypes;
+    private final Class<?> expectedType;
 
-	public MethodExpressionImpl() {
-		this(null, null, null, null);
-	}
+    public MethodExpressionImpl() {
+        this(null, null, null, null);
+    }
 
-	/**
-	 * 
-	 * @param expr
-	 * @param node
-	 * @param paramTypes
-	 */
-	public MethodExpressionImpl(String expr, Node node, Class<?>[] paramTypes, Class<?> expectedType) {
-		super();
-		this.expr = expr;
-		this.node = node;
-		this.paramTypes = paramTypes;
-		this.expectedType = expectedType;
-	}
+    /**
+     * 
+     * @param expr
+     * @param node
+     * @param paramTypes
+     */
+    public MethodExpressionImpl(String expr, Node node, Class<?>[] paramTypes, Class<?> expectedType) {
+        super();
+        this.expr = expr;
+        this.node = node;
+        this.paramTypes = paramTypes;
+        this.expectedType = expectedType;
+    }
 
-	/**
-	 * Returns the original String used to create this <code>Expression</code>,
-	 * unmodified.
-	 * 
-	 * <p>
-	 * This is used for debugging purposes but also for the purposes of comparison
-	 * (e.g. to ensure the expression in a configuration file has not changed).
-	 * </p>
-	 * 
-	 * <p>
-	 * This method does not provide sufficient information to re-create an
-	 * expression. Two different expressions can have exactly the same expression
-	 * string but different function mappings. Serialization should be used to save
-	 * and restore the state of an <code>Expression</code>.
-	 * </p>
-	 * 
-	 * @return The original expression String.
-	 * 
-	 * @see javax.el.Expression#getExpressionString()
-	 */
-	public String getExpressionString() {
-		return this.expr;
-	}
+    /**
+     * Returns the original String used to create this <code>Expression</code>,
+     * unmodified.
+     * 
+     * <p>
+     * This is used for debugging purposes but also for the purposes of comparison
+     * (e.g. to ensure the expression in a configuration file has not changed).
+     * </p>
+     * 
+     * <p>
+     * This method does not provide sufficient information to re-create an
+     * expression. Two different expressions can have exactly the same expression
+     * string but different function mappings. Serialization should be used to save
+     * and restore the state of an <code>Expression</code>.
+     * </p>
+     * 
+     * @return The original expression String.
+     * 
+     * @see javax.el.Expression#getExpressionString()
+     */
+    public String getExpressionString() {
+        return this.expr;
+    }
 
-	/**
-	 * Evaluates the expression relative to the provided context, and returns
-	 * information about the actual referenced method.
-	 * 
-	 * @param context
-	 *            The context of this evaluation
-	 * @return an instance of <code>MethodInfo</code> containing information about
-	 *         the method the expression evaluated to.
-	 * @throws NullPointerException
-	 *             if context is <code>null</code> or the base object is
-	 *             <code>null</code> on the last resolution.
-	 * @throws PropertyNotFoundException
-	 *             if one of the property resolutions failed because a specified
-	 *             variable or property does not exist or is not readable.
-	 * @throws MethodNotFoundException
-	 *             if no suitable method can be found.
-	 * @throws ELException
-	 *             if an exception was thrown while performing property or variable
-	 *             resolution. The thrown exception must be included as the cause
-	 *             property of this exception, if available.
-	 * @see javax.el.MethodExpression#getMethodInfo(javax.el.ELContext)
-	 */
-	public MethodInfo getMethodInfo(ELContext context) throws PropertyNotFoundException, //
-			MethodNotFoundException, ELException //
-	{
-		return this.getNode().getMethodInfo(context, this.paramTypes);
-	}
+    /**
+     * Evaluates the expression relative to the provided context, and returns
+     * information about the actual referenced method.
+     * 
+     * @param context
+     *            The context of this evaluation
+     * @return an instance of <code>MethodInfo</code> containing information about
+     *         the method the expression evaluated to.
+     * @throws NullPointerException
+     *             if context is <code>null</code> or the base object is
+     *             <code>null</code> on the last resolution.
+     * @throws PropertyNotFoundException
+     *             if one of the property resolutions failed because a specified
+     *             variable or property does not exist or is not readable.
+     * @throws MethodNotFoundException
+     *             if no suitable method can be found.
+     * @throws ELException
+     *             if an exception was thrown while performing property or variable
+     *             resolution. The thrown exception must be included as the cause
+     *             property of this exception, if available.
+     * @see javax.el.MethodExpression#getMethodInfo(javax.el.ELContext)
+     */
+    public MethodInfo getMethodInfo(ELContext context) throws PropertyNotFoundException, //
+            MethodNotFoundException, ELException //
+    {
+        return this.getNode().getMethodInfo(context, this.paramTypes);
+    }
 
-	/**
-	 * @return The Node for the expression
-	 * @throws ELException
-	 */
-	private Node getNode() throws ELException {
-		if (this.node == null) {
-			this.node = ExpressionFactoryImpl.createNode(this.expr);
-		}
-		return this.node;
-	}
+    /**
+     * @return The Node for the expression
+     * @throws ELException
+     */
+    private Node getNode() throws ELException {
+        if (this.node == null) {
+            this.node = ExpressionFactoryImpl.createNode(this.expr);
+        }
+        return this.node;
+    }
 
-	/**
-	 * Returns the hash code for this <code>Expression</code>.
-	 * 
-	 * <p>
-	 * See the note in the {@link #equals} method on how two expressions can be
-	 * equal if their expression Strings are different. Recall that if two objects
-	 * are equal according to the <code>equals(Object)</code> method, then calling
-	 * the <code>hashCode</code> method on each of the two objects must produce the
-	 * same integer result. Implementations must take special note and implement
-	 * <code>hashCode</code> correctly.
-	 * </p>
-	 * 
-	 * @return The hash code for this <code>Expression</code>.
-	 * @see #equals
-	 * @see java.util.Hashtable
-	 * @see java.lang.Object#hashCode()
-	 */
-	public int hashCode() {
-		return getNode().hashCode();
-	}
+    /**
+     * Returns the hash code for this <code>Expression</code>.
+     * 
+     * <p>
+     * See the note in the {@link #equals} method on how two expressions can be
+     * equal if their expression Strings are different. Recall that if two objects
+     * are equal according to the <code>equals(Object)</code> method, then calling
+     * the <code>hashCode</code> method on each of the two objects must produce the
+     * same integer result. Implementations must take special note and implement
+     * <code>hashCode</code> correctly.
+     * </p>
+     * 
+     * @return The hash code for this <code>Expression</code>.
+     * @see #equals
+     * @see java.util.Hashtable
+     * @see java.lang.Object#hashCode()
+     */
+    public int hashCode() {
+        return getNode().hashCode();
+    }
 
-	/**
-	 * Evaluates the expression relative to the provided context, invokes the method
-	 * that was found using the supplied parameters, and returns the result of the
-	 * method invocation.
-	 * 
-	 * @param context
-	 *            The context of this evaluation.
-	 * @param params
-	 *            The parameters to pass to the method, or <code>null</code> if no
-	 *            parameters.
-	 * @return the result of the method invocation (<code>null</code> if the method
-	 *         has a <code>void</code> return type).
-	 * @throws NullPointerException
-	 *             if context is <code>null</code> or the base object is
-	 *             <code>null</code> on the last resolution.
-	 * @throws PropertyNotFoundException
-	 *             if one of the property resolutions failed because a specified
-	 *             variable or property does not exist or is not readable.
-	 * @throws MethodNotFoundException
-	 *             if no suitable method can be found.
-	 * @throws ELException
-	 *             if an exception was thrown while performing property or variable
-	 *             resolution. The thrown exception must be included as the cause
-	 *             property of this exception, if available. If the exception thrown
-	 *             is an <code>InvocationTargetException</code>, extract its
-	 *             <code>cause</code> and pass it to the <code>ELException</code>
-	 *             constructor.
-	 * @see javax.el.MethodExpression#invoke(javax.el.ELContext, java.lang.Object[])
-	 */
-	public Object invoke(final ELContext context, Object[] params) throws PropertyNotFoundException, //
-			MethodNotFoundException, ELException //
-	{
-		context.notifyBeforeEvaluation(this.expr);
+    /**
+     * Evaluates the expression relative to the provided context, invokes the method
+     * that was found using the supplied parameters, and returns the result of the
+     * method invocation.
+     * 
+     * @param context
+     *            The context of this evaluation.
+     * @param params
+     *            The parameters to pass to the method, or <code>null</code> if no
+     *            parameters.
+     * @return the result of the method invocation (<code>null</code> if the method
+     *         has a <code>void</code> return type).
+     * @throws NullPointerException
+     *             if context is <code>null</code> or the base object is
+     *             <code>null</code> on the last resolution.
+     * @throws PropertyNotFoundException
+     *             if one of the property resolutions failed because a specified
+     *             variable or property does not exist or is not readable.
+     * @throws MethodNotFoundException
+     *             if no suitable method can be found.
+     * @throws ELException
+     *             if an exception was thrown while performing property or variable
+     *             resolution. The thrown exception must be included as the cause
+     *             property of this exception, if available. If the exception thrown
+     *             is an <code>InvocationTargetException</code>, extract its
+     *             <code>cause</code> and pass it to the <code>ELException</code>
+     *             constructor.
+     * @see javax.el.MethodExpression#invoke(javax.el.ELContext, java.lang.Object[])
+     */
+    public Object invoke(final ELContext context, Object[] params) throws PropertyNotFoundException, //
+            MethodNotFoundException, ELException //
+    {
+        context.notifyBeforeEvaluation(this.expr);
 
-		Object value = this.getNode().invoke(context, this.paramTypes, params);
-		
-		if (value != null && expectedType != null) {
-			if (!expectedType.isInstance(value)) {
-				try {
-					value = context.convertToType(value, expectedType);
-				}
-				catch (IllegalArgumentException ex) {
-					throw new ELException(ex);
-				}
-			}
-		}
+        Object value = this.getNode().invoke(context, this.paramTypes, params);
 
-		context.notifyAfterEvaluation(this.expr);
+        if (value != null && expectedType != null) {
+            if (!expectedType.isInstance(value)) {
+                try {
+                    value = context.convertToType(value, expectedType);
+                }
+                catch (IllegalArgumentException ex) {
+                    throw new ELException(ex);
+                }
+            }
+        }
 
-		return value;
-	}
+        context.notifyAfterEvaluation(this.expr);
 
-	public boolean isLiteralText() {
-		return false;
-	}
+        return value;
+    }
 
-	@Override
-	public boolean isParametersProvided() {
-		return this.getNode().isParametersProvided();
-	}
+    public boolean isLiteralText() {
+        return false;
+    }
 
-	/**
-	 * Determines whether the specified object is equal to this
-	 * <code>Expression</code>.
-	 * 
-	 * <p>
-	 * The result is <code>true</code> if and only if the argument is not
-	 * <code>null</code>, is an <code>Expression</code> object that is the of the
-	 * same type (<code>ValueExpression</code> or <code>MethodExpression</code>),
-	 * and has an identical parsed representation.
-	 * </p>
-	 * 
-	 * <p>
-	 * Note that two expressions can be equal if their expression Strings are
-	 * different. For example, <code>${fn1:foo()}</code> and
-	 * <code>${fn2:foo()}</code> are equal if their corresponding
-	 * <code>FunctionMapper</code>s mapped <code>fn1:foo</code> and
-	 * <code>fn2:foo</code> to the same method.
-	 * </p>
-	 * 
-	 * @param obj
-	 *            the <code>Object</code> to test for equality.
-	 * @return <code>true</code> if <code>obj</code> equals this
-	 *         <code>Expression</code>; <code>false</code> otherwise.
-	 * @see java.util.Hashtable
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(Object obj) {
-		if (obj instanceof MethodExpressionImpl) {
-			MethodExpressionImpl me = (MethodExpressionImpl) obj;
-			return getNode().equals(me.getNode());
-		}
-		return false;
-	}
+    @Override
+    public boolean isParametersProvided() {
+        return this.getNode().isParametersProvided();
+    }
+
+    /**
+     * Determines whether the specified object is equal to this
+     * <code>Expression</code>.
+     * 
+     * <p>
+     * The result is <code>true</code> if and only if the argument is not
+     * <code>null</code>, is an <code>Expression</code> object that is the of the
+     * same type (<code>ValueExpression</code> or <code>MethodExpression</code>),
+     * and has an identical parsed representation.
+     * </p>
+     * 
+     * <p>
+     * Note that two expressions can be equal if their expression Strings are
+     * different. For example, <code>${fn1:foo()}</code> and
+     * <code>${fn2:foo()}</code> are equal if their corresponding
+     * <code>FunctionMapper</code>s mapped <code>fn1:foo</code> and
+     * <code>fn2:foo</code> to the same method.
+     * </p>
+     * 
+     * @param obj
+     *            the <code>Object</code> to test for equality.
+     * @return <code>true</code> if <code>obj</code> equals this
+     *         <code>Expression</code>; <code>false</code> otherwise.
+     * @see java.util.Hashtable
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    public boolean equals(Object obj) {
+        if (obj instanceof MethodExpressionImpl) {
+            MethodExpressionImpl me = (MethodExpressionImpl) obj;
+            return getNode().equals(me.getNode());
+        }
+        return false;
+    }
 
 }

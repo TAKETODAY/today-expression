@@ -25,13 +25,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author TODAY <br>
- * 		   2019-02-23 15:48
+ *         2019-02-23 15:48
  */
-public final class ConcurrentCache<K,V> {
-    
-	private final int size;
-    private final Map<K,V> eden;
-    private final Map<K,V> longterm;
+public final class ConcurrentCache<K, V> {
+
+    private final int size;
+    private final Map<K, V> eden;
+    private final Map<K, V> longterm;
 
     public ConcurrentCache(int size) {
         this.size = size;

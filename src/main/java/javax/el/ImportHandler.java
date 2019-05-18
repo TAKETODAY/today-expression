@@ -55,150 +55,150 @@ import java.util.Map;
  */
 public enum ImportHandler {
 
-	INSTANCE;
+    INSTANCE;
 
-	private final Map<String, Class<?>> classMap = new HashMap<>();
-	private final Map<String, String> classNameMap = new HashMap<>();
-	private final Map<String, String> staticNameMap = new HashMap<>();
+    private final Map<String, Class<?>> classMap = new HashMap<>();
+    private final Map<String, String> classNameMap = new HashMap<>();
+    private final Map<String, String> staticNameMap = new HashMap<>();
 
-	private final List<String> packages = new ArrayList<>();
-	private final HashSet<String> notAClass = new HashSet<>();
+    private final List<String> packages = new ArrayList<>();
+    private final HashSet<String> notAClass = new HashSet<>();
 
-	{
-		importPackage("java.lang");
-	}
-	
-	public static final ImportHandler getInstance() {
-		return INSTANCE;
-	}
+    {
+        importPackage("java.lang");
+    }
 
-	/**
-	 * Import a static field or method.
-	 * 
-	 * @param name
-	 *            The static member name, including the full class name, to be
-	 *            imported
-	 * @throws ELException
-	 *             if the name does not include a ".".
-	 */
-	public void importStatic(String name) throws ELException {
-		int i = name.lastIndexOf('.');
-		if (i <= 0) {
-			throw new ELException("The name " + name + " is not a full static member name");
-		}
-		String memberName = name.substring(i + 1);
-		String className = name.substring(0, i);
-		staticNameMap.put(memberName, className);
-	}
+    public static final ImportHandler getInstance() {
+        return INSTANCE;
+    }
 
-	/**
-	 * Import a class.
-	 * 
-	 * @param name
-	 *            The full class name of the class to be imported
-	 * @throws ELException
-	 *             if the name does not include a ".".
-	 */
-	public void importClass(String name) throws ELException {
-		int i = name.lastIndexOf('.');
-		if (i <= 0) {
-			throw new ELException("The name " + name + " is not a full class name");
-		}
-		String className = name.substring(i + 1);
-		classNameMap.put(className, name);
-	}
+    /**
+     * Import a static field or method.
+     * 
+     * @param name
+     *            The static member name, including the full class name, to be
+     *            imported
+     * @throws ELException
+     *             if the name does not include a ".".
+     */
+    public void importStatic(String name) throws ELException {
+        int i = name.lastIndexOf('.');
+        if (i <= 0) {
+            throw new ELException("The name " + name + " is not a full static member name");
+        }
+        String memberName = name.substring(i + 1);
+        String className = name.substring(0, i);
+        staticNameMap.put(memberName, className);
+    }
 
-	/**
-	 * Import all the classes in a package.
-	 * 
-	 * @param packageName
-	 *            The package name to be imported
-	 */
-	public void importPackage(String packageName) {
-		packages.add(packageName);
-	}
+    /**
+     * Import a class.
+     * 
+     * @param name
+     *            The full class name of the class to be imported
+     * @throws ELException
+     *             if the name does not include a ".".
+     */
+    public void importClass(String name) throws ELException {
+        int i = name.lastIndexOf('.');
+        if (i <= 0) {
+            throw new ELException("The name " + name + " is not a full class name");
+        }
+        String className = name.substring(i + 1);
+        classNameMap.put(className, name);
+    }
 
-	/**
-	 * Resolve a class name.
-	 *
-	 * @param name
-	 *            The name of the class (without package name) to be resolved.
-	 * @return If the class has been imported previously, with {@link #importClass}
-	 *         or {@link #importPackage}, then its Class instance. Otherwise
-	 *         <code>null</code>.
-	 * @throws ELException
-	 *             if the class is abstract or is an interface, or not public.
-	 */
-	public Class<?> resolveClass(String name) {
+    /**
+     * Import all the classes in a package.
+     * 
+     * @param packageName
+     *            The package name to be imported
+     */
+    public void importPackage(String packageName) {
+        packages.add(packageName);
+    }
 
-		String className = classNameMap.get(name);
-		if (className != null) {
-			return resolveClassFor(className);
-		}
+    /**
+     * Resolve a class name.
+     *
+     * @param name
+     *            The name of the class (without package name) to be resolved.
+     * @return If the class has been imported previously, with {@link #importClass}
+     *         or {@link #importPackage}, then its Class instance. Otherwise
+     *         <code>null</code>.
+     * @throws ELException
+     *             if the class is abstract or is an interface, or not public.
+     */
+    public Class<?> resolveClass(String name) {
 
-		for (String packageName : packages) {
-			String fullClassName = packageName + "." + name;
-			Class<?> c = resolveClassFor(fullClassName);
-			if (c != null) {
-				classNameMap.put(name, fullClassName);
-				return c;
-			}
-		}
-		return null;
-	}
+        String className = classNameMap.get(name);
+        if (className != null) {
+            return resolveClassFor(className);
+        }
 
-	/**
-	 * Resolve a static field or method name.
-	 *
-	 * @param name
-	 *            The name of the member(without package and class name) to be
-	 *            resolved.
-	 * @return If the field or method has been imported previously, with
-	 *         {@link #importStatic}, then the class object representing the class
-	 *         that declares the static field or method. Otherwise
-	 *         <code>null</code>.
-	 * @throws ELException
-	 *             if the class is not public, or is abstract or is an interface.
-	 */
-	public Class<?> resolveStatic(String name) {
-		String className = staticNameMap.get(name);
-		if (className != null) {
-			Class<?> c = resolveClassFor(className);
-			if (c != null) {
-				return c;
-			}
-		}
-		return null;
-	}
+        for (String packageName : packages) {
+            String fullClassName = packageName + "." + name;
+            Class<?> c = resolveClassFor(fullClassName);
+            if (c != null) {
+                classNameMap.put(name, fullClassName);
+                return c;
+            }
+        }
+        return null;
+    }
 
-	private Class<?> resolveClassFor(String className) {
-		Class<?> c = classMap.get(className);
-		if (c != null) {
-			return c;
-		}
-		c = getClassFor(className);
-		if (c != null) {
-			checkModifiers(c.getModifiers());
-			classMap.put(className, c);
-		}
-		return c;
-	}
+    /**
+     * Resolve a static field or method name.
+     *
+     * @param name
+     *            The name of the member(without package and class name) to be
+     *            resolved.
+     * @return If the field or method has been imported previously, with
+     *         {@link #importStatic}, then the class object representing the class
+     *         that declares the static field or method. Otherwise
+     *         <code>null</code>.
+     * @throws ELException
+     *             if the class is not public, or is abstract or is an interface.
+     */
+    public Class<?> resolveStatic(String name) {
+        String className = staticNameMap.get(name);
+        if (className != null) {
+            Class<?> c = resolveClassFor(className);
+            if (c != null) {
+                return c;
+            }
+        }
+        return null;
+    }
 
-	private Class<?> getClassFor(String className) {
-		if (!notAClass.contains(className)) {
-			try {
-				return Class.forName(className, false, Thread.currentThread().getContextClassLoader());
-			}
-			catch (ClassNotFoundException ex) {
-				notAClass.add(className);
-			}
-		}
-		return null;
-	}
+    private Class<?> resolveClassFor(String className) {
+        Class<?> c = classMap.get(className);
+        if (c != null) {
+            return c;
+        }
+        c = getClassFor(className);
+        if (c != null) {
+            checkModifiers(c.getModifiers());
+            classMap.put(className, c);
+        }
+        return c;
+    }
 
-	private void checkModifiers(int modifiers) {
-		if (Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers) || !Modifier.isPublic((modifiers))) {
-			throw new ELException("Imported class must be public, and cannot be abstract or an interface");
-		}
-	}
+    private Class<?> getClassFor(String className) {
+        if (!notAClass.contains(className)) {
+            try {
+                return Class.forName(className, false, Thread.currentThread().getContextClassLoader());
+            }
+            catch (ClassNotFoundException ex) {
+                notAClass.add(className);
+            }
+        }
+        return null;
+    }
+
+    private void checkModifiers(int modifiers) {
+        if (Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers) || !Modifier.isPublic((modifiers))) {
+            throw new ELException("Imported class must be public, and cannot be abstract or an interface");
+        }
+    }
 }

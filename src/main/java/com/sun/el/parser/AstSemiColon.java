@@ -47,18 +47,18 @@ import javax.el.ELException;
  * @author Kin-man Chung
  */
 public class AstSemiColon extends SimpleNode {
-	
-	public AstSemiColon(int id) {
-		super(id);
-	}
 
-	public Object getValue(ELContext ctx) throws ELException {
-		this.children[0].getValue(ctx);
-		return this.children[1].getValue(ctx);
-	}
+    public AstSemiColon(int id) {
+        super(id);
+    }
 
-	public void setValue(ELContext ctx, Object value) throws ELException {
-		this.children[0].getValue(ctx);
-		this.children[1].setValue(ctx, value);
-	}
+    public Object getValue(ELContext ctx) throws ELException {
+        this.children[0].getValue(ctx);
+        return this.children[1].getValue(ctx);
+    }
+
+    public void setValue(ELContext ctx, Object value) throws ELException {
+        this.children[0].getValue(ctx);
+        this.children[1].setValue(ctx, value);
+    }
 }

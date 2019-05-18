@@ -48,53 +48,53 @@ import javax.el.MethodInfo;
 @SuppressWarnings("serial")
 public class MethodExpressionLiteral extends MethodExpression {
 
-	private final String expr;
-	private final Class<?> expectedType;
-	private final Class<?>[] paramTypes;
+    private final String expr;
+    private final Class<?> expectedType;
+    private final Class<?>[] paramTypes;
 
-	public MethodExpressionLiteral() {
-		this(null, null, null);
-	}
+    public MethodExpressionLiteral() {
+        this(null, null, null);
+    }
 
-	public MethodExpressionLiteral(String expr, Class<?> expectedType, Class<?>[] paramTypes) {
-		this.expr = expr;
-		this.expectedType = expectedType;
-		this.paramTypes = paramTypes;
-	}
+    public MethodExpressionLiteral(String expr, Class<?> expectedType, Class<?>[] paramTypes) {
+        this.expr = expr;
+        this.expectedType = expectedType;
+        this.paramTypes = paramTypes;
+    }
 
-	public MethodInfo getMethodInfo(ELContext context) throws ELException {
-		return new MethodInfo(this.expr, this.expectedType, this.paramTypes);
-	}
+    public MethodInfo getMethodInfo(ELContext context) throws ELException {
+        return new MethodInfo(this.expr, this.expectedType, this.paramTypes);
+    }
 
-	public Object invoke(ELContext context, Object[] params) throws ELException {
-		
-		if (this.expectedType == null) {
-			return this.expr;
-		}
-		
-		try {
-			
-			return context.convertToType(this.expr, this.expectedType);
-		}
-		catch (Exception ex) {
-			throw new ELException(ex);
-		}
-	}
+    public Object invoke(ELContext context, Object[] params) throws ELException {
 
-	public String getExpressionString() {
-		return this.expr;
-	}
+        if (this.expectedType == null) {
+            return this.expr;
+        }
 
-	public boolean equals(Object obj) {
-		return (obj instanceof MethodExpressionLiteral && this.hashCode() == obj.hashCode());
-	}
+        try {
 
-	public int hashCode() {
-		return this.expr.hashCode();
-	}
+            return context.convertToType(this.expr, this.expectedType);
+        }
+        catch (Exception ex) {
+            throw new ELException(ex);
+        }
+    }
 
-	public boolean isLiteralText() {
-		return true;
-	}
+    public String getExpressionString() {
+        return this.expr;
+    }
+
+    public boolean equals(Object obj) {
+        return (obj instanceof MethodExpressionLiteral && this.hashCode() == obj.hashCode());
+    }
+
+    public int hashCode() {
+        return this.expr.hashCode();
+    }
+
+    public boolean isLiteralText() {
+        return true;
+    }
 
 }

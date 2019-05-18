@@ -47,12 +47,12 @@ import javax.el.ELException;
  * @author Kin-man Chung
  */
 public final class AstConcat extends SimpleNode {
-	public AstConcat(int id) {
-		super(id);
-	}
+    public AstConcat(int id) {
+        super(id);
+    }
 
-	public Object getValue(ELContext ctx)
-			throws ELException {
-		return children[0].getValue(ctx).toString() + children[1].getValue(ctx).toString();
-	}
+    public Object getValue(ELContext ctx)
+            throws ELException {
+        return children[0].getValue(ctx).toString() + children[1].getValue(ctx).toString();
+    }
 }

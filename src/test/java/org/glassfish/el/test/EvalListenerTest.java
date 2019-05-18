@@ -61,69 +61,69 @@ import org.junit.Test;
  */
 public class EvalListenerTest {
 
-	public EvalListenerTest() {
-	}
+    public EvalListenerTest() {
+    }
 
-	@BeforeClass
-	public static void setUpClass() throws Exception {
-	}
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+    }
 
-	@AfterClass
-	public static void tearDownClass() throws Exception {
-	}
+    @AfterClass
+    public static void tearDownClass() throws Exception {
+    }
 
-	@Before
-	public void setUp() {
-	}
+    @Before
+    public void setUp() {
+    }
 
-	@After
-	public void tearDown() {
-	}
+    @After
+    public void tearDown() {
+    }
 
-	@Test
-	public void testEvalListener() {
-		ELProcessor elp = new ELProcessor();
-		ELManager elm = elp.getELManager();
-		final ArrayList<String> msgs = new ArrayList<String>();
-		elm.addEvaluationListener(new EvaluationListener() {
-			@Override
-			public void beforeEvaluation(ELContext ctxt, String expr) {
-				System.out.println("Before: " + expr);
-				msgs.add("Before: " + expr);
-			}
+    @Test
+    public void testEvalListener() {
+        ELProcessor elp = new ELProcessor();
+        ELManager elm = elp.getELManager();
+        final ArrayList<String> msgs = new ArrayList<String>();
+        elm.addEvaluationListener(new EvaluationListener() {
+            @Override
+            public void beforeEvaluation(ELContext ctxt, String expr) {
+                System.out.println("Before: " + expr);
+                msgs.add("Before: " + expr);
+            }
 
-			@Override
-			public void afterEvaluation(ELContext ctxt, String expr) {
-				System.out.println("After: " + expr);
-				msgs.add("After: " + expr);
-			}
-		});
-		elp.eval("100 + 10");
-		elp.eval("x = 5; x*101");
-		String[] expected = { "Before: ${100 + 10}", "After: ${100 + 10}", "Before: ${x = 5; x*101}", "After: ${x = 5; x*101}" };
-		for (int i = 0; i < expected.length; i++) {
-			assertEquals(expected[i], msgs.get(i));
-		}
-	}
+            @Override
+            public void afterEvaluation(ELContext ctxt, String expr) {
+                System.out.println("After: " + expr);
+                msgs.add("After: " + expr);
+            }
+        });
+        elp.eval("100 + 10");
+        elp.eval("x = 5; x*101");
+        String[] expected = { "Before: ${100 + 10}", "After: ${100 + 10}", "Before: ${x = 5; x*101}", "After: ${x = 5; x*101}" };
+        for (int i = 0; i < expected.length; i++) {
+            assertEquals(expected[i], msgs.get(i));
+        }
+    }
 
-	@Test
-	public void testResListener() {
-		ELProcessor elp = new ELProcessor();
-		ELManager elm = elp.getELManager();
-		final ArrayList<String> msgs = new ArrayList<String>();
-		elm.addEvaluationListener(new EvaluationListener() {
-			@Override
-			public void propertyResolved(ELContext ctxt, Object b, Object p) {
-				System.out.println("Resolved: " + b + " " + p);
-				msgs.add("Resolved: " + b + " " + p);
-			}
-		});
-		elp.eval("x = 10");
-		elp.eval("[1,2,3][2]");
-		elp.eval("'abcd'.length()");
-		String[] expected = { "Resolved: null x", "Resolved: [1, 2, 3] 2", "Resolved: abcd length"};
-		for (int i = 0; i < expected.length; i++) {
-			assertEquals(expected[i], msgs.get(i));
-		}
-	}
+    @Test
+    public void testResListener() {
+        ELProcessor elp = new ELProcessor();
+        ELManager elm = elp.getELManager();
+        final ArrayList<String> msgs = new ArrayList<String>();
+        elm.addEvaluationListener(new EvaluationListener() {
+            @Override
+            public void propertyResolved(ELContext ctxt, Object b, Object p) {
+                System.out.println("Resolved: " + b + " " + p);
+                msgs.add("Resolved: " + b + " " + p);
+            }
+        });
+        elp.eval("x = 10");
+        elp.eval("[1,2,3][2]");
+        elp.eval("'abcd'.length()");
+        String[] expected = { "Resolved: null x", "Resolved: [1, 2, 3] 2", "Resolved: abcd length" };
+        for (int i = 0; i < expected.length; i++) {
+            assertEquals(expected[i], msgs.get(i));
+        }
+    }
 }

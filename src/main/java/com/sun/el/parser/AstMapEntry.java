@@ -44,7 +44,7 @@ package com.sun.el.parser;
  * @author Kin-man Chung
  */
 public class AstMapEntry extends SimpleNode {
-	public AstMapEntry(int id) {
-		super(id);
-	}
+    public AstMapEntry(int id) {
+        super(id);
+    }
 }

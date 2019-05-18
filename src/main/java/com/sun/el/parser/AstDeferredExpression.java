@@ -49,23 +49,23 @@ import javax.el.ELException;
  */
 public final class AstDeferredExpression extends SimpleNode {
 
-	public AstDeferredExpression(int id) {
-		super(id);
-	}
+    public AstDeferredExpression(int id) {
+        super(id);
+    }
 
-	public Class<?> getType(ELContext ctx) throws ELException {
-		return this.children[0].getType(ctx);
-	}
+    public Class<?> getType(ELContext ctx) throws ELException {
+        return this.children[0].getType(ctx);
+    }
 
-	public Object getValue(ELContext ctx) throws ELException {
-		return this.children[0].getValue(ctx);
-	}
+    public Object getValue(ELContext ctx) throws ELException {
+        return this.children[0].getValue(ctx);
+    }
 
-	public boolean isReadOnly(ELContext ctx) throws ELException {
-		return this.children[0].isReadOnly(ctx);
-	}
+    public boolean isReadOnly(ELContext ctx) throws ELException {
+        return this.children[0].isReadOnly(ctx);
+    }
 
-	public void setValue(ELContext ctx, Object value) throws ELException {
-		this.children[0].setValue(ctx, value);
-	}
+    public void setValue(ELContext ctx, Object value) throws ELException {
+        this.children[0].setValue(ctx, value);
+    }
 }

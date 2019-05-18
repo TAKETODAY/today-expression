@@ -49,14 +49,14 @@ import javax.el.ELException;
  */
 public class ArithmeticNode extends SimpleNode {
 
-	/**
-	 * @param i
-	 */
-	public ArithmeticNode(int i) {
-		super(i);
-	}
+    /**
+     * @param i
+     */
+    public ArithmeticNode(int i) {
+        super(i);
+    }
 
-	public Class<?> getType(ELContext ctx) throws ELException {
-		return Number.class;
-	}
+    public Class<?> getType(ELContext ctx) throws ELException {
+        return Number.class;
+    }
 }

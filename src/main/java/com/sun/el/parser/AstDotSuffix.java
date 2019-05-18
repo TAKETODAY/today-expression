@@ -49,11 +49,11 @@ import javax.el.ELException;
  */
 public final class AstDotSuffix extends SimpleNode {
 
-	public AstDotSuffix(int id) {
-		super(id);
-	}
+    public AstDotSuffix(int id) {
+        super(id);
+    }
 
-	public Object getValue(ELContext ctx) throws ELException {
-		return this.image;
-	}
+    public Object getValue(ELContext ctx) throws ELException {
+        return this.image;
+    }
 }

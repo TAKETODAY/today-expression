@@ -51,30 +51,30 @@ import javax.el.ELException;
  */
 public final class AstFloatingPoint extends SimpleNode {
 
-	public AstFloatingPoint(int id) {
-		super(id);
-	}
+    public AstFloatingPoint(int id) {
+        super(id);
+    }
 
-	private Number number;
+    private Number number;
 
-	public Number getFloatingPoint() {
-		if (this.number == null) {
-			try {
-				
-				this.number = Double.parseDouble(this.image);
-			}
-			catch (ArithmeticException e0) {
-				this.number = new BigDecimal(this.image);
-			}
-		}
-		return this.number;
-	}
+    public Number getFloatingPoint() {
+        if (this.number == null) {
+            try {
 
-	public Object getValue(ELContext ctx) throws ELException {
-		return this.getFloatingPoint();
-	}
+                this.number = Double.parseDouble(this.image);
+            }
+            catch (ArithmeticException e0) {
+                this.number = new BigDecimal(this.image);
+            }
+        }
+        return this.number;
+    }
 
-	public Class<?> getType(ELContext ctx) throws ELException {
-		return this.getFloatingPoint().getClass();
-	}
+    public Object getValue(ELContext ctx) throws ELException {
+        return this.getFloatingPoint();
+    }
+
+    public Class<?> getType(ELContext ctx) throws ELException {
+        return this.getFloatingPoint().getClass();
+    }
 }

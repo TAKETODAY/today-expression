@@ -51,13 +51,13 @@ import com.sun.el.lang.ELArithmetic;
  */
 public final class AstMult extends ArithmeticNode {
 
-	public AstMult(int id) {
-		super(id);
-	}
+    public AstMult(int id) {
+        super(id);
+    }
 
-	public Object getValue(ELContext ctx) throws ELException {
-		Object obj0 = this.children[0].getValue(ctx);
-		Object obj1 = this.children[1].getValue(ctx);
-		return ELArithmetic.multiply(obj0, obj1);
-	}
+    public Object getValue(ELContext ctx) throws ELException {
+        Object obj0 = this.children[0].getValue(ctx);
+        Object obj1 = this.children[1].getValue(ctx);
+        return ELArithmetic.multiply(obj0, obj1);
+    }
 }

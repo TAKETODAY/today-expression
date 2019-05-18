@@ -49,25 +49,25 @@ import javax.el.ELException;
  */
 public final class AstCompositeExpression extends SimpleNode {
 
-	public AstCompositeExpression(int id) {
-		super(id);
-	}
+    public AstCompositeExpression(int id) {
+        super(id);
+    }
 
-	public Class<?> getType(ELContext ctx) throws ELException {
-		return String.class;
-	}
+    public Class<?> getType(ELContext ctx) throws ELException {
+        return String.class;
+    }
 
-	public Object getValue(ELContext ctx) throws ELException {
-		StringBuffer sb = new StringBuffer(16);
-		Object obj = null;
-		if (this.children != null) {
-			for (int i = 0; i < this.children.length; i++) {
-				obj = this.children[i].getValue(ctx);
-				if (obj != null) {
-					sb.append(obj);
-				}
-			}
-		}
-		return sb.toString();
-	}
+    public Object getValue(ELContext ctx) throws ELException {
+        StringBuffer sb = new StringBuffer(16);
+        Object obj = null;
+        if (this.children != null) {
+            for (int i = 0; i < this.children.length; i++) {
+                obj = this.children[i].getValue(ctx);
+                if (obj != null) {
+                    sb.append(obj);
+                }
+            }
+        }
+        return sb.toString();
+    }
 }

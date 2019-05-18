@@ -30,38 +30,38 @@ import javax.el.BeanNameResolver;
  */
 public class LocalBeanNameResolver extends BeanNameResolver {
 
-	private final Map<String, Object> beans;
+    private final Map<String, Object> beans;
 
-	public LocalBeanNameResolver() {
-		this(new HashMap<String, Object>(8, 1.0f));
-	}
+    public LocalBeanNameResolver() {
+        this(new HashMap<String, Object>(8, 1.0f));
+    }
 
-	public LocalBeanNameResolver(Map<String, Object> beans) {
-		this.beans = beans;
-	}
+    public LocalBeanNameResolver(Map<String, Object> beans) {
+        this.beans = beans;
+    }
 
-	@Override
-	public boolean isNameResolved(String beanName) {
-		return beans.containsKey(beanName);
-	}
+    @Override
+    public boolean isNameResolved(String beanName) {
+        return beans.containsKey(beanName);
+    }
 
-	@Override
-	public Object getBean(String beanName) {
-		return beans.get(beanName);
-	}
+    @Override
+    public Object getBean(String beanName) {
+        return beans.get(beanName);
+    }
 
-	@Override
-	public void setBeanValue(String beanName, Object value) {
-		beans.put(beanName, value);
-	}
+    @Override
+    public void setBeanValue(String beanName, Object value) {
+        beans.put(beanName, value);
+    }
 
-	@Override
-	public boolean isReadOnly(String beanName) {
-		return false;
-	}
+    @Override
+    public boolean isReadOnly(String beanName) {
+        return false;
+    }
 
-	@Override
-	public boolean canCreateBean(String beanName) {
-		return true;
-	}
+    @Override
+    public boolean canCreateBean(String beanName) {
+        return true;
+    }
 }

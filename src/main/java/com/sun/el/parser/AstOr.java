@@ -49,18 +49,18 @@ import javax.el.ELException;
  */
 public final class AstOr extends BooleanNode {
 
-	public AstOr(int id) {
-		super(id);
-	}
+    public AstOr(int id) {
+        super(id);
+    }
 
-	public Object getValue(ELContext ctx) throws ELException {
-		Object obj = this.children[0].getValue(ctx);
-		Boolean b = coerceToBoolean(obj);
-		if (b.booleanValue()) {
-			return b;
-		}
-		obj = this.children[1].getValue(ctx);
-		b = coerceToBoolean(obj);
-		return b;
-	}
+    public Object getValue(ELContext ctx) throws ELException {
+        Object obj = this.children[0].getValue(ctx);
+        Boolean b = coerceToBoolean(obj);
+        if (b.booleanValue()) {
+            return b;
+        }
+        obj = this.children[1].getValue(ctx);
+        b = coerceToBoolean(obj);
+        return b;
+    }
 }

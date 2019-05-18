@@ -50,14 +50,14 @@ import com.sun.el.lang.ELArithmetic;
  * @version $Change: 181177 $$DateTime: 2001/06/26 08:45:09 $$Author: kchung $
  */
 public final class AstMinus extends ArithmeticNode {
-	public AstMinus(int id) {
-		super(id);
-	}
+    public AstMinus(int id) {
+        super(id);
+    }
 
-	public Object getValue(ELContext ctx)
-			throws ELException {
-		Object obj0 = this.children[0].getValue(ctx);
-		Object obj1 = this.children[1].getValue(ctx);
-		return ELArithmetic.subtract(obj0, obj1);
-	}
+    public Object getValue(ELContext ctx)
+            throws ELException {
+        Object obj0 = this.children[0].getValue(ctx);
+        Object obj1 = this.children[1].getValue(ctx);
+        return ELArithmetic.subtract(obj0, obj1);
+    }
 }

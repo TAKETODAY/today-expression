@@ -53,33 +53,33 @@ import com.sun.el.util.MessageFactory;
  */
 public class AstLambdaExpression extends SimpleNode {
 
-	public AstLambdaExpression(int id) {
-		super(id);
-	}
+    public AstLambdaExpression(int id) {
+        super(id);
+    }
 
-	@Override
-	public Object getValue(ELContext ctx) throws ELException {
+    @Override
+    public Object getValue(ELContext ctx) throws ELException {
 
-		// Create a lambda expression
-		final ValueExpression expr = new ValueExpressionImpl("#{Lambda Expression}", this.children[1], null);
+        // Create a lambda expression
+        final ValueExpression expr = new ValueExpressionImpl("#{Lambda Expression}", this.children[1], null);
 
-		LambdaExpression lambda = new LambdaExpression(((AstLambdaParameters) this.children[0]).getParameters(), expr, ctx);
+        LambdaExpression lambda = new LambdaExpression(((AstLambdaParameters) this.children[0]).getParameters(), expr, ctx);
 
-		if (this.children.length <= 2) {
-			return lambda;
-		}
+        if (this.children.length <= 2) {
+            return lambda;
+        }
 
-		// There are arguments following the lambda exprn, invoke it now.
-		Object ret = null;
-		for (int i = 2; i < this.children.length; i++) {
-			if (ret != null) {
-				if (!(ret instanceof LambdaExpression)) {
-					throw new ELException(MessageFactory.get("error.lambda.call"));
-				}
-				lambda = (LambdaExpression) ret;
-			}
-			ret = lambda.invoke(ctx, ((AstMethodArguments) this.children[i]).getParameters(ctx));
-		}
-		return ret;
-	}
+        // There are arguments following the lambda exprn, invoke it now.
+        Object ret = null;
+        for (int i = 2; i < this.children.length; i++) {
+            if (ret != null) {
+                if (!(ret instanceof LambdaExpression)) {
+                    throw new ELException(MessageFactory.get("error.lambda.call"));
+                }
+                lambda = (LambdaExpression) ret;
+            }
+            ret = lambda.invoke(ctx, ((AstMethodArguments) this.children[i]).getParameters(ctx));
+        }
+        return ret;
+    }
 }

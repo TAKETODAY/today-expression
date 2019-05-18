@@ -44,7 +44,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * <p>
  * Encapsulates a parameterized {@link ValueExpression}.
@@ -77,114 +76,114 @@ import java.util.Map;
  */
 public class LambdaExpression {
 
-	private final ELContext context;
-	private final ValueExpression expression;
-	private final List<String> formalParameters;
-	// Arguments from nesting lambdas, when the body is another lambda
-	private final Map<String, Object> envirArgs;
+    private final ELContext context;
+    private final ValueExpression expression;
+    private final List<String> formalParameters;
+    // Arguments from nesting lambdas, when the body is another lambda
+    private final Map<String, Object> envirArgs;
 
-	/**
-	 * Creates a new LambdaExpression.
-	 * 
-	 * @param formalParameters
-	 *            The list of String representing the formal parameters.
-	 * @param expression
-	 *            The <code>ValueExpression</code> representing the body.
-	 * @param context
-	 *            {@link EvaluationContext}
-	 */
-	public LambdaExpression(List<String> formalParameters, ValueExpression expression, ELContext context) {
-		this.formalParameters = formalParameters;
-		this.expression = expression;
-		this.context = context;
-		this.envirArgs = new HashMap<>();
-	}
+    /**
+     * Creates a new LambdaExpression.
+     * 
+     * @param formalParameters
+     *            The list of String representing the formal parameters.
+     * @param expression
+     *            The <code>ValueExpression</code> representing the body.
+     * @param context
+     *            {@link EvaluationContext}
+     */
+    public LambdaExpression(List<String> formalParameters, ValueExpression expression, ELContext context) {
+        this.formalParameters = formalParameters;
+        this.expression = expression;
+        this.context = context;
+        this.envirArgs = new HashMap<>();
+    }
 
-	/**
-	 * Invoke the encapsulated Lambda expression.
-	 * <p>
-	 * The supplied arguments are matched, in the same order, to the formal
-	 * parameters. If there are more arguments than the formal parameters, the extra
-	 * arguments are ignored. If there are less arguments than the formal
-	 * parameters, an <code>ELException</code> is thrown.
-	 * </p>
-	 *
-	 * <p>
-	 * The actual Lambda arguments are added to the ELContext and are available
-	 * during the evaluation of the Lambda expression. They are removed after the
-	 * evaluation.
-	 * </p>
-	 *
-	 * @param elContext
-	 *            The ELContext used for the evaluation of the expression The
-	 *            ELContext set by {@link #setELContext} is ignored.
-	 * @param args
-	 *            The arguments to invoke the Lambda expression. For calls with no
-	 *            arguments, an empty array must be provided. A Lambda argument can
-	 *            be <code>null</code>.
-	 * @return The result of invoking the Lambda expression
-	 * @throws ELException
-	 *             if not enough arguments are provided
-	 * @throws NullPointerException
-	 *             is elContext is null
-	 */
-	public Object invoke(ELContext elContext, Object... args) throws ELException {
-		int i = 0;
-		final Map<String, Object> lambdaArgs = new HashMap<String, Object>();
+    /**
+     * Invoke the encapsulated Lambda expression.
+     * <p>
+     * The supplied arguments are matched, in the same order, to the formal
+     * parameters. If there are more arguments than the formal parameters, the extra
+     * arguments are ignored. If there are less arguments than the formal
+     * parameters, an <code>ELException</code> is thrown.
+     * </p>
+     *
+     * <p>
+     * The actual Lambda arguments are added to the ELContext and are available
+     * during the evaluation of the Lambda expression. They are removed after the
+     * evaluation.
+     * </p>
+     *
+     * @param elContext
+     *            The ELContext used for the evaluation of the expression The
+     *            ELContext set by {@link #setELContext} is ignored.
+     * @param args
+     *            The arguments to invoke the Lambda expression. For calls with no
+     *            arguments, an empty array must be provided. A Lambda argument can
+     *            be <code>null</code>.
+     * @return The result of invoking the Lambda expression
+     * @throws ELException
+     *             if not enough arguments are provided
+     * @throws NullPointerException
+     *             is elContext is null
+     */
+    public Object invoke(ELContext elContext, Object... args) throws ELException {
+        int i = 0;
+        final Map<String, Object> lambdaArgs = new HashMap<String, Object>();
 
-		// First get arguments injected from the outter lambda, if any
-		lambdaArgs.putAll(envirArgs);
+        // First get arguments injected from the outter lambda, if any
+        lambdaArgs.putAll(envirArgs);
 
-		for (String fParam : formalParameters) {
-			if (i >= args.length) {
-				throw new ELException("Expected Argument " + fParam + " missing in Lambda Expression");
-			}
-			lambdaArgs.put(fParam, args[i++]);
-		}
+        for (String fParam : formalParameters) {
+            if (i >= args.length) {
+                throw new ELException("Expected Argument " + fParam + " missing in Lambda Expression");
+            }
+            lambdaArgs.put(fParam, args[i++]);
+        }
 
-		elContext.enterLambdaScope(lambdaArgs);
-		final Object ret = expression.getValue(elContext);
+        elContext.enterLambdaScope(lambdaArgs);
+        final Object ret = expression.getValue(elContext);
 
-		// If the result of evaluating the body is another LambdaExpression,
-		// whose body has not been evaluated yet. (A LambdaExpression is
-		// evaluated iff when its invoke method is called.) The current lambda
-		// arguments may be needed in that body when it is evaluated later,
-		// after the current lambda exits. To make these arguments available
-		// then, they are injected into it.
-		if (ret instanceof LambdaExpression) {
-			((LambdaExpression) ret).envirArgs.putAll(lambdaArgs);
-		}
-		elContext.exitLambdaScope();
-		return ret;
-	}
+        // If the result of evaluating the body is another LambdaExpression,
+        // whose body has not been evaluated yet. (A LambdaExpression is
+        // evaluated iff when its invoke method is called.) The current lambda
+        // arguments may be needed in that body when it is evaluated later,
+        // after the current lambda exits. To make these arguments available
+        // then, they are injected into it.
+        if (ret instanceof LambdaExpression) {
+            ((LambdaExpression) ret).envirArgs.putAll(lambdaArgs);
+        }
+        elContext.exitLambdaScope();
+        return ret;
+    }
 
-	/**
-	 * Invoke the encapsulated Lambda expression.
-	 * <p>
-	 * The supplied arguments are matched, in the same order, to the formal
-	 * parameters. If there are more arguments than the formal parameters, the extra
-	 * arguments are ignored. If there are less arguments than the formal
-	 * parameters, an <code>ELException</code> is thrown.
-	 * </p>
-	 *
-	 * <p>
-	 * The actual Lambda arguments are added to the ELContext and are available
-	 * during the evaluation of the Lambda expression. They are removed after the
-	 * evaluation.
-	 * </p>
-	 *
-	 * The ELContext set by {@link LambdaExpression#setELContext} is used in the
-	 * evaluation of the lambda Expression.
-	 *
-	 * @param args
-	 *            The arguments to invoke the Lambda expression. For calls with no
-	 *            arguments, an empty array must be provided. A Lambda argument can
-	 *            be <code>null</code>.
-	 * @return The result of invoking the Lambda expression
-	 * @throws ELException
-	 *             if not enough arguments are provided
-	 */
-	public Object invoke(Object... args) {
-		return invoke(this.context, args);
-	}
+    /**
+     * Invoke the encapsulated Lambda expression.
+     * <p>
+     * The supplied arguments are matched, in the same order, to the formal
+     * parameters. If there are more arguments than the formal parameters, the extra
+     * arguments are ignored. If there are less arguments than the formal
+     * parameters, an <code>ELException</code> is thrown.
+     * </p>
+     *
+     * <p>
+     * The actual Lambda arguments are added to the ELContext and are available
+     * during the evaluation of the Lambda expression. They are removed after the
+     * evaluation.
+     * </p>
+     *
+     * The ELContext set by {@link LambdaExpression#setELContext} is used in the
+     * evaluation of the lambda Expression.
+     *
+     * @param args
+     *            The arguments to invoke the Lambda expression. For calls with no
+     *            arguments, an empty array must be provided. A Lambda argument can
+     *            be <code>null</code>.
+     * @return The result of invoking the Lambda expression
+     * @throws ELException
+     *             if not enough arguments are provided
+     */
+    public Object invoke(Object... args) {
+        return invoke(this.context, args);
+    }
 }

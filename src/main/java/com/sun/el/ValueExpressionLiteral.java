@@ -55,64 +55,64 @@ import com.sun.el.util.MessageFactory;
 @SuppressWarnings("serial")
 public final class ValueExpressionLiteral extends ValueExpression {
 
-	private final Object value;
-	private final Class<?> expectedType;
+    private final Object value;
+    private final Class<?> expectedType;
 
-	public ValueExpressionLiteral() {
-		this(null, null);
-	}
+    public ValueExpressionLiteral() {
+        this(null, null);
+    }
 
-	public ValueExpressionLiteral(Object value, Class<?> expectedType) {
-		this.value = value;
-		this.expectedType = expectedType;
-	}
+    public ValueExpressionLiteral(Object value, Class<?> expectedType) {
+        this.value = value;
+        this.expectedType = expectedType;
+    }
 
-	public Object getValue(ELContext context) {
-		if (this.expectedType != null) {
-			try {
-				return context.convertToType(this.value, this.expectedType);
-			}
-			catch (IllegalArgumentException ex) {
-				throw new ELException(ex);
-			}
-		}
-		return this.value;
-	}
+    public Object getValue(ELContext context) {
+        if (this.expectedType != null) {
+            try {
+                return context.convertToType(this.value, this.expectedType);
+            }
+            catch (IllegalArgumentException ex) {
+                throw new ELException(ex);
+            }
+        }
+        return this.value;
+    }
 
-	public void setValue(ELContext context, Object value) {
-		throw new PropertyNotWritableException(MessageFactory.get("error.value.literal.write", this.value));
-	}
+    public void setValue(ELContext context, Object value) {
+        throw new PropertyNotWritableException(MessageFactory.get("error.value.literal.write", this.value));
+    }
 
-	public boolean isReadOnly(ELContext context) {
-		return true;
-	}
+    public boolean isReadOnly(ELContext context) {
+        return true;
+    }
 
-	public Class<?> getType(ELContext context) {
-		return (this.value != null) ? this.value.getClass() : null;
-	}
+    public Class<?> getType(ELContext context) {
+        return (this.value != null) ? this.value.getClass() : null;
+    }
 
-	public Class<?> getExpectedType() {
-		return this.expectedType;
-	}
+    public Class<?> getExpectedType() {
+        return this.expectedType;
+    }
 
-	public String getExpressionString() {
-		return (this.value != null) ? this.value.toString() : null;
-	}
+    public String getExpressionString() {
+        return (this.value != null) ? this.value.toString() : null;
+    }
 
-	public boolean equals(Object obj) {
-		return (obj instanceof ValueExpressionLiteral && this.equals((ValueExpressionLiteral) obj));
-	}
+    public boolean equals(Object obj) {
+        return (obj instanceof ValueExpressionLiteral && this.equals((ValueExpressionLiteral) obj));
+    }
 
-	public boolean equals(ValueExpressionLiteral ve) {
-		return (ve != null && (this.value != null && ve.value != null && (this.value == ve.value || this.value.equals(ve.value))));
-	}
+    public boolean equals(ValueExpressionLiteral ve) {
+        return (ve != null && (this.value != null && ve.value != null && (this.value == ve.value || this.value.equals(ve.value))));
+    }
 
-	public int hashCode() {
-		return (this.value != null) ? this.value.hashCode() : 0;
-	}
+    public int hashCode() {
+        return (this.value != null) ? this.value.hashCode() : 0;
+    }
 
-	public boolean isLiteralText() {
-		return true;
-	}
+    public boolean isLiteralText() {
+        return true;
+    }
 
 }

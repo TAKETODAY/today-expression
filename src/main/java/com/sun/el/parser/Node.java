@@ -55,60 +55,60 @@ import javax.el.ValueReference;
  */
 public interface Node {
 
-	/**
-	 * This method is called after the node has been made the current node. It
-	 * indicates that child nodes can now be added to it.
-	 */
-	void jjtOpen();
+    /**
+     * This method is called after the node has been made the current node. It
+     * indicates that child nodes can now be added to it.
+     */
+    void jjtOpen();
 
-	/**
-	 * This method is called after all the child nodes have been added.
-	 */
-	void jjtClose();
+    /**
+     * This method is called after all the child nodes have been added.
+     */
+    void jjtClose();
 
-	/**
-	 * This pair of methods are used to inform the node of its parent.
-	 */
-	void jjtSetParent(Node n);
+    /**
+     * This pair of methods are used to inform the node of its parent.
+     */
+    void jjtSetParent(Node n);
 
-	Node jjtGetParent();
+    Node jjtGetParent();
 
-	/**
-	 * This method tells the node to add its argument to the node's list of
-	 * children.
-	 */
-	void jjtAddChild(Node n, int i);
+    /**
+     * This method tells the node to add its argument to the node's list of
+     * children.
+     */
+    void jjtAddChild(Node n, int i);
 
-	/**
-	 * This method returns a child node. The children are numbered from zero, left
-	 * to right.
-	 */
-	Node jjtGetChild(int i);
+    /**
+     * This method returns a child node. The children are numbered from zero, left
+     * to right.
+     */
+    Node jjtGetChild(int i);
 
-	/** Return the number of children the node has. */
-	int jjtGetNumChildren();
+    /** Return the number of children the node has. */
+    int jjtGetNumChildren();
 
-	String getImage();
+    String getImage();
 
-	Object getValue(ELContext ctx) throws ELException;
+    Object getValue(ELContext ctx) throws ELException;
 
-	void setValue(ELContext ctx, Object value) throws ELException;
+    void setValue(ELContext ctx, Object value) throws ELException;
 
-	Class<?> getType(ELContext ctx) throws ELException;
+    Class<?> getType(ELContext ctx) throws ELException;
 
-	ValueReference getValueReference(ELContext ctx) throws ELException;
+    ValueReference getValueReference(ELContext ctx) throws ELException;
 
-	boolean isReadOnly(ELContext ctx) throws ELException;
+    boolean isReadOnly(ELContext ctx) throws ELException;
 
-	void accept(NodeVisitor visitor, ELContext context) throws ELException;
+    void accept(NodeVisitor visitor, ELContext context) throws ELException;
 
-	MethodInfo getMethodInfo(ELContext ctx, Class<?>[] paramTypes) throws ELException;
+    MethodInfo getMethodInfo(ELContext ctx, Class<?>[] paramTypes) throws ELException;
 
-	Object invoke(ELContext ctx, Class<?>[] paramTypes, Object[] paramValues) throws ELException;
+    Object invoke(ELContext ctx, Class<?>[] paramTypes, Object[] paramValues) throws ELException;
 
-	boolean equals(Object n);
+    boolean equals(Object n);
 
-	int hashCode();
+    int hashCode();
 
-	boolean isParametersProvided();
+    boolean isParametersProvided();
 }

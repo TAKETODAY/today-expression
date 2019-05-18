@@ -70,52 +70,52 @@ import java.util.Iterator;
 
 public abstract class TypeConverter extends ELResolver {
 
-	@Override
-	public Object getValue(ELContext context, Object base, Object property) {
-		return null;
-	}
+    @Override
+    public Object getValue(ELContext context, Object base, Object property) {
+        return null;
+    }
 
-	@Override
-	public Class<?> getType(ELContext context, Object base, Object property) {
-		return null;
-	}
+    @Override
+    public Class<?> getType(ELContext context, Object base, Object property) {
+        return null;
+    }
 
-	@Override
-	public void setValue(ELContext context, Object base, Object property, Object value) {
-	}
+    @Override
+    public void setValue(ELContext context, Object base, Object property, Object value) {
+    }
 
-	@Override
-	public boolean isReadOnly(ELContext context, Object base, Object property) {
-		return false;
-	}
+    @Override
+    public boolean isReadOnly(ELContext context, Object base, Object property) {
+        return false;
+    }
 
-	@Override
-	public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context, Object base) {
-		return null;
-	}
+    @Override
+    public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context, Object base) {
+        return null;
+    }
 
-	@Override
-	public Class<?> getCommonPropertyType(ELContext context, Object base) {
-		return null;
-	}
+    @Override
+    public Class<?> getCommonPropertyType(ELContext context, Object base) {
+        return null;
+    }
 
-	/**
-	 * Converts an object to a specific type.
-	 *
-	 * <p>
-	 * An <code>ELException</code> is thrown if an error occurs during the
-	 * conversion.
-	 * </p>
-	 *
-	 * @param context
-	 *            The context of this evaluation.
-	 * @param obj
-	 *            The object to convert.
-	 * @param targetType
-	 *            The target type for the conversion.
-	 * @throws ELException
-	 *             thrown if errors occur.
-	 */
-	@Override
-	abstract public Object convertToType(ELContext context, Object obj, Class<?> targetType);
+    /**
+     * Converts an object to a specific type.
+     *
+     * <p>
+     * An <code>ELException</code> is thrown if an error occurs during the
+     * conversion.
+     * </p>
+     *
+     * @param context
+     *            The context of this evaluation.
+     * @param obj
+     *            The object to convert.
+     * @param targetType
+     *            The target type for the conversion.
+     * @throws ELException
+     *             thrown if errors occur.
+     */
+    @Override
+    abstract public Object convertToType(ELContext context, Object obj, Class<?> targetType);
 }

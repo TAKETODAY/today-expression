@@ -50,30 +50,30 @@ import javax.el.ELException;
  * @version $Change: 181177 $$DateTime: 2001/06/26 08:45:09 $$Author: kchung $
  */
 public final class AstInteger extends SimpleNode {
-	
-	public AstInteger(int id) {
-		super(id);
-	}
 
-	private Number number;
+    public AstInteger(int id) {
+        super(id);
+    }
 
-	protected Number getInteger() {
-		if (this.number == null) {
-			try {
-				this.number = Long.valueOf(this.image);
-			}
-			catch (ArithmeticException e1) {
-				this.number = new BigInteger(this.image);
-			}
-		}
-		return number;
-	}
+    private Number number;
 
-	public Class<?> getType(ELContext ctx) throws ELException {
-		return this.getInteger().getClass();
-	}
+    protected Number getInteger() {
+        if (this.number == null) {
+            try {
+                this.number = Long.valueOf(this.image);
+            }
+            catch (ArithmeticException e1) {
+                this.number = new BigInteger(this.image);
+            }
+        }
+        return number;
+    }
 
-	public Object getValue(ELContext ctx) throws ELException {
-		return this.getInteger();
-	}
+    public Class<?> getType(ELContext ctx) throws ELException {
+        return this.getInteger().getClass();
+    }
+
+    public Object getValue(ELContext ctx) throws ELException {
+        return this.getInteger();
+    }
 }

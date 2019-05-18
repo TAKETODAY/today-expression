@@ -45,14 +45,14 @@ import javax.el.ELException;
 
 public class AstAssign extends SimpleNode {
 
-	public AstAssign(int id) {
-		super(id);
-	}
+    public AstAssign(int id) {
+        super(id);
+    }
 
-	public Object getValue(ELContext ctx) throws ELException {
+    public Object getValue(ELContext ctx) throws ELException {
 
-		Object value = children[1].getValue(ctx);
-		children[0].setValue(ctx, value);
-		return value;
-	}
+        Object value = children[1].getValue(ctx);
+        children[0].setValue(ctx, value);
+        return value;
+    }
 }

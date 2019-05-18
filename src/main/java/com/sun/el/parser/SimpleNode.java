@@ -55,185 +55,185 @@ import com.sun.el.util.MessageFactory;
  */
 public abstract class SimpleNode extends ELSupport implements Node {
 
-	protected Node parent;
+    protected Node parent;
 
-	protected Node[] children;
+    protected Node[] children;
 
-	protected final int id;
+    protected final int id;
 
-	protected String image;
+    protected String image;
 
-	public SimpleNode(int i) {
-		id = i;
-	}
+    public SimpleNode(int i) {
+        id = i;
+    }
 
-	public void jjtOpen() {
-	}
+    public void jjtOpen() {
+    }
 
-	public void jjtClose() {
-	}
+    public void jjtClose() {
+    }
 
-	public void jjtSetParent(Node n) {
-		parent = n;
-	}
+    public void jjtSetParent(Node n) {
+        parent = n;
+    }
 
-	public Node jjtGetParent() {
-		return parent;
-	}
+    public Node jjtGetParent() {
+        return parent;
+    }
 
-	public void jjtAddChild(Node n, int i) {
-		if (children == null) {
-			children = new Node[i + 1];
-		}
-		else if (i >= children.length) {
-			Node c[] = new Node[i + 1];
-			System.arraycopy(children, 0, c, 0, children.length);
-			children = c;
-		}
-		children[i] = n;
-	}
+    public void jjtAddChild(Node n, int i) {
+        if (children == null) {
+            children = new Node[i + 1];
+        }
+        else if (i >= children.length) {
+            Node c[] = new Node[i + 1];
+            System.arraycopy(children, 0, c, 0, children.length);
+            children = c;
+        }
+        children[i] = n;
+    }
 
-	public Node jjtGetChild(int i) {
-		return children[i];
-	}
+    public Node jjtGetChild(int i) {
+        return children[i];
+    }
 
-	public int jjtGetNumChildren() {
-		return (children == null) ? 0 : children.length;
-	}
+    public int jjtGetNumChildren() {
+        return (children == null) ? 0 : children.length;
+    }
 
-	/*
-	 * You can override these two methods in subclasses of SimpleNode to customize
-	 * the way the node appears when the tree is dumped. If your output uses more
-	 * than one line you should override toString(String), otherwise overriding
-	 * toString() is probably all you need to do.
-	 */
-	public String toString() {
-		if (this.image != null) {
-			return ELParserTreeConstants.jjtNodeName[id] + "[" + this.image + "]";
-		}
-		return ELParserTreeConstants.jjtNodeName[id];
-	}
+    /*
+     * You can override these two methods in subclasses of SimpleNode to customize
+     * the way the node appears when the tree is dumped. If your output uses more
+     * than one line you should override toString(String), otherwise overriding
+     * toString() is probably all you need to do.
+     */
+    public String toString() {
+        if (this.image != null) {
+            return ELParserTreeConstants.jjtNodeName[id] + "[" + this.image + "]";
+        }
+        return ELParserTreeConstants.jjtNodeName[id];
+    }
 
-	public String toString(String prefix) {
-		return prefix + toString();
-	}
+    public String toString(String prefix) {
+        return prefix + toString();
+    }
 
-	/**
-	 * Override this method if you want to customize how the node dumps out its
-	 * children.
-	 */
-	public void dump(String prefix) {
-		System.out.println(toString(prefix));
-		if (children != null) {
-			for (int i = 0; i < children.length; ++i) {
-				SimpleNode n = (SimpleNode) children[i];
-				if (n != null) {
-					n.dump(prefix + " ");
-				}
-			}
-		}
-	}
+    /**
+     * Override this method if you want to customize how the node dumps out its
+     * children.
+     */
+    public void dump(String prefix) {
+        System.out.println(toString(prefix));
+        if (children != null) {
+            for (int i = 0; i < children.length; ++i) {
+                SimpleNode n = (SimpleNode) children[i];
+                if (n != null) {
+                    n.dump(prefix + " ");
+                }
+            }
+        }
+    }
 
-	public String getImage() {
-		return image;
-	}
+    public String getImage() {
+        return image;
+    }
 
-	public void setImage(String image) {
-		this.image = image;
-	}
+    public void setImage(String image) {
+        this.image = image;
+    }
 
-	public Class<?> getType(ELContext ctx) throws ELException {
-		throw new UnsupportedOperationException();
-	}
+    public Class<?> getType(ELContext ctx) throws ELException {
+        throw new UnsupportedOperationException();
+    }
 
-	public Object getValue(ELContext ctx) throws ELException {
-		throw new UnsupportedOperationException();
-	}
+    public Object getValue(ELContext ctx) throws ELException {
+        throw new UnsupportedOperationException();
+    }
 
-	public ValueReference getValueReference(ELContext ctx) throws ELException {
-		return null;
-	}
+    public ValueReference getValueReference(ELContext ctx) throws ELException {
+        return null;
+    }
 
-	public boolean isReadOnly(ELContext ctx) throws ELException {
-		return true;
-	}
+    public boolean isReadOnly(ELContext ctx) throws ELException {
+        return true;
+    }
 
-	public void setValue(ELContext ctx, Object value) throws ELException {
-		throw new PropertyNotWritableException(MessageFactory.get("error.syntax.set"));
-	}
+    public void setValue(ELContext ctx, Object value) throws ELException {
+        throw new PropertyNotWritableException(MessageFactory.get("error.syntax.set"));
+    }
 
-	public void accept(NodeVisitor visitor, ELContext context) throws ELException {
-		visitor.visit(this, context);
-		final Node[] children = this.children;
-		if (children != null && children.length > 0) {
-			for (int i = 0; i < children.length; i++) {
-				this.children[i].accept(visitor, context);
-			}
-		}
-	}
+    public void accept(NodeVisitor visitor, ELContext context) throws ELException {
+        visitor.visit(this, context);
+        final Node[] children = this.children;
+        if (children != null && children.length > 0) {
+            for (int i = 0; i < children.length; i++) {
+                this.children[i].accept(visitor, context);
+            }
+        }
+    }
 
-	public Object invoke(ELContext ctx, Class<?>[] paramTypes, Object[] paramValues) throws ELException {
-		throw new UnsupportedOperationException();
-	}
+    public Object invoke(ELContext ctx, Class<?>[] paramTypes, Object[] paramValues) throws ELException {
+        throw new UnsupportedOperationException();
+    }
 
-	public MethodInfo getMethodInfo(ELContext ctx, Class<?>[] paramTypes) throws ELException {
-		throw new UnsupportedOperationException();
-	}
+    public MethodInfo getMethodInfo(ELContext ctx, Class<?>[] paramTypes) throws ELException {
+        throw new UnsupportedOperationException();
+    }
 
-	@Override
-	public boolean equals(Object node) {
-		if (!(node instanceof SimpleNode)) {
-			return false;
-		}
-		SimpleNode n = (SimpleNode) node;
-		if (this.id != n.id) {
-			return false;
-		}
-		if (this.children == null && n.children == null) {
-			if (this.image == null) {
-				return n.image == null;
-			}
-			return this.image.equals(n.image);
-		}
-		if (this.children == null || n.children == null) {
-			// One is null and the other is non-null
-			return false;
-		}
-		if (this.children.length != n.children.length) {
-			return false;
-		}
-		if (this.children.length == 0) {
-			if (this.image == null) {
-				return n.image == null;
-			}
-			return this.image.equals(n.image);
-		}
-		for (int i = 0; i < this.children.length; i++) {
-			if (!this.children[i].equals(n.children[i])) {
-				return false;
-			}
-		}
-		return true;
-	}
+    @Override
+    public boolean equals(Object node) {
+        if (!(node instanceof SimpleNode)) {
+            return false;
+        }
+        SimpleNode n = (SimpleNode) node;
+        if (this.id != n.id) {
+            return false;
+        }
+        if (this.children == null && n.children == null) {
+            if (this.image == null) {
+                return n.image == null;
+            }
+            return this.image.equals(n.image);
+        }
+        if (this.children == null || n.children == null) {
+            // One is null and the other is non-null
+            return false;
+        }
+        if (this.children.length != n.children.length) {
+            return false;
+        }
+        if (this.children.length == 0) {
+            if (this.image == null) {
+                return n.image == null;
+            }
+            return this.image.equals(n.image);
+        }
+        for (int i = 0; i < this.children.length; i++) {
+            if (!this.children[i].equals(n.children[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-	@Override
-	public boolean isParametersProvided() {
-		return false;
-	}
+    @Override
+    public boolean isParametersProvided() {
+        return false;
+    }
 
-	@Override
-	public int hashCode() {
-		if (this.children == null || this.children.length == 0) {
-			if (this.image != null) {
-				return this.image.hashCode();
-			}
-			return this.id;
-		}
-		int h = 0;
-		for (int i = this.children.length - 1; i >= 0; i--) {
-			h = h + h + h + this.children[i].hashCode();
-		}
-		h = h + h + h + id;
-		return h;
-	}
+    @Override
+    public int hashCode() {
+        if (this.children == null || this.children.length == 0) {
+            if (this.image != null) {
+                return this.image.hashCode();
+            }
+            return this.id;
+        }
+        int h = 0;
+        for (int i = this.children.length - 1; i >= 0; i--) {
+            h = h + h + h + this.children[i].hashCode();
+        }
+        h = h + h + h + id;
+        return h;
+    }
 }

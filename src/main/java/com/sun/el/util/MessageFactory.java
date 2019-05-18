@@ -49,14 +49,14 @@ import java.util.ResourceBundle;
  */
 public final class MessageFactory {
 
-	private static final ResourceBundle bundle = ResourceBundle.getBundle("com.sun.el.Messages");
+    private static final ResourceBundle bundle = ResourceBundle.getBundle("com.sun.el.Messages");
 
-	public static String get(final String key) {
-		return bundle.getString(key);
-	}
+    public static String get(final String key) {
+        return bundle.getString(key);
+    }
 
-	public static String get(final String key, final Object... obj) {
-		return MessageFormat.format(bundle.getString(key), obj);
-	}
+    public static String get(final String key, final Object... obj) {
+        return MessageFormat.format(bundle.getString(key), obj);
+    }
 
 }

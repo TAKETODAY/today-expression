@@ -48,17 +48,17 @@ import javax.el.ELException;
  * @version $Change: 181177 $$DateTime: 2001/06/26 08:45:09 $$Author: kchung $
  */
 public final class AstNull extends SimpleNode {
-	
-	public AstNull(int id) {
-		super(id);
-	}
 
-	public Class<?> getType(ELContext ctx) throws ELException {
-		return null;
-	}
+    public AstNull(int id) {
+        super(id);
+    }
 
-	public Object getValue(ELContext ctx)
-			throws ELException {
-		return null;
-	}
+    public Class<?> getType(ELContext ctx) throws ELException {
+        return null;
+    }
+
+    public Object getValue(ELContext ctx)
+            throws ELException {
+        return null;
+    }
 }

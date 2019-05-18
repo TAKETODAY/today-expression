@@ -107,113 +107,113 @@ import com.sun.el.parser.Node;
 @SuppressWarnings("serial")
 public final class ValueExpressionImpl extends ValueExpression {
 
-	private final String expr;
-	private transient Node node;
-	private final Class<?> expectedType;
+    private final String expr;
+    private transient Node node;
+    private final Class<?> expectedType;
 
-	public ValueExpressionImpl(String expr, Node node, Class<?> expectedType) {
-		this.expr = expr;
-		this.node = node;
-		this.expectedType = expectedType;
-	}
+    public ValueExpressionImpl(String expr, Node node, Class<?> expectedType) {
+        this.expr = expr;
+        this.node = node;
+        this.expectedType = expectedType;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof ValueExpressionImpl) {
-			return getNode().equals(((ValueExpressionImpl) obj).getNode());
-		}
-		return false;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof ValueExpressionImpl) {
+            return getNode().equals(((ValueExpressionImpl) obj).getNode());
+        }
+        return false;
+    }
 
-	@Override
-	public Class<?> getExpectedType() {
-		return this.expectedType;
-	}
+    @Override
+    public Class<?> getExpectedType() {
+        return this.expectedType;
+    }
 
-	/**
-	 * Returns the type the result of the expression will be coerced to after
-	 * evaluation.
-	 * 
-	 * @return the <code>expectedType</code> passed to the
-	 *         <code>ExpressionFactory.createValueExpression</code> method that
-	 *         created this <code>ValueExpression</code>.
-	 * 
-	 * @see javax.el.Expression#getExpressionString()
-	 */
-	@Override
-	public String getExpressionString() {
-		return this.expr;
-	}
+    /**
+     * Returns the type the result of the expression will be coerced to after
+     * evaluation.
+     * 
+     * @return the <code>expectedType</code> passed to the
+     *         <code>ExpressionFactory.createValueExpression</code> method that
+     *         created this <code>ValueExpression</code>.
+     * 
+     * @see javax.el.Expression#getExpressionString()
+     */
+    @Override
+    public String getExpressionString() {
+        return this.expr;
+    }
 
-	/**
-	 * @return The Node for the expression
-	 * @throws ELException
-	 */
-	private Node getNode() throws ELException {
-		if (this.node == null) {
-			this.node = ExpressionFactoryImpl.createNode(this.expr);
-		}
-		return this.node;
-	}
+    /**
+     * @return The Node for the expression
+     * @throws ELException
+     */
+    private Node getNode() throws ELException {
+        if (this.node == null) {
+            this.node = ExpressionFactoryImpl.createNode(this.expr);
+        }
+        return this.node;
+    }
 
-	@Override
-	public Class<?> getType(ELContext context) throws PropertyNotFoundException, ELException {
-		return this.getNode().getType(context);
-	}
+    @Override
+    public Class<?> getType(ELContext context) throws PropertyNotFoundException, ELException {
+        return this.getNode().getType(context);
+    }
 
-	@Override
-	public ValueReference getValueReference(ELContext context) throws PropertyNotFoundException, ELException {
-		return this.getNode().getValueReference(context);
-	}
+    @Override
+    public ValueReference getValueReference(ELContext context) throws PropertyNotFoundException, ELException {
+        return this.getNode().getValueReference(context);
+    }
 
-	@Override
-	public Object getValue(final ELContext context) throws PropertyNotFoundException, ELException {
+    @Override
+    public Object getValue(final ELContext context) throws PropertyNotFoundException, ELException {
 
-		context.notifyBeforeEvaluation(this.expr);
-		Object value = this.getNode().getValue(context);
+        context.notifyBeforeEvaluation(this.expr);
+        Object value = this.getNode().getValue(context);
 
-		if (value != null && expectedType != null) {
-			try {
-				if (!expectedType.isInstance(value)) {
-					value = context.convertToType(value, expectedType);
-				}
-			}
-			catch (IllegalArgumentException ex) {
-				throw new ELException(ex);
-			}
-		}
-		context.notifyAfterEvaluation(this.expr);
-		return value;
-	}
+        if (value != null && expectedType != null) {
+            try {
+                if (!expectedType.isInstance(value)) {
+                    value = context.convertToType(value, expectedType);
+                }
+            }
+            catch (IllegalArgumentException ex) {
+                throw new ELException(ex);
+            }
+        }
+        context.notifyAfterEvaluation(this.expr);
+        return value;
+    }
 
-	@Override
-	public int hashCode() {
-		return getNode().hashCode();
-	}
+    @Override
+    public int hashCode() {
+        return getNode().hashCode();
+    }
 
-	@Override
-	public boolean isLiteralText() {
-		try {
-			return this.getNode() instanceof AstLiteralExpression;
-		}
-		catch (ELException ele) {
-			return false;
-		}
-	}
+    @Override
+    public boolean isLiteralText() {
+        try {
+            return this.getNode() instanceof AstLiteralExpression;
+        }
+        catch (ELException ele) {
+            return false;
+        }
+    }
 
-	@Override
-	public boolean isReadOnly(ELContext context) throws PropertyNotFoundException, ELException {
-		return this.getNode().isReadOnly(context);
-	}
+    @Override
+    public boolean isReadOnly(ELContext context) throws PropertyNotFoundException, ELException {
+        return this.getNode().isReadOnly(context);
+    }
 
-	@Override
-	public void setValue(ELContext context, Object value)
-			throws PropertyNotFoundException, PropertyNotWritableException, ELException //
-	{
-		this.getNode().setValue(context, value);
-	}
+    @Override
+    public void setValue(ELContext context, Object value)
+            throws PropertyNotFoundException, PropertyNotWritableException, ELException //
+    {
+        this.getNode().setValue(context, value);
+    }
 
-	public String toString() {
-		return "ValueExpression[" + this.expr + "]";
-	}
+    public String toString() {
+        return "ValueExpression[" + this.expr + "]";
+    }
 }

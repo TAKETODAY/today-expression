@@ -49,36 +49,36 @@ import javax.el.ELException;
  */
 public final class AstChoice extends SimpleNode {
 
-	public AstChoice(int id) {
-		super(id);
-	}
+    public AstChoice(int id) {
+        super(id);
+    }
 
-	public Class<?> getType(ELContext ctx) throws ELException {
-		Object obj0 = this.children[0].getValue(ctx);
-		Boolean b0 = coerceToBoolean(obj0);
-		return this.children[((b0.booleanValue() ? 1 : 2))].getType(ctx);
-	}
+    public Class<?> getType(ELContext ctx) throws ELException {
+        Object obj0 = this.children[0].getValue(ctx);
+        Boolean b0 = coerceToBoolean(obj0);
+        return this.children[((b0.booleanValue() ? 1 : 2))].getType(ctx);
+    }
 
-	public Object getValue(ELContext ctx) throws ELException {
-		Boolean b0 = coerceToBoolean(this.children[0].getValue(ctx));
-		return this.children[((b0.booleanValue() ? 1 : 2))].getValue(ctx);
-	}
+    public Object getValue(ELContext ctx) throws ELException {
+        Boolean b0 = coerceToBoolean(this.children[0].getValue(ctx));
+        return this.children[((b0.booleanValue() ? 1 : 2))].getValue(ctx);
+    }
 
-	public boolean isReadOnly(ELContext ctx) throws ELException {
-		Object obj0 = this.children[0].getValue(ctx);
-		Boolean b0 = coerceToBoolean(obj0);
-		return this.children[((b0.booleanValue() ? 1 : 2))].isReadOnly(ctx);
-	}
+    public boolean isReadOnly(ELContext ctx) throws ELException {
+        Object obj0 = this.children[0].getValue(ctx);
+        Boolean b0 = coerceToBoolean(obj0);
+        return this.children[((b0.booleanValue() ? 1 : 2))].isReadOnly(ctx);
+    }
 
-	public void setValue(ELContext ctx, Object value) throws ELException {
-		Object obj0 = this.children[0].getValue(ctx);
-		Boolean b0 = coerceToBoolean(obj0);
-		this.children[((b0.booleanValue() ? 1 : 2))].setValue(ctx, value);
-	}
+    public void setValue(ELContext ctx, Object value) throws ELException {
+        Object obj0 = this.children[0].getValue(ctx);
+        Boolean b0 = coerceToBoolean(obj0);
+        this.children[((b0.booleanValue() ? 1 : 2))].setValue(ctx, value);
+    }
 
-	public Object invoke(ELContext ctx, Class<?>[] paramTypes, Object[] paramValues) throws ELException {
-		Boolean b0 = coerceToBoolean(this.children[0].getValue(ctx));
-		return this.children[((b0.booleanValue() ? 1 : 2))].invoke(ctx, paramTypes, paramValues);
-	}
+    public Object invoke(ELContext ctx, Class<?>[] paramTypes, Object[] paramValues) throws ELException {
+        Boolean b0 = coerceToBoolean(this.children[0].getValue(ctx));
+        return this.children[((b0.booleanValue() ? 1 : 2))].invoke(ctx, paramTypes, paramValues);
+    }
 
 }

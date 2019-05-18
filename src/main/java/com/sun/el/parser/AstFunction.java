@@ -58,156 +58,156 @@ import com.sun.el.util.MessageFactory;
  */
 public final class AstFunction extends SimpleNode {
 
-	protected String localName = "";
-	protected String prefix = "";
+    protected String localName = "";
+    protected String prefix = "";
 
-	public AstFunction(int id) {
-		super(id);
-	}
+    public AstFunction(int id) {
+        super(id);
+    }
 
-	public String getLocalName() {
-		return localName;
-	}
+    public String getLocalName() {
+        return localName;
+    }
 
-	public String getOutputName() {
+    public String getOutputName() {
 
-		if (this.prefix.length() == 0) {
-			return this.localName;
-		}
-		return this.prefix + ":" + this.localName;
-	}
+        if (this.prefix.length() == 0) {
+            return this.localName;
+        }
+        return this.prefix + ":" + this.localName;
+    }
 
-	public String getPrefix() {
-		return prefix;
-	}
+    public String getPrefix() {
+        return prefix;
+    }
 
-	@Override
-	public Class<?> getType(ELContext ctx) throws ELException {
+    @Override
+    public Class<?> getType(ELContext ctx) throws ELException {
 
-		FunctionMapper fnMapper = ctx.getFunctionMapper();
+        FunctionMapper fnMapper = ctx.getFunctionMapper();
 
-		// quickly validate again for this request
-		if (fnMapper == null) {
-			throw new ELException(MessageFactory.get("error.fnMapper.null"));
-		}
-		Method m = fnMapper.resolveFunction(this.prefix, this.localName);
-		if (m == null) {
-			throw new ELException(MessageFactory.get("error.fnMapper.method", this.getOutputName()));
-		}
-		return m.getReturnType();
-	}
+        // quickly validate again for this request
+        if (fnMapper == null) {
+            throw new ELException(MessageFactory.get("error.fnMapper.null"));
+        }
+        Method m = fnMapper.resolveFunction(this.prefix, this.localName);
+        if (m == null) {
+            throw new ELException(MessageFactory.get("error.fnMapper.method", this.getOutputName()));
+        }
+        return m.getReturnType();
+    }
 
-	/*
-	 * Find the object associated with the given name. Return null if the there is
-	 * no such object.
-	 */
-	private Object findValue(ELContext ctx, String name) {
+    /*
+     * Find the object associated with the given name. Return null if the there is
+     * no such object.
+     */
+    private Object findValue(ELContext ctx, String name) {
 
-		// First check if this is a Lambda argument
-		if (ctx.isLambdaArgument(name)) {
-			return ctx.getLambdaArgument(name);
-		}
+        // First check if this is a Lambda argument
+        if (ctx.isLambdaArgument(name)) {
+            return ctx.getLambdaArgument(name);
+        }
 
-		// Next check if this an EL variable
-		final VariableMapper varMapper = ctx.getVariableMapper();
-		if (varMapper != null) {
-			final ValueExpression expr = varMapper.resolveVariable(name);
-			if (expr != null) {
-				return expr.getValue(ctx);
-			}
-		}
-		// Check if this is resolvable by an ELResolver
-		ctx.setPropertyResolved(false);
-		final Object ret = ctx.getELResolver().getValue(ctx, null, name);
-		if (ctx.isPropertyResolved()) {
-			return ret;
-		}
-		return null;
-	}
+        // Next check if this an EL variable
+        final VariableMapper varMapper = ctx.getVariableMapper();
+        if (varMapper != null) {
+            final ValueExpression expr = varMapper.resolveVariable(name);
+            if (expr != null) {
+                return expr.getValue(ctx);
+            }
+        }
+        // Check if this is resolvable by an ELResolver
+        ctx.setPropertyResolved(false);
+        final Object ret = ctx.getELResolver().getValue(ctx, null, name);
+        if (ctx.isPropertyResolved()) {
+            return ret;
+        }
+        return null;
+    }
 
-	@Override
-	public Object getValue(ELContext ctx) throws ELException {
+    @Override
+    public Object getValue(ELContext ctx) throws ELException {
 
-		// Check to see if a function is a bean that is a Lambdaexpression.
-		// If so, invoke it. Also allow for the case that a Lambda expression
-		// can return another Lambda expression.
-		if (prefix.length() == 0) {
-			Object val = findValue(ctx, this.localName);
-			// Check the case of repeated lambda invocation, such as f()()()
+        // Check to see if a function is a bean that is a Lambdaexpression.
+        // If so, invoke it. Also allow for the case that a Lambda expression
+        // can return another Lambda expression.
+        if (prefix.length() == 0) {
+            Object val = findValue(ctx, this.localName);
+            // Check the case of repeated lambda invocation, such as f()()()
 
-			if ((val != null) && (val instanceof LambdaExpression)) {
-				for (int i = 0; i < this.children.length; i++) {
-					Object[] params = ((AstMethodArguments) this.children[i]).getParameters(ctx);
-					if (!(val instanceof LambdaExpression)) {
-						throw new ELException(MessageFactory.get("error.function.syntax", getOutputName()));
-					}
-					val = ((LambdaExpression) val).invoke(ctx, params);
-				}
-				return val;
-			}
-		}
+            if ((val != null) && (val instanceof LambdaExpression)) {
+                for (int i = 0; i < this.children.length; i++) {
+                    Object[] params = ((AstMethodArguments) this.children[i]).getParameters(ctx);
+                    if (!(val instanceof LambdaExpression)) {
+                        throw new ELException(MessageFactory.get("error.function.syntax", getOutputName()));
+                    }
+                    val = ((LambdaExpression) val).invoke(ctx, params);
+                }
+                return val;
+            }
+        }
 
-		final FunctionMapper fnMapper = ctx.getFunctionMapper();
+        final FunctionMapper fnMapper = ctx.getFunctionMapper();
 
-		Method m = fnMapper.resolveFunction(this.prefix, this.localName);
-		if (m == null) {
-			if (this.prefix.length() == 0 && ctx.getImportHandler() != null) {
-				// Check if this is a constructor call for an imported class
-				Class<?> c = ctx.getImportHandler().resolveClass(this.localName);
-				String methodName = null;
-				if (c != null) {
-					methodName = "<init>";
-				}
-				else {
-					// Check if this is a imported static method
-					c = ctx.getImportHandler().resolveStatic(this.localName);
-					methodName = this.localName;;
-				}
-				if (c != null) {
-					// Use StaticFieldELResolver to invoke the constructor or the
-					// static method.
-					final Object[] params = ((AstMethodArguments) this.children[0]).getParameters(ctx);
-					return ctx.getELResolver().invoke(ctx, c, methodName, null, params);
-				}
-			}
-			// quickly validate for this request
-			throw new ELException(MessageFactory.get("error.fnMapper.method", this.getOutputName()));
-		}
+        Method m = fnMapper.resolveFunction(this.prefix, this.localName);
+        if (m == null) {
+            if (this.prefix.length() == 0 && ctx.getImportHandler() != null) {
+                // Check if this is a constructor call for an imported class
+                Class<?> c = ctx.getImportHandler().resolveClass(this.localName);
+                String methodName = null;
+                if (c != null) {
+                    methodName = "<init>";
+                }
+                else {
+                    // Check if this is a imported static method
+                    c = ctx.getImportHandler().resolveStatic(this.localName);
+                    methodName = this.localName;;
+                }
+                if (c != null) {
+                    // Use StaticFieldELResolver to invoke the constructor or the
+                    // static method.
+                    final Object[] params = ((AstMethodArguments) this.children[0]).getParameters(ctx);
+                    return ctx.getELResolver().invoke(ctx, c, methodName, null, params);
+                }
+            }
+            // quickly validate for this request
+            throw new ELException(MessageFactory.get("error.fnMapper.method", this.getOutputName()));
+        }
 
-		final Class<?>[] paramTypes = m.getParameterTypes();
-		final Object[] params = ((AstMethodArguments) this.children[0]).getParameters(ctx);
-		try {
+        final Class<?>[] paramTypes = m.getParameterTypes();
+        final Object[] params = ((AstMethodArguments) this.children[0]).getParameters(ctx);
+        try {
 
-			for (int i = 0; i < params.length; i++) {
-				params[i] = ctx.convertToType(params[i], paramTypes[i]);
-			}
-		}
-		catch (ELException ele) {
-			throw new ELException(MessageFactory.get("error.function", this.getOutputName()), ele);
-		}
+            for (int i = 0; i < params.length; i++) {
+                params[i] = ctx.convertToType(params[i], paramTypes[i]);
+            }
+        }
+        catch (ELException ele) {
+            throw new ELException(MessageFactory.get("error.function", this.getOutputName()), ele);
+        }
 
-		try {
-			// static method
-			return m.invoke(null, params);
-		}
-		catch (IllegalAccessException iae) {
-			throw new ELException(MessageFactory.get("error.function", this.getOutputName()), iae);
-		}
-		catch (InvocationTargetException ite) {
-			throw new ELException(MessageFactory.get("error.function", this.getOutputName()), ite.getCause());
-		}
-	}
+        try {
+            // static method
+            return m.invoke(null, params);
+        }
+        catch (IllegalAccessException iae) {
+            throw new ELException(MessageFactory.get("error.function", this.getOutputName()), iae);
+        }
+        catch (InvocationTargetException ite) {
+            throw new ELException(MessageFactory.get("error.function", this.getOutputName()), ite.getCause());
+        }
+    }
 
-	public void setLocalName(String localName) {
-		this.localName = localName;
-	}
+    public void setLocalName(String localName) {
+        this.localName = localName;
+    }
 
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
-	}
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
 
-	@Override
-	public String toString() {
-		return ELParserTreeConstants.jjtNodeName[id] + "[" + this.getOutputName() + "]";
-	}
+    @Override
+    public String toString() {
+        return ELParserTreeConstants.jjtNodeName[id] + "[" + this.getOutputName() + "]";
+    }
 }
