@@ -7,8 +7,8 @@
 	<groupId>cn.taketoday</groupId>
 	<artifactId>today-expression</artifactId>
 
-<!-- 	<version>0.0.1.RELEASE</version> -->
-	<version>0.0.2.SNAPSHOT</version>
+<!-- 	<version>0.0.2.RELEASE</version> -->
+	<version>latest</version>
 
 	<name>Java Unified Expression Language</name>
 	<description>Java Unified Expression Language.</description>
