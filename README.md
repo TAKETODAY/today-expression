@@ -1,14 +1,19 @@
 # Java Unified Expression Language
 
 
-## 安装
+## Install
 
 ```xml
 <dependency>
     <groupId>cn.taketoday</groupId>
     <artifactId>today-expression</artifactId>
-    <version>0.0.1.RELEASE</version>
+    <version>0.0.2.RELEASE</version>
 </dependency>
 ```
-- [Maven Central](https://search.maven.org/artifact/cn.taketoday/today-expression/0.0.1.RELEASE/jar)
+
+```
+implementation 'cn.taketoday:today-expression:0.0.2.RELEASE'
+```
+
+- [Maven Central](https://search.maven.org/artifact/cn.taketoday/today-expression)
 
