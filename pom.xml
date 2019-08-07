@@ -7,9 +7,9 @@
     <artifactId>today-expression</artifactId>
 
 <!-- 	
-	<version>latest</version>
+    <version>0.0.3.RELEASE</version>
 -->
-    <version>0.0.2.RELEASE</version>
+    <version>latest</version>
 
     <name>Java Unified Expression Language</name>
     <description>Java Unified Expression Language.</description>
@@ -25,7 +25,7 @@
     </licenses>
 
     <issueManagement>
-        <system>jira</system>
+        <system>Github Issues</system>
         <url>http://java.net/jira/browse/EL_SPEC</url>
     </issueManagement>
 

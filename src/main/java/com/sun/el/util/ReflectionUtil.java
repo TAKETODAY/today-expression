@@ -74,10 +74,12 @@ public abstract class ReflectionUtil {
             "boolean", "byte", "char", "double", "float", "int", "long", "short", "void"//
     };
 
+    @SuppressWarnings("rawtypes")
     protected static final Class[] PRIMITIVES = new Class[] { //
             boolean.class, byte.class, char.class, double.class, float.class, int.class, long.class, short.class, Void.TYPE
     };
 
+    @SuppressWarnings("rawtypes")
     public static Class forName(String name) throws ClassNotFoundException {
         if (null == name || "".equals(name)) {
             return null;
@@ -96,6 +98,7 @@ public abstract class ReflectionUtil {
         return c;
     }
 
+    @SuppressWarnings("rawtypes")
     protected static Class forNamePrimitive(String name) {
         if (name.length() <= 8) {
             int p = Arrays.binarySearch(PRIMITIVE_NAMES, name);
@@ -113,6 +116,7 @@ public abstract class ReflectionUtil {
      * @return The array of Classes
      * @throws ClassNotFoundException
      */
+    @SuppressWarnings("rawtypes")
     public static Class[] toTypeArray(String[] s) throws ClassNotFoundException {
         if (s == null)
             return null;
@@ -129,6 +133,7 @@ public abstract class ReflectionUtil {
      * @param c
      * @return The array of Classes
      */
+    @SuppressWarnings("rawtypes")
     public static String[] toTypeNameArray(Class[] c) {
         if (c == null)
             return null;
@@ -726,13 +731,13 @@ public abstract class ReflectionUtil {
             return result;
         }
 
-        public static List<Wrapper> wrap(Constructor<?>[] constructors) {
-            List<Wrapper> result = new ArrayList<>();
-            for (Constructor<?> constructor : constructors) {
-                result.add(new ConstructorWrapper(constructor));
-            }
-            return result;
-        }
+//        public static List<Wrapper> wrap(Constructor<?>[] constructors) {
+//            List<Wrapper> result = new ArrayList<>();
+//            for (Constructor<?> constructor : constructors) {
+//                result.add(new ConstructorWrapper(constructor));
+//            }
+//            return result;
+//        }
 
         public abstract Object unWrap();
 
@@ -779,32 +784,32 @@ public abstract class ReflectionUtil {
      * This method duplicates code in javax.el.ELUtil. When making changes keep the
      * code in sync.
      */
-    private static class ConstructorWrapper extends Wrapper {
-        private final Constructor<?> c;
-
-        public ConstructorWrapper(Constructor<?> c) {
-            this.c = c;
-        }
-
-        @Override
-        public Object unWrap() {
-            return c;
-        }
-
-        @Override
-        public Class<?>[] getParameterTypes() {
-            return c.getParameterTypes();
-        }
-
-        @Override
-        public boolean isVarArgs() {
-            return c.isVarArgs();
-        }
-
-        @Override
-        public boolean isBridge() {
-            return false;
-        }
-    }
+//    private static class ConstructorWrapper extends Wrapper {
+//        private final Constructor<?> c;
+//
+//        public ConstructorWrapper(Constructor<?> c) {
+//            this.c = c;
+//        }
+//
+//        @Override
+//        public Object unWrap() {
+//            return c;
+//        }
+//
+//        @Override
+//        public Class<?>[] getParameterTypes() {
+//            return c.getParameterTypes();
+//        }
+//
+//        @Override
+//        public boolean isVarArgs() {
+//            return c.isVarArgs();
+//        }
+//
+//        @Override
+//        public boolean isBridge() {
+//            return false;
+//        }
+//    }
 
 }

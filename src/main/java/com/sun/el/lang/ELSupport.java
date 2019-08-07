@@ -191,7 +191,7 @@ public abstract class ELSupport {
     // Enum types are hard construct. We can declare this as
     // <T extends Enum<T>> T coerceToEnum(Object, Class<T> type)
     // but this makes it harder to get the calls right.
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public final static Enum coerceToEnum(final Object obj, Class type) {
 
         if (obj == null || "".equals(obj)) {

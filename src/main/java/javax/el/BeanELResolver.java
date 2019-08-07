@@ -529,15 +529,17 @@ public class BeanELResolver extends ELResolver {
 
         public BeanProperties(Class<?> baseClass) {
 
-            for (final Field field : baseClass.getDeclaredFields()) {
-                if (!Modifier.isPublic(field.getModifiers())) {
-                    field.setAccessible(true);
+            do {
+                for (final Field field : baseClass.getDeclaredFields()) {
+                    if (!Modifier.isPublic(field.getModifiers())) {
+                        field.setAccessible(true);
+                    }
+                    propertyMap.put(field.getName(), field); // parent class will replace same field
                 }
-                propertyMap.put(field.getName(), field);
-            }
+            } while ((baseClass = baseClass.getSuperclass()) != Object.class && baseClass != null);
         }
 
-        public final Field getBeanProperty(String property) {
+        public final Field getBeanProperty(final String property) {
             return propertyMap.get(property);
         }
     }
