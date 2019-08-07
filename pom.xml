@@ -6,10 +6,10 @@
     <groupId>cn.taketoday</groupId>
     <artifactId>today-expression</artifactId>
 
-<!-- 	
-    <version>0.0.3.RELEASE</version>
--->
+<!--
     <version>latest</version>
+-->
+    <version>0.0.3.RELEASE</version>
 
     <name>Java Unified Expression Language</name>
     <description>Java Unified Expression Language.</description>
