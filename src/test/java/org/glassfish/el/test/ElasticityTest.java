@@ -60,16 +60,13 @@ public class ElasticityTest {
 
     ELProcessor elp;
 
-    public ElasticityTest() {
-    }
+    public ElasticityTest() {}
 
     @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
+    public static void setUpClass() throws Exception {}
 
     @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
+    public static void tearDownClass() throws Exception {}
 
     @Before
     public void setUp() {
@@ -77,8 +74,7 @@ public class ElasticityTest {
     }
 
     @After
-    public void tearDown() {
-    }
+    public void tearDown() {}
 
     static public class Data {
         int s;
@@ -153,10 +149,10 @@ public class ElasticityTest {
         obj = elp.eval("c.values().select(v->v.list." + "where(d->d.s>1 && d.s<10)." + "average(d->d.d) > 100).toList()");
         System.out.println(obj);
         obj = elp.eval(
-                "c.values().select(v->v.list." + "where(d->d.s>1 && d.s<10)." + "average(d->d.d) > 100).any()");
+                       "c.values().select(v->v.list." + "where(d->d.s>1 && d.s<10)." + "average(d->d.d) > 100).any()");
         System.out.println(obj);
         obj = elp.eval(
-                "c.entrySet().select(s->[s.key, s.value.list." + "where(d->d.s>1 && d.s<10)." + "average(d->d.d)]).toList()");
+                       "c.entrySet().select(s->[s.key, s.value.list." + "where(d->d.s>1 && d.s<10)." + "average(d->d.d)]).toList()");
         System.out.println(obj);
     }
 }

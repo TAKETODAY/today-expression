@@ -69,8 +69,7 @@ public class ELProcessorTest {
     }
 
     @Before
-    public void setUp() {
-    }
+    public void setUp() {}
 
     @Test
     public void testMethExpr() {
@@ -84,7 +83,7 @@ public class ELProcessorTest {
         }
         assertTrue(meth == null);
         meth = factory.createMethodExpression(
-                ctxt, "#{'abc'.length()}", Object.class, null);
+                                              ctxt, "#{'abc'.length()}", Object.class, null);
         Object result = meth.invoke(ctxt, new Object[] { "abcde" });
         System.out.println("'abc'.length() called, equals " + result);
         assertEquals(result, new Integer(3));

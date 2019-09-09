@@ -112,7 +112,7 @@ public class ExpressionFactoryImpl extends ExpressionFactory implements NodeVisi
 
     @Override
     public MethodExpression createMethodExpression(ELContext context, String expression, Class<?> expectedReturnType, //
-            Class<?>[] expectedParamTypes)//
+                                                   Class<?>[] expectedParamTypes)//
     {
         MethodExpression methodExpression;
 
@@ -251,7 +251,7 @@ public class ExpressionFactoryImpl extends ExpressionFactory implements NodeVisi
 
             AstFunction funcNode = (AstFunction) node;
             if ((funcNode.getPrefix().length() == 0) && //
-                    (fnMapper == null || fnMapper.resolveFunction(funcNode.getPrefix(), funcNode.getLocalName()) == null)) //
+                (fnMapper == null || fnMapper.resolveFunction(funcNode.getPrefix(), funcNode.getLocalName()) == null)) //
             {
                 // This can be a call to a LambdaExpression. The target
                 // of the call is a bean or an EL variable. Capture

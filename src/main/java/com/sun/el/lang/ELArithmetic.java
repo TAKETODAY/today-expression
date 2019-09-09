@@ -60,10 +60,8 @@ public abstract class ELArithmetic {
         }
 
         protected Number coerce(Number num) {
-            if (num instanceof BigDecimal)
-                return num;
-            if (num instanceof BigInteger)
-                return new BigDecimal((BigInteger) num);
+            if (num instanceof BigDecimal) return num;
+            if (num instanceof BigInteger) return new BigDecimal((BigInteger) num);
             return new BigDecimal(num.doubleValue());
         }
 
@@ -99,8 +97,7 @@ public abstract class ELArithmetic {
         }
 
         protected Number coerce(Number num) {
-            if (num instanceof BigInteger)
-                return num;
+            if (num instanceof BigInteger) return num;
             return new BigInteger(num.toString());
         }
 
@@ -143,10 +140,8 @@ public abstract class ELArithmetic {
         }
 
         protected Number coerce(Number num) {
-            if (num instanceof Double)
-                return num;
-            if (num instanceof BigInteger)
-                return new BigDecimal((BigInteger) num);
+            if (num instanceof Double) return num;
+            if (num instanceof BigInteger) return new BigDecimal((BigInteger) num);
             return num.doubleValue();
         }
 
@@ -251,12 +246,9 @@ public abstract class ELArithmetic {
         }
 
         final ELArithmetic delegate;
-        if (BIGDECIMAL.matches(obj0, obj1))
-            delegate = BIGDECIMAL;
-        else if (DOUBLE.matches(obj0, obj1))
-            delegate = DOUBLE;
-        else if (BIGINTEGER.matches(obj0, obj1))
-            delegate = BIGINTEGER;
+        if (BIGDECIMAL.matches(obj0, obj1)) delegate = BIGDECIMAL;
+        else if (DOUBLE.matches(obj0, obj1)) delegate = DOUBLE;
+        else if (BIGINTEGER.matches(obj0, obj1)) delegate = BIGINTEGER;
         else
             delegate = LONG;
 
@@ -272,12 +264,9 @@ public abstract class ELArithmetic {
         }
 
         final ELArithmetic delegate;
-        if (BIGDECIMAL.matches(obj0, obj1))
-            delegate = BIGDECIMAL;
-        else if (DOUBLE.matches(obj0, obj1))
-            delegate = DOUBLE;
-        else if (BIGINTEGER.matches(obj0, obj1))
-            delegate = BIGINTEGER;
+        if (BIGDECIMAL.matches(obj0, obj1)) delegate = BIGDECIMAL;
+        else if (DOUBLE.matches(obj0, obj1)) delegate = DOUBLE;
+        else if (BIGINTEGER.matches(obj0, obj1)) delegate = BIGINTEGER;
         else
             delegate = LONG;
 
@@ -293,12 +282,9 @@ public abstract class ELArithmetic {
         }
 
         final ELArithmetic delegate;
-        if (BIGDECIMAL.matches(obj0, obj1))
-            delegate = BIGDECIMAL;
-        else if (DOUBLE.matches(obj0, obj1))
-            delegate = DOUBLE;
-        else if (BIGINTEGER.matches(obj0, obj1))
-            delegate = BIGINTEGER;
+        if (BIGDECIMAL.matches(obj0, obj1)) delegate = BIGDECIMAL;
+        else if (DOUBLE.matches(obj0, obj1)) delegate = DOUBLE;
+        else if (BIGINTEGER.matches(obj0, obj1)) delegate = BIGINTEGER;
         else
             delegate = LONG;
 
@@ -314,10 +300,8 @@ public abstract class ELArithmetic {
         }
 
         final ELArithmetic delegate;
-        if (BIGDECIMAL.matches(obj0, obj1))
-            delegate = BIGDECIMAL;
-        else if (BIGINTEGER.matches(obj0, obj1))
-            delegate = BIGDECIMAL;
+        if (BIGDECIMAL.matches(obj0, obj1)) delegate = BIGDECIMAL;
+        else if (BIGINTEGER.matches(obj0, obj1)) delegate = BIGDECIMAL;
         else
             delegate = DOUBLE;
 
@@ -333,12 +317,9 @@ public abstract class ELArithmetic {
         }
 
         final ELArithmetic delegate;
-        if (BIGDECIMAL.matches(obj0, obj1))
-            delegate = BIGDECIMAL;
-        else if (DOUBLE.matches(obj0, obj1))
-            delegate = DOUBLE;
-        else if (BIGINTEGER.matches(obj0, obj1))
-            delegate = BIGINTEGER;
+        if (BIGDECIMAL.matches(obj0, obj1)) delegate = BIGDECIMAL;
+        else if (DOUBLE.matches(obj0, obj1)) delegate = DOUBLE;
+        else if (BIGINTEGER.matches(obj0, obj1)) delegate = BIGINTEGER;
         else
             delegate = LONG;
 
@@ -354,12 +335,12 @@ public abstract class ELArithmetic {
 
     public final static boolean isNumberType(final Class<?> type) {
         return type == Long.TYPE //
-                || type == Double.TYPE //
-                || type == Byte.TYPE //
-                || type == Short.TYPE //
-                || type == Integer.TYPE //
-                || type == Float.TYPE //
-                || Number.class.isAssignableFrom(type);
+               || type == Double.TYPE //
+               || type == Byte.TYPE //
+               || type == Short.TYPE //
+               || type == Integer.TYPE //
+               || type == Float.TYPE //
+               || Number.class.isAssignableFrom(type);
     }
 
     /**

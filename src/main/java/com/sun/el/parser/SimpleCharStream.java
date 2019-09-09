@@ -97,8 +97,8 @@ public class SimpleCharStream {
         this(dstream, 1, 1, 512);
     }
 
-    public SimpleCharStream(InputStream dstream, String encoding, int startline, int startcolumn, int buffersize) //
-            throws UnsupportedEncodingException //
+    public SimpleCharStream(InputStream dstream, String encoding,
+            int startline, int startcolumn, int buffersize) throws UnsupportedEncodingException //
     {
         this(encoding == null ? new InputStreamReader(dstream)
                 : new InputStreamReader(dstream, encoding), startline, startcolumn, buffersize);
@@ -108,8 +108,8 @@ public class SimpleCharStream {
         this(new InputStreamReader(dstream), startline, startcolumn, buffersize);
     }
 
-    public SimpleCharStream(InputStream dstream, String encoding, int startline, int startcolumn) //
-            throws UnsupportedEncodingException ///
+    public SimpleCharStream(InputStream dstream, String encoding,
+            int startline, int startcolumn) throws UnsupportedEncodingException ///
     {
         this(dstream, encoding, startline, startcolumn, 512);
     }
@@ -176,15 +176,12 @@ public class SimpleCharStream {
                     bufpos = maxNextCharInd = 0;
                     available = tokenBegin;
                 }
-                else if (tokenBegin < 0)
-                    bufpos = maxNextCharInd = 0;
+                else if (tokenBegin < 0) bufpos = maxNextCharInd = 0;
                 else
                     ExpandBuff(false);
             }
-            else if (available > tokenBegin)
-                available = bufsize;
-            else if ((tokenBegin - available) < 2048)
-                ExpandBuff(true);
+            else if (available > tokenBegin) available = bufsize;
+            else if ((tokenBegin - available) < 2048) ExpandBuff(true);
             else
                 available = tokenBegin;
         }
@@ -202,8 +199,7 @@ public class SimpleCharStream {
         catch (IOException e) {
             --bufpos;
             backup(0);
-            if (tokenBegin == -1)
-                tokenBegin = bufpos;
+            if (tokenBegin == -1) tokenBegin = bufpos;
             throw e;
         }
     }
@@ -258,14 +254,12 @@ public class SimpleCharStream {
         if (inBuf > 0) {
             --inBuf;
 
-            if (++bufpos == bufsize)
-                bufpos = 0;
+            if (++bufpos == bufsize) bufpos = 0;
 
             return buffer[bufpos];
         }
 
-        if (++bufpos >= maxNextCharInd)
-            FillBuff();
+        if (++bufpos >= maxNextCharInd) FillBuff();
 
         char c = buffer[bufpos];
 
@@ -315,8 +309,7 @@ public class SimpleCharStream {
     public void backup(int amount) {
 
         inBuf += amount;
-        if ((bufpos -= amount) < 0)
-            bufpos += bufsize;
+        if ((bufpos -= amount) < 0) bufpos += bufsize;
     }
 
     /** Get token literal value. */
@@ -331,11 +324,10 @@ public class SimpleCharStream {
     public char[] GetSuffix(int len) {
         char[] ret = new char[len];
 
-        if ((bufpos + 1) >= len)
-            System.arraycopy(buffer, bufpos - len + 1, ret, 0, len);
+        if ((bufpos + 1) >= len) System.arraycopy(buffer, bufpos - len + 1, ret, 0, len);
         else {
             System.arraycopy(buffer, bufsize - (len - bufpos - 1), ret, 0,
-                    len - bufpos - 1);
+                             len - bufpos - 1);
             System.arraycopy(buffer, 0, ret, len - bufpos - 1, bufpos + 1);
         }
         return ret;
@@ -378,8 +370,7 @@ public class SimpleCharStream {
             bufcolumn[j] = newCol + columnDiff;
 
             while (i++ < len) {
-                if (bufline[j = start % bufsize] != bufline[++start % bufsize])
-                    bufline[j] = newLine++;
+                if (bufline[j = start % bufsize] != bufline[++start % bufsize]) bufline[j] = newLine++;
                 else
                     bufline[j] = newLine;
             }

@@ -82,8 +82,7 @@ public class OverloadedMethodTest {
     }
 
     @After
-    public void tearDown() {
-    }
+    public void tearDown() {}
 
     @Test
     public void testMethodWithNoArg() {
@@ -96,8 +95,7 @@ public class OverloadedMethodTest {
             elp.eval("foo.methodNotExisted()");
             fail("testNoExistedMethod Failed");
         }
-        catch (MethodNotFoundException e) {
-        }
+        catch (MethodNotFoundException e) {}
     }
 
     @Test
@@ -124,8 +122,7 @@ public class OverloadedMethodTest {
             elp.eval("foo.methodWithAmbiguousArgs(i12, i12)");
             fail("testMethodWithAmbiguousArgs Failed");
         }
-        catch (MethodNotFoundException e) {
-        }
+        catch (MethodNotFoundException e) {}
     }
 
     @Test
@@ -171,11 +168,11 @@ public class OverloadedMethodTest {
     @Test
     public void testMethodExprInvokingWithoutArgs() {
         MethodExpression methodExpr = exprFactory.createMethodExpression(
-                elContext,
-                "${foo.methodForMethodExpr}",
-                String.class,
-                new Class<?>[]
-                { String.class });
+                                                                         elContext,
+                                                                         "${foo.methodForMethodExpr}",
+                                                                         String.class,
+                                                                         new Class<?>[]
+                                                                         { String.class });
 
         Object invoke = methodExpr.invoke(elContext, new Object[0]);
         System.err.println(invoke);
@@ -186,11 +183,11 @@ public class OverloadedMethodTest {
     public void testMethodExprInvoking() {
 
         MethodExpression methodExpr = exprFactory.createMethodExpression(
-                elContext,
-                "${foo.methodForMethodExpr2}",
-                String.class,
-                new Class<?>[]
-                { Runnable.class });
+                                                                         elContext,
+                                                                         "${foo.methodForMethodExpr2}",
+                                                                         String.class,
+                                                                         new Class<?>[]
+                                                                         { Runnable.class });
         assertEquals("Runnable", methodExpr.invoke(elContext, new Object[] { Thread.currentThread() }));
         try {
             Object invoke = methodExpr.invoke(elContext, new Object[] { "foo" });

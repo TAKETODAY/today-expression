@@ -49,8 +49,7 @@ class FactoryFinder {
                 try {
                     constr = spiClass.getConstructor(Properties.class);
                 }
-                catch (Exception ex) {
-                }
+                catch (Exception ex) {}
                 if (constr != null) {
                     return constr.newInstance(properties);
                 }
@@ -116,8 +115,7 @@ class FactoryFinder {
                 }
             }
         }
-        catch (Exception ex) {
-        }
+        catch (Exception ex) {}
 
         // try to read from $java.home/lib/el.properties
         try {
@@ -131,8 +129,7 @@ class FactoryFinder {
                 return newInstance(factoryClassName, classLoader, properties);
             }
         }
-        catch (Exception ex) {
-        }
+        catch (Exception ex) {}
 
         // Use the system property
         try {
@@ -141,8 +138,7 @@ class FactoryFinder {
                 return newInstance(systemProp, classLoader, properties);
             }
         }
-        catch (SecurityException se) {
-        }
+        catch (SecurityException se) {}
 
         if (fallbackClassName == null) {
             throw new ELException("Provider for " + factoryId + " cannot be found", null);

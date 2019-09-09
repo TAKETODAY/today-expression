@@ -58,8 +58,7 @@ public class OperatorTest {
 
     static ELProcessor elp;
 
-    public OperatorTest() {
-    }
+    public OperatorTest() {}
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -67,12 +66,10 @@ public class OperatorTest {
     }
 
     @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
+    public static void tearDownClass() throws Exception {}
 
     @Before
-    public void setUp() {
-    }
+    public void setUp() {}
 
     void testExpr(String testname, String expr, Long expected) {
         System.out.println("=== Test " + testname + " ===");
@@ -130,7 +127,7 @@ public class OperatorTest {
         testExpr("quote", "'\"'", "\"");
         ELManager elm = elp.getELManager();
         ValueExpression v = elm.getExpressionFactory().createValueExpression(
-                elm.getELContext(), "#${1+1}", Object.class);
+                                                                             elm.getELContext(), "#${1+1}", Object.class);
         Object ret = v.getValue(elm.getELContext());
         assertEquals(ret, "#2");
 
@@ -139,7 +136,6 @@ public class OperatorTest {
 //        elp.eval("[1,2][true]"); // throws IllegalArgumentExpression
         /*
          * elp.defineBean("date", new Date(2013, 1,2)); elp.eval("date.getYear()");
-         * 
          * elp.defineBean("href", null); testExpr("space", "(empty href)?'#':href",
          * "#"); MethodExpression m = elm.getExpressionFactory().createMethodExpression(
          * elm.getELContext(), "${name}", Object.class, new Class[] {});

@@ -151,7 +151,7 @@ public final class AstIdentifier extends SimpleNode {
         // First check if this is a lambda argument
         if (ctx.isLambdaArgument(this.image)) {
             throw new PropertyNotWritableException(MessageFactory.get("error.lambda.parameter.readonly",
-                    this.image));
+                                                                      this.image));
         }
         VariableMapper varMapper = ctx.getVariableMapper();
         if (varMapper != null) {
@@ -205,6 +205,7 @@ public final class AstIdentifier extends SimpleNode {
         else if (obj == null) {
             throw new MethodNotFoundException("Identity '" + this.image + "' was null and was unable to invoke");
         }
-        throw new ELException("Identity '" + this.image + "' does not reference a MethodExpression instance, returned type: " + obj.getClass().getName());
+        throw new ELException("Identity '" + this.image + "' does not reference a MethodExpression instance, returned type: " + obj
+                .getClass().getName());
     }
 }

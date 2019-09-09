@@ -60,16 +60,13 @@ import org.junit.Test;
 public class ConvertTest {
     ELProcessor elp;
 
-    public ConvertTest() {
-    }
+    public ConvertTest() {}
 
     @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
+    public static void setUpClass() throws Exception {}
 
     @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
+    public static void tearDownClass() throws Exception {}
 
     @Before
     public void setUp() {
@@ -77,8 +74,7 @@ public class ConvertTest {
     }
 
     @After
-    public void tearDown() {
-    }
+    public void tearDown() {}
 
     static public class MyBean {
         String name;

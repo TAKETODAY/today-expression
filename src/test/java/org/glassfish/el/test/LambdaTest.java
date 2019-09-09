@@ -51,12 +51,10 @@ import org.junit.Test;
 public class LambdaTest {
 
     @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
+    public static void setUpClass() throws Exception {}
 
     @Before
-    public void setUp() {
-    }
+    public void setUp() {}
 
     void testExpr(ELProcessor elp, String testname, String expr, Long expected) {
         System.out.println("=== Test Lambda Expression:" + testname + " ===");
@@ -90,7 +88,7 @@ public class LambdaTest {
         testExpr(elp, "conditional", "(x->cond? x+1: x+2)(10)", 11L);
         elp.eval("cond = false");
         testExpr(elp, "conditional 2",
-                "func = cond? (x->x+1): (x->x+2); func(10)", 12L);
+                 "func = cond? (x->x+1): (x->x+2); func(10)", 12L);
     }
 
     @Test

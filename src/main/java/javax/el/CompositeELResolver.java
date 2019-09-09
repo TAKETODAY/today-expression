@@ -628,8 +628,7 @@ public class CompositeELResolver extends ELResolver {
             if (propertyIter == null || !propertyIter.hasNext()) {
                 while (index < size) {
                     ELResolver elResolver = resolvers[index++];
-                    propertyIter = elResolver.getFeatureDescriptors(
-                            context, base);
+                    propertyIter = elResolver.getFeatureDescriptors(context, base);
                     if (propertyIter != null) {
                         return propertyIter.hasNext();
                     }
@@ -643,8 +642,7 @@ public class CompositeELResolver extends ELResolver {
             if (propertyIter == null || !propertyIter.hasNext()) {
                 while (index < size) {
                     ELResolver elResolver = resolvers[index++];
-                    propertyIter = elResolver.getFeatureDescriptors(
-                            context, base);
+                    propertyIter = elResolver.getFeatureDescriptors(context, base);
                     if (propertyIter != null) {
                         return propertyIter.next();
                     }

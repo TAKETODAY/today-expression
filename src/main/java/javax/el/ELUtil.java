@@ -50,8 +50,7 @@ class ELUtil {
      * This class may not be constructed.
      * </p>
      */
-    private ELUtil() {
-    }
+    private ELUtil() {}
 
     /*
      * For testing Backward Compatibility option static java.util.Properties
@@ -171,7 +170,7 @@ class ELUtil {
      * changes keep the code in sync.
      */
     private static Wrapper findWrapper(Class<?> clazz, List<Wrapper> wrappers,
-            String name, Class<?>[] paramTypes, Object[] paramValues) //
+                                       String name, Class<?>[] paramTypes, Object[] paramValues) //
     {
 
         List<Wrapper> assignableCandidates = new ArrayList<Wrapper>();
@@ -221,7 +220,8 @@ class ELUtil {
                     Class<?> varType = mParamTypes[i].getComponentType();
                     for (int j = i; j < paramCount; j++) {
                         if (!isAssignableFrom(paramTypes[j], varType) && !(paramValues != null && j < paramValues.length && isCoercibleFrom(
-                                paramValues[j], varType))) {
+                                                                                                                                            paramValues[j],
+                                                                                                                                            varType))) {
                             noMatch = true;
                             break;
                         }
@@ -290,7 +290,7 @@ class ELUtil {
      * changes keep the code in sync.
      */
     private static Wrapper findMostSpecificWrapper(List<Wrapper> candidates,
-            Class<?>[] matchingTypes, boolean elSpecific, String errorMsg) {
+                                                   Class<?>[] matchingTypes, boolean elSpecific, String errorMsg) {
         List<Wrapper> ambiguouses = new ArrayList<Wrapper>();
         for (Wrapper candidate : candidates) {
             boolean lessSpecific = false;
@@ -323,7 +323,7 @@ class ELUtil {
      * changes keep the code in sync.
      */
     private static int isMoreSpecific(Wrapper wrapper1, Wrapper wrapper2,
-            Class<?>[] matchingTypes, boolean elSpecific) //
+                                      Class<?>[] matchingTypes, boolean elSpecific) //
     {
         Class<?>[] paramTypes1 = wrapper1.getParameterTypes();
         Class<?>[] paramTypes2 = wrapper2.getParameterTypes();
@@ -390,11 +390,8 @@ class ELUtil {
         else {
             if (elSpecific) {
                 /*
-                 * Number will be treated as more specific
-                 * 
-                 * ASTInteger only return Long or BigInteger, no Byte / Short / Integer.
-                 * ASTFloatingPoint also.
-                 * 
+                 * Number will be treated as more specific ASTInteger only return Long or
+                 * BigInteger, no Byte / Short / Integer. ASTFloatingPoint also.
                  */
                 if (matchingType != null && Number.class.isAssignableFrom(matchingType)) {
                     boolean b1 = Number.class.isAssignableFrom(type1) || type1.isPrimitive();
@@ -547,14 +544,11 @@ class ELUtil {
 
     /*
      * This method duplicates code in com.sun.el.util.ReflectionUtil. When making
-     * changes keep the code in sync.
-     * 
-     * Get a public method form a public class or interface of a given method. Note
-     * that if a PropertyDescriptor is obtained for a non-public class that
-     * implements a public interface, the read/write methods will be for the class,
-     * and therefore inaccessible. To correct this, a version of the same method
-     * must be found in a superclass or interface.
-     * 
+     * changes keep the code in sync. Get a public method form a public class or
+     * interface of a given method. Note that if a PropertyDescriptor is obtained
+     * for a non-public class that implements a public interface, the read/write
+     * methods will be for the class, and therefore inaccessible. To correct this, a
+     * version of the same method must be found in a superclass or interface.
      */
     static Method getMethod(Class<?> type, Method m) {
         if (m == null || Modifier.isPublic(type.getModifiers())) {
@@ -638,12 +632,12 @@ class ELUtil {
                 else {
                     Class<?> varArgClass = parameterTypes[varArgIndex].getComponentType();
                     final Object varargs = Array.newInstance(
-                            varArgClass,
-                            (paramCount - varArgIndex)//
+                                                             varArgClass,
+                                                             (paramCount - varArgIndex)//
                     );
                     for (int i = (varArgIndex); i < paramCount; i++) {
                         Array.set(varargs, i - varArgIndex,
-                                context.convertToType(params[i], varArgClass));
+                                  context.convertToType(params[i], varArgClass));
                     }
                     parameters[varArgIndex] = varargs;
                 }

@@ -56,8 +56,7 @@ public abstract class EvaluationListener {
      * @param expression
      *            The EL expression string to be evaluated
      */
-    public void beforeEvaluation(ELContext context, String expression) {
-    }
+    public void beforeEvaluation(ELContext context, String expression) {}
 
     /**
      * Receives notification after an EL expression is evaluated
@@ -67,8 +66,7 @@ public abstract class EvaluationListener {
      * @param expression
      *            The EL expression string to be evaluated
      */
-    public void afterEvaluation(ELContext context, String expression) {
-    }
+    public void afterEvaluation(ELContext context, String expression) {}
 
     /**
      * Receives notification when the (base, property) pair is resolved
@@ -80,7 +78,6 @@ public abstract class EvaluationListener {
      * @param property
      *            The property object
      */
-    public void propertyResolved(ELContext context, Object base, Object property) {
-    }
+    public void propertyResolved(ELContext context, Object base, Object property) {}
 
 }

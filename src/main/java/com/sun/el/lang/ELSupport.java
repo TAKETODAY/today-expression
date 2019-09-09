@@ -218,7 +218,7 @@ public abstract class ELSupport {
             return (Character) obj;
         }
         throw new IllegalArgumentException(MessageFactory.get("error.convert",
-                obj, obj.getClass(), Character.class));
+                                                              obj, obj.getClass(), Character.class));
     }
 
     public final static Number coerceToNumber(final Object obj) {
@@ -282,7 +282,7 @@ public abstract class ELSupport {
         }
 
         throw new IllegalArgumentException(MessageFactory.get("error.convert",
-                number, number.getClass(), type));
+                                                              number, number.getClass(), type));
     }
 
     public final static Number coerceToNumber(final Object obj, final Class<?> type) throws IllegalArgumentException {
@@ -306,7 +306,7 @@ public abstract class ELSupport {
         }
 
         throw new IllegalArgumentException(MessageFactory.get("error.convert",
-                obj, obj.getClass(), type));
+                                                              obj, obj.getClass(), type));
     }
 
     protected final static Number coerceToNumber(final String val, final Class<?> type) throws IllegalArgumentException {
@@ -412,8 +412,7 @@ public abstract class ELSupport {
         }
 
         if (obj instanceof String) {
-            if ("".equals(obj))
-                return null;
+            if ("".equals(obj)) return null;
             PropertyEditor editor = PropertyEditorManager.findEditor(type);
             if (editor != null) {
                 editor.setAsText((String) obj);
@@ -457,7 +456,9 @@ public abstract class ELSupport {
     }
 
     public final static boolean isLongOp(final Object obj0, final Object obj1) {
-        return (obj0 instanceof Long || obj1 instanceof Long || obj0 instanceof Integer || obj1 instanceof Integer || obj0 instanceof Character || obj1 instanceof Character || obj0 instanceof Short || obj1 instanceof Short || obj0 instanceof Byte || obj1 instanceof Byte);
+        return (obj0 instanceof Long || obj1 instanceof Long || obj0 instanceof Integer || obj1 instanceof Integer
+                || obj0 instanceof Character || obj1 instanceof Character || obj0 instanceof Short || obj1 instanceof Short
+                || obj0 instanceof Byte || obj1 instanceof Byte);
     }
 
     public final static boolean isStringFloat(final String str) {

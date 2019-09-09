@@ -32,8 +32,7 @@ public abstract class VariableMapper {
      * @return the ValueExpression assigned to the variable, null if there is no
      *         previous assignment to this variable.
      */
-    public abstract ValueExpression resolveVariable(
-            String variable);
+    public abstract ValueExpression resolveVariable(String variable);
 
     /**
      * Assign a ValueExpression to an EL variable, replacing any previously
@@ -47,7 +46,5 @@ public abstract class VariableMapper {
      * @return The previous ValueExpression assigned to this variable, null if there
      *         is no previous assignment to this variable.
      */
-    public abstract ValueExpression setVariable(
-            String variable,
-            ValueExpression expression);
+    public abstract ValueExpression setVariable(String variable, ValueExpression expression);
 }

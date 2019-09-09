@@ -71,12 +71,12 @@ public abstract class ReflectionUtil {
     protected static final String[] EMPTY_STRING = new String[0];
 
     protected static final String[] PRIMITIVE_NAMES = new String[] { //
-            "boolean", "byte", "char", "double", "float", "int", "long", "short", "void"//
+        "boolean", "byte", "char", "double", "float", "int", "long", "short", "void"//
     };
 
     @SuppressWarnings("rawtypes")
     protected static final Class[] PRIMITIVES = new Class[] { //
-            boolean.class, byte.class, char.class, double.class, float.class, int.class, long.class, short.class, Void.TYPE
+        boolean.class, byte.class, char.class, double.class, float.class, int.class, long.class, short.class, Void.TYPE
     };
 
     @SuppressWarnings("rawtypes")
@@ -118,8 +118,7 @@ public abstract class ReflectionUtil {
      */
     @SuppressWarnings("rawtypes")
     public static Class[] toTypeArray(String[] s) throws ClassNotFoundException {
-        if (s == null)
-            return null;
+        if (s == null) return null;
         Class[] c = new Class[s.length];
         for (int i = 0; i < s.length; i++) {
             c[i] = forName(s[i]);
@@ -135,8 +134,7 @@ public abstract class ReflectionUtil {
      */
     @SuppressWarnings("rawtypes")
     public static String[] toTypeNameArray(Class[] c) {
-        if (c == null)
-            return null;
+        if (c == null) return null;
         String[] s = new String[c.length];
         for (int i = 0; i < c.length; i++) {
             s[i] = c[i].getName();
@@ -154,11 +152,11 @@ public abstract class ReflectionUtil {
      * @throws PropertyNotFoundException
      */
     public static PropertyDescriptor getPropertyDescriptor(Object base,
-            Object property) throws ELException, PropertyNotFoundException {
+                                                           Object property) throws ELException, PropertyNotFoundException {
         String name = ELSupport.coerceToString(property);
         try {
             PropertyDescriptor[] desc = Introspector.getBeanInfo(
-                    base.getClass()).getPropertyDescriptors();
+                                                                 base.getClass()).getPropertyDescriptors();
             for (int i = 0; i < desc.length; i++) {
                 if (desc[i].getName().equals(name)) {
                     return desc[i];
@@ -197,11 +195,11 @@ public abstract class ReflectionUtil {
      * code in sync.
      */
     public static Method findMethod(Class<?> clazz, String methodName,
-            Class<?>[] paramTypes, Object[] paramValues) {
+                                    Class<?>[] paramTypes, Object[] paramValues) {
 
         if (clazz == null || methodName == null) {
             throw new MethodNotFoundException(MessageFactory.get(
-                    "error.method.notfound", clazz, methodName, paramString(paramTypes)));
+                                                                 "error.method.notfound", clazz, methodName, paramString(paramTypes)));
         }
 
         if (paramTypes == null) {
@@ -213,7 +211,7 @@ public abstract class ReflectionUtil {
         List<Wrapper> wrappers = Wrapper.wrap(methods, methodName);
 
         Wrapper result = findWrapper(
-                clazz, wrappers, methodName, paramTypes, paramValues);
+                                     clazz, wrappers, methodName, paramTypes, paramValues);
 
         if (result == null) {
             return null;
@@ -226,7 +224,7 @@ public abstract class ReflectionUtil {
      * code in sync.
      */
     private static Wrapper findWrapper(Class<?> clazz, List<Wrapper> wrappers,
-            String name, Class<?>[] paramTypes, Object[] paramValues) {
+                                       String name, Class<?>[] paramTypes, Object[] paramValues) {
 
         List<Wrapper> assignableCandidates = new ArrayList<Wrapper>();
         List<Wrapper> coercibleCandidates = new ArrayList<Wrapper>();
@@ -275,7 +273,8 @@ public abstract class ReflectionUtil {
                     Class<?> varType = mParamTypes[i].getComponentType();
                     for (int j = i; j < paramCount; j++) {
                         if (!isAssignableFrom(paramTypes[j], varType) && !(paramValues != null && j < paramValues.length && isCoercibleFrom(
-                                paramValues[j], varType))) {
+                                                                                                                                            paramValues[j],
+                                                                                                                                            varType))) {
                             noMatch = true;
                             break;
                         }
@@ -324,7 +323,7 @@ public abstract class ReflectionUtil {
         }
 
         String errorMsg = MessageFactory.get(
-                "error.method.ambiguous", clazz, name, paramString(paramTypes));
+                                             "error.method.ambiguous", clazz, name, paramString(paramTypes));
         if (!assignableCandidates.isEmpty()) {
             return findMostSpecificWrapper(assignableCandidates, paramTypes, false, errorMsg);
         }
@@ -336,7 +335,7 @@ public abstract class ReflectionUtil {
         }
         else {
             throw new MethodNotFoundException(MessageFactory.get(
-                    "error.method.notfound", clazz, name, paramString(paramTypes)));
+                                                                 "error.method.notfound", clazz, name, paramString(paramTypes)));
         }
 
     }
@@ -346,7 +345,7 @@ public abstract class ReflectionUtil {
      * code in sync.
      */
     private static Wrapper findMostSpecificWrapper(List<Wrapper> candidates,
-            Class<?>[] matchingTypes, boolean elSpecific, String errorMsg) {
+                                                   Class<?>[] matchingTypes, boolean elSpecific, String errorMsg) {
         List<Wrapper> ambiguouses = new ArrayList<Wrapper>();
         for (Wrapper candidate : candidates) {
             boolean lessSpecific = false;
@@ -379,7 +378,7 @@ public abstract class ReflectionUtil {
      * code in sync.
      */
     private static int isMoreSpecific(Wrapper wrapper1, Wrapper wrapper2,
-            Class<?>[] matchingTypes, boolean elSpecific) {
+                                      Class<?>[] matchingTypes, boolean elSpecific) {
         Class<?>[] paramTypes1 = wrapper1.getParameterTypes();
         Class<?>[] paramTypes2 = wrapper2.getParameterTypes();
 
@@ -445,11 +444,8 @@ public abstract class ReflectionUtil {
         else {
             if (elSpecific) {
                 /*
-                 * Number will be treated as more specific
-                 * 
-                 * ASTInteger only return Long or BigInteger, no Byte / Short / Integer.
-                 * ASTFloatingPoint also.
-                 * 
+                 * Number will be treated as more specific ASTInteger only return Long or
+                 * BigInteger, no Byte / Short / Integer. ASTFloatingPoint also.
                  */
                 if (matchingType != null && Number.class.isAssignableFrom(matchingType)) {
                     boolean b1 = Number.class.isAssignableFrom(type1) || type1.isPrimitive();
@@ -604,14 +600,11 @@ public abstract class ReflectionUtil {
 
     /*
      * This method duplicates code in javax.el.ELUtil. When making changes keep the
-     * code in sync.
-     * 
-     * Get a public method form a public class or interface of a given method. Note
-     * that if a PropertyDescriptor is obtained for a non-public class that
-     * implements a public interface, the read/write methods will be for the class,
-     * and therefore inaccessible. To correct this, a version of the same method
-     * must be found in a superclass or interface.
-     * 
+     * code in sync. Get a public method form a public class or interface of a given
+     * method. Note that if a PropertyDescriptor is obtained for a non-public class
+     * that implements a public interface, the read/write methods will be for the
+     * class, and therefore inaccessible. To correct this, a version of the same
+     * method must be found in a superclass or interface.
      */
     static Method getMethod(Class<?> type, Method m) {
         if (m == null || Modifier.isPublic(type.getModifiers())) {
@@ -677,7 +670,7 @@ public abstract class ReflectionUtil {
      * code in sync.
      */
     static Object[] buildParameters(ELContext context, Class<?>[] parameterTypes,
-            boolean isVarArgs, Object[] params) {
+                                    boolean isVarArgs, Object[] params) {
         Object[] parameters = null;
         if (parameterTypes.length > 0) {
             parameters = new Object[parameterTypes.length];
@@ -687,7 +680,7 @@ public abstract class ReflectionUtil {
                 // First argCount-1 parameters are standard
                 for (int i = 0; (i < varArgIndex && i < paramCount); i++) {
                     parameters[i] = context.convertToType(params[i],
-                            parameterTypes[i]);
+                                                          parameterTypes[i]);
                 }
                 // Last parameter is the varargs
                 if (parameterTypes.length == paramCount && parameterTypes[varArgIndex] == params[varArgIndex].getClass()) {
@@ -696,11 +689,11 @@ public abstract class ReflectionUtil {
                 else {
                     Class<?> varArgClass = parameterTypes[varArgIndex].getComponentType();
                     final Object varargs = Array.newInstance(
-                            varArgClass,
-                            (paramCount - varArgIndex));
+                                                             varArgClass,
+                                                             (paramCount - varArgIndex));
                     for (int i = (varArgIndex); i < paramCount; i++) {
                         Array.set(varargs, i - varArgIndex,
-                                context.convertToType(params[i], varArgClass));
+                                  context.convertToType(params[i], varArgClass));
                     }
                     parameters[varArgIndex] = varargs;
                 }
@@ -708,7 +701,7 @@ public abstract class ReflectionUtil {
             else {
                 for (int i = 0; i < parameterTypes.length && i < paramCount; i++) {
                     parameters[i] = context.convertToType(params[i],
-                            parameterTypes[i]);
+                                                          parameterTypes[i]);
                 }
             }
         }

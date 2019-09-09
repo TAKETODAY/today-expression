@@ -67,11 +67,12 @@ public class StreamELResolver extends ELResolver {
     }
 
     public Object invoke(final ELContext context, final Object base, final Object method, //
-            final Class<?>[] paramTypes, final Object[] params) //
+                         final Class<?>[] paramTypes, final Object[] params) //
     {
 
         if (base instanceof Collection) {
-            @SuppressWarnings("unchecked") Collection<Object> c = (Collection<Object>) base;
+            @SuppressWarnings("unchecked")
+            Collection<Object> c = (Collection<Object>) base;
             if ("stream".equals(method) && params.length == 0) {
                 Objects.requireNonNull(context).setPropertyResolved(true);
                 return new Stream(c.iterator());
@@ -130,8 +131,7 @@ public class StreamELResolver extends ELResolver {
         return null;
     }
 
-    public void setValue(ELContext context, Object base, Object property, Object value) {
-    }
+    public void setValue(ELContext context, Object base, Object property, Object value) {}
 
     public boolean isReadOnly(ELContext context, Object base, Object property) {
         return false;

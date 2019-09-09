@@ -59,16 +59,13 @@ public class StaticRefTest {
 
     ELProcessor elp;
 
-    public StaticRefTest() {
-    }
+    public StaticRefTest() {}
 
     @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
+    public static void setUpClass() throws Exception {}
 
     @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
+    public static void tearDownClass() throws Exception {}
 
     @Before
     public void setUp() {
@@ -76,8 +73,7 @@ public class StaticRefTest {
     }
 
     @After
-    public void tearDown() {
-    }
+    public void tearDown() {}
 
     @Test
     public void testStaticRef() {

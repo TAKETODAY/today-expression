@@ -83,22 +83,22 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
     final private int[] jj_la1 = new int[53];
 
     private static final int[] JJ_LA1_0 = new int[] { //
-            0xe, 0xe, 0x4000000, 0x0, 0x575a00, 0x575a00, 0x2000000, 0x0, //
-            0x100000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xf8000000, //
-            0x60000000, 0x18000000, 0x0, 0x80000000, 0xf8000000, 0x0, 0x0, 0x0, //
-            0x0, 0x0, 0x0, 0x0, 0x0, 0x575a00, 0x480000, 0x575a00, 0x480000, //
-            0x100000, 0x100000, 0x2000000, 0x575a00, 0x575a00, 0x100000, 0x100000, //
-            0x400200, 0x2000000, 0x575a00, 0x1000000, 0x2000000, 0x575a00, 0x1000000, //
-            0x100000, 0x75800, 0x30000
+        0xe, 0xe, 0x4000000, 0x0, 0x575a00, 0x575a00, 0x2000000, 0x0, //
+        0x100000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xf8000000, //
+        0x60000000, 0x18000000, 0x0, 0x80000000, 0xf8000000, 0x0, 0x0, 0x0, //
+        0x0, 0x0, 0x0, 0x0, 0x0, 0x575a00, 0x480000, 0x575a00, 0x480000, //
+        0x100000, 0x100000, 0x2000000, 0x575a00, 0x575a00, 0x100000, 0x100000, //
+        0x400200, 0x2000000, 0x575a00, 0x1000000, 0x2000000, 0x575a00, 0x1000000, //
+        0x100000, 0x75800, 0x30000
     };
 
     private static final int[] JJ_LA1_1 = new int[] { //
-            0x0, 0x0, 0x0, 0x1000000, 0x4022180, 0x4022180, 0x0, 0x4000000, //
-            0x4000000, 0x40000, 0x1800, 0x1800, 0x600, 0x600, 0x78, 0x18, //
-            0x60, 0x78, 0x7, 0x0, 0x0, 0x6, 0x1, 0x7, 0x800000, 0x30000, //
-            0x30000, 0x788000, 0x180000, 0x600000, 0x788000, 0x180, 0x4022180, //
-            0x0, 0x4000000, 0x0, 0x0, 0x0, 0x0, 0x4022180, 0x4022180, 0x0, 0x0, //
-            0x4000000, 0x0, 0x4022180, 0x0, 0x0, 0x4022180, 0x0, 0x0, 0x0, 0x0,//
+        0x0, 0x0, 0x0, 0x1000000, 0x4022180, 0x4022180, 0x0, 0x4000000, //
+        0x4000000, 0x40000, 0x1800, 0x1800, 0x600, 0x600, 0x78, 0x18, //
+        0x60, 0x78, 0x7, 0x0, 0x0, 0x6, 0x1, 0x7, 0x800000, 0x30000, //
+        0x30000, 0x788000, 0x180000, 0x600000, 0x788000, 0x180, 0x4022180, //
+        0x0, 0x4000000, 0x0, 0x0, 0x0, 0x0, 0x4022180, 0x4022180, 0x0, 0x0, //
+        0x4000000, 0x0, 0x4022180, 0x0, 0x0, 0x4022180, 0x0, 0x0, 0x0, 0x0,//
     };
 
     private final JJCalls[] jj_2_rtns = new JJCalls[5];
@@ -1478,19 +1478,16 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
             }
             if (jjte000 instanceof RuntimeException) {
                 {
-                    if (true)
-                        throw (RuntimeException) jjte000;
+                    if (true) throw (RuntimeException) jjte000;
                 }
             }
             if (jjte000 instanceof ParseException) {
                 {
-                    if (true)
-                        throw (ParseException) jjte000;
+                    if (true) throw (ParseException) jjte000;
                 }
             }
             {
-                if (true)
-                    throw jjte000;
+                if (true) throw jjte000;
             }
         } finally {
             if (jjtc000) {
@@ -1562,19 +1559,16 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
             }
             if (jjte000 instanceof RuntimeException) {
                 {
-                    if (true)
-                        throw (RuntimeException) jjte000;
+                    if (true) throw (RuntimeException) jjte000;
                 }
             }
             if (jjte000 instanceof ParseException) {
                 {
-                    if (true)
-                        throw (ParseException) jjte000;
+                    if (true) throw (ParseException) jjte000;
                 }
             }
             {
-                if (true)
-                    throw jjte000;
+                if (true) throw jjte000;
             }
         } finally {
             if (jjtc000) {
@@ -1677,19 +1671,16 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
             }
             if (jjte000 instanceof RuntimeException) {
                 {
-                    if (true)
-                        throw (RuntimeException) jjte000;
+                    if (true) throw (RuntimeException) jjte000;
                 }
             }
             if (jjte000 instanceof ParseException) {
                 {
-                    if (true)
-                        throw (ParseException) jjte000;
+                    if (true) throw (ParseException) jjte000;
                 }
             }
             {
-                if (true)
-                    throw jjte000;
+                if (true) throw jjte000;
             }
         } finally {
             if (jjtc000) {
@@ -1725,19 +1716,16 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
             }
             if (jjte000 instanceof RuntimeException) {
                 {
-                    if (true)
-                        throw (RuntimeException) jjte000;
+                    if (true) throw (RuntimeException) jjte000;
                 }
             }
             if (jjte000 instanceof ParseException) {
                 {
-                    if (true)
-                        throw (ParseException) jjte000;
+                    if (true) throw (ParseException) jjte000;
                 }
             }
             {
-                if (true)
-                    throw jjte000;
+                if (true) throw jjte000;
             }
         } finally {
             if (jjtc000) {
@@ -1798,19 +1786,16 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
             }
             if (jjte000 instanceof RuntimeException) {
                 {
-                    if (true)
-                        throw (RuntimeException) jjte000;
+                    if (true) throw (RuntimeException) jjte000;
                 }
             }
             if (jjte000 instanceof ParseException) {
                 {
-                    if (true)
-                        throw (ParseException) jjte000;
+                    if (true) throw (ParseException) jjte000;
                 }
             }
             {
-                if (true)
-                    throw jjte000;
+                if (true) throw jjte000;
             }
         } finally {
             if (jjtc000) {
@@ -2108,28 +2093,22 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
     }
 
     private boolean jj_3R_98() {
-        if (jj_scan_token(LBRACK))
-            return true;
+        if (jj_scan_token(LBRACK)) return true;
         Token xsp;
         xsp = jj_scanpos;
-        if (jj_3R_102())
-            jj_scanpos = xsp;
-        if (jj_scan_token(RBRACK))
-            return true;
+        if (jj_3R_102()) jj_scanpos = xsp;
+        if (jj_scan_token(RBRACK)) return true;
         return false;
     }
 
     private boolean jj_3R_34() {
-        if (jj_scan_token(COMMA))
-            return true;
-        if (jj_3R_29())
-            return true;
+        if (jj_scan_token(COMMA)) return true;
+        if (jj_3R_29()) return true;
         return false;
     }
 
     private boolean jj_3R_31() {
-        if (jj_3R_35())
-            return true;
+        if (jj_3R_35()) return true;
         Token xsp;
         while (true) {
             xsp = jj_scanpos;
@@ -2142,80 +2121,65 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
     }
 
     private boolean jj_3R_32() {
-        if (jj_scan_token(QUESTIONMARK))
-            return true;
+        if (jj_scan_token(QUESTIONMARK)) return true;
         return false;
     }
 
     private boolean jj_3R_103() {
-        if (jj_3R_37())
-            return true;
+        if (jj_3R_37()) return true;
         return false;
     }
 
     private boolean jj_3R_101() {
-        if (jj_3R_103())
-            return true;
+        if (jj_3R_103()) return true;
         return false;
     }
 
     private boolean jj_3R_27() {
-        if (jj_3R_31())
-            return true;
+        if (jj_3R_31()) return true;
         Token xsp;
         xsp = jj_scanpos;
-        if (jj_3R_32())
-            jj_scanpos = xsp;
+        if (jj_3R_32()) jj_scanpos = xsp;
         return false;
     }
 
     private boolean jj_3R_89() {
-        if (jj_3R_98())
-            return true;
+        if (jj_3R_98()) return true;
         return false;
     }
 
     private boolean jj_3R_97() {
-        if (jj_scan_token(START_MAP))
-            return true;
+        if (jj_scan_token(START_MAP)) return true;
         Token xsp;
         xsp = jj_scanpos;
-        if (jj_3R_101())
-            jj_scanpos = xsp;
-        if (jj_scan_token(RCURL))
-            return true;
+        if (jj_3R_101()) jj_scanpos = xsp;
+        if (jj_scan_token(RCURL)) return true;
         return false;
     }
 
     private boolean jj_3R_88() {
-        if (jj_3R_97())
-            return true;
+        if (jj_3R_97()) return true;
         return false;
     }
 
     private boolean jj_3R_87() {
-        if (jj_3R_29())
-            return true;
+        if (jj_3R_29()) return true;
         return false;
     }
 
     private boolean jj_3_5() {
-        if (jj_3R_19())
-            return true;
+        if (jj_3R_19()) return true;
         return false;
     }
 
     private boolean jj_3R_86() {
-        if (jj_scan_token(LPAREN))
-            return true;
-        if (jj_3R_37())
-            return true;
+        if (jj_scan_token(LPAREN)) return true;
+        if (jj_3R_37()) return true;
         return false;
     }
 
     private boolean jj_3R_30() {
-        if (jj_3R_29())
-            return true;
+        if (jj_3R_29()) return true;
         Token xsp;
         while (true) {
             xsp = jj_scanpos;
@@ -2228,14 +2192,12 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
     }
 
     private boolean jj_3R_38() {
-        if (jj_scan_token(COMMA))
-            return true;
+        if (jj_scan_token(COMMA)) return true;
         return false;
     }
 
     private boolean jj_3_4() {
-        if (jj_3R_18())
-            return true;
+        if (jj_3R_18()) return true;
         return false;
     }
 
@@ -2252,8 +2214,7 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
                         jj_scanpos = xsp;
                         if (jj_3R_88()) {
                             jj_scanpos = xsp;
-                            if (jj_3R_89())
-                                return true;
+                            if (jj_3R_89()) return true;
                         }
                     }
                 }
@@ -2263,14 +2224,11 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
     }
 
     private boolean jj_3R_26() {
-        if (jj_scan_token(LPAREN))
-            return true;
+        if (jj_scan_token(LPAREN)) return true;
         Token xsp;
         xsp = jj_scanpos;
-        if (jj_3R_30())
-            jj_scanpos = xsp;
-        if (jj_scan_token(RPAREN))
-            return true;
+        if (jj_3R_30()) jj_scanpos = xsp;
+        if (jj_scan_token(RPAREN)) return true;
         return false;
     }
 
@@ -2279,54 +2237,45 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
         xsp = jj_scanpos;
         if (jj_3R_25()) {
             jj_scanpos = xsp;
-            if (jj_3R_26())
-                return true;
+            if (jj_3R_26()) return true;
         }
         return false;
     }
 
     private boolean jj_3R_25() {
-        if (jj_3R_29())
-            return true;
+        if (jj_3R_29()) return true;
         return false;
     }
 
     private boolean jj_3R_57() {
-        if (jj_scan_token(ASSIGN))
-            return true;
+        if (jj_scan_token(ASSIGN)) return true;
         return false;
     }
 
     private boolean jj_3_2() {
-        if (jj_3R_17())
-            return true;
+        if (jj_3R_17()) return true;
         return false;
     }
 
     private boolean jj_3_3() {
-        if (jj_3R_17())
-            return true;
+        if (jj_3R_17()) return true;
         return false;
     }
 
     private boolean jj_3R_17() {
-        if (jj_3R_20())
-            return true;
-        if (jj_scan_token(ARROW))
-            return true;
+        if (jj_3R_20()) return true;
+        if (jj_scan_token(ARROW)) return true;
         Token xsp;
         xsp = jj_scanpos;
         if (jj_3_2()) {
             jj_scanpos = xsp;
-            if (jj_3R_21())
-                return true;
+            if (jj_3R_21()) return true;
         }
         return false;
     }
 
     private boolean jj_3R_33() {
-        if (jj_3R_37())
-            return true;
+        if (jj_3R_37()) return true;
         Token xsp;
         while (true) {
             xsp = jj_scanpos;
@@ -2339,35 +2288,28 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
     }
 
     private boolean jj_3R_45() {
-        if (jj_scan_token(SEMICOLON))
-            return true;
+        if (jj_scan_token(SEMICOLON)) return true;
         return false;
     }
 
     private boolean jj_3R_18() {
-        if (jj_scan_token(LPAREN))
-            return true;
-        if (jj_3R_20())
-            return true;
-        if (jj_scan_token(ARROW))
-            return true;
+        if (jj_scan_token(LPAREN)) return true;
+        if (jj_3R_20()) return true;
+        if (jj_scan_token(ARROW)) return true;
         Token xsp;
         xsp = jj_scanpos;
         if (jj_3_3()) {
             jj_scanpos = xsp;
-            if (jj_3R_22())
-                return true;
+            if (jj_3R_22()) return true;
         }
         return false;
     }
 
     private boolean jj_3R_50() {
-        if (jj_3R_27())
-            return true;
+        if (jj_3R_27()) return true;
         Token xsp;
         xsp = jj_scanpos;
-        if (jj_3R_57())
-            jj_scanpos = xsp;
+        if (jj_3R_57()) jj_scanpos = xsp;
         return false;
     }
 
@@ -2376,33 +2318,27 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
         xsp = jj_scanpos;
         if (jj_3_1()) {
             jj_scanpos = xsp;
-            if (jj_3R_50())
-                return true;
+            if (jj_3R_50()) return true;
         }
         return false;
     }
 
     private boolean jj_3_1() {
-        if (jj_3R_17())
-            return true;
+        if (jj_3R_17()) return true;
         return false;
     }
 
     private boolean jj_3R_28() {
-        if (jj_scan_token(LPAREN))
-            return true;
+        if (jj_scan_token(LPAREN)) return true;
         Token xsp;
         xsp = jj_scanpos;
-        if (jj_3R_33())
-            jj_scanpos = xsp;
-        if (jj_scan_token(RPAREN))
-            return true;
+        if (jj_3R_33()) jj_scanpos = xsp;
+        if (jj_scan_token(RPAREN)) return true;
         return false;
     }
 
     private boolean jj_3R_41() {
-        if (jj_3R_44())
-            return true;
+        if (jj_3R_44()) return true;
         Token xsp;
         while (true) {
             xsp = jj_scanpos;
@@ -2415,26 +2351,22 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
     }
 
     private boolean jj_3R_91() {
-        if (jj_scan_token(LBRACK))
-            return true;
+        if (jj_scan_token(LBRACK)) return true;
         return false;
     }
 
     private boolean jj_3R_37() {
-        if (jj_3R_41())
-            return true;
+        if (jj_3R_41()) return true;
         return false;
     }
 
     private boolean jj_3R_80() {
-        if (jj_3R_91())
-            return true;
+        if (jj_3R_91()) return true;
         return false;
     }
 
     private boolean jj_3R_90() {
-        if (jj_scan_token(DOT))
-            return true;
+        if (jj_scan_token(DOT)) return true;
         return false;
     }
 
@@ -2443,27 +2375,23 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
         xsp = jj_scanpos;
         if (jj_3R_79()) {
             jj_scanpos = xsp;
-            if (jj_3R_80())
-                return true;
+            if (jj_3R_80()) return true;
         }
         return false;
     }
 
     private boolean jj_3R_79() {
-        if (jj_3R_90())
-            return true;
+        if (jj_3R_90()) return true;
         return false;
     }
 
     private boolean jj_3R_73() {
-        if (jj_3R_76())
-            return true;
+        if (jj_3R_76()) return true;
         return false;
     }
 
     private boolean jj_3R_75() {
-        if (jj_3R_78())
-            return true;
+        if (jj_3R_78()) return true;
         return false;
     }
 
@@ -2472,21 +2400,18 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
         xsp = jj_scanpos;
         if (jj_3R_74()) {
             jj_scanpos = xsp;
-            if (jj_3R_75())
-                return true;
+            if (jj_3R_75()) return true;
         }
         return false;
     }
 
     private boolean jj_3R_74() {
-        if (jj_3R_77())
-            return true;
+        if (jj_3R_77()) return true;
         return false;
     }
 
     private boolean jj_3R_71() {
-        if (jj_3R_72())
-            return true;
+        if (jj_3R_72()) return true;
         Token xsp;
         while (true) {
             xsp = jj_scanpos;
@@ -2499,16 +2424,13 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
     }
 
     private boolean jj_3R_67() {
-        if (jj_3R_71())
-            return true;
+        if (jj_3R_71()) return true;
         return false;
     }
 
     private boolean jj_3R_66() {
-        if (jj_scan_token(EMPTY))
-            return true;
-        if (jj_3R_60())
-            return true;
+        if (jj_scan_token(EMPTY)) return true;
+        if (jj_3R_60()) return true;
         return false;
     }
 
@@ -2517,17 +2439,14 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
         xsp = jj_scanpos;
         if (jj_scan_token(39)) {
             jj_scanpos = xsp;
-            if (jj_scan_token(40))
-                return true;
+            if (jj_scan_token(40)) return true;
         }
-        if (jj_3R_60())
-            return true;
+        if (jj_3R_60()) return true;
         return false;
     }
 
     private boolean jj_3R_96() {
-        if (jj_scan_token(NULL))
-            return true;
+        if (jj_scan_token(NULL)) return true;
         return false;
     }
 
@@ -2540,8 +2459,7 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
                 jj_scanpos = xsp;
                 if (jj_3R_66()) {
                     jj_scanpos = xsp;
-                    if (jj_3R_67())
-                        return true;
+                    if (jj_3R_67()) return true;
                 }
             }
         }
@@ -2549,16 +2467,13 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
     }
 
     private boolean jj_3R_64() {
-        if (jj_scan_token(MINUS))
-            return true;
-        if (jj_3R_60())
-            return true;
+        if (jj_scan_token(MINUS)) return true;
+        if (jj_3R_60()) return true;
         return false;
     }
 
     private boolean jj_3R_95() {
-        if (jj_scan_token(STRING_LITERAL))
-            return true;
+        if (jj_scan_token(STRING_LITERAL)) return true;
         return false;
     }
 
@@ -2567,8 +2482,7 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
         xsp = jj_scanpos;
         if (jj_scan_token(53)) {
             jj_scanpos = xsp;
-            if (jj_scan_token(54))
-                return true;
+            if (jj_scan_token(54)) return true;
         }
         return false;
     }
@@ -2578,8 +2492,7 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
         xsp = jj_scanpos;
         if (jj_scan_token(51)) {
             jj_scanpos = xsp;
-            if (jj_scan_token(52))
-                return true;
+            if (jj_scan_token(52)) return true;
         }
         return false;
     }
@@ -2591,28 +2504,24 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
             jj_scanpos = xsp;
             if (jj_3R_69()) {
                 jj_scanpos = xsp;
-                if (jj_3R_70())
-                    return true;
+                if (jj_3R_70()) return true;
             }
         }
         return false;
     }
 
     private boolean jj_3R_68() {
-        if (jj_scan_token(MULT))
-            return true;
+        if (jj_scan_token(MULT)) return true;
         return false;
     }
 
     private boolean jj_3R_94() {
-        if (jj_scan_token(INTEGER_LITERAL))
-            return true;
+        if (jj_scan_token(INTEGER_LITERAL)) return true;
         return false;
     }
 
     private boolean jj_3R_58() {
-        if (jj_3R_60())
-            return true;
+        if (jj_3R_60()) return true;
         Token xsp;
         while (true) {
             xsp = jj_scanpos;
@@ -2625,14 +2534,12 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
     }
 
     private boolean jj_3R_93() {
-        if (jj_scan_token(FLOATING_POINT_LITERAL))
-            return true;
+        if (jj_scan_token(FLOATING_POINT_LITERAL)) return true;
         return false;
     }
 
     private boolean jj_3R_63() {
-        if (jj_scan_token(MINUS))
-            return true;
+        if (jj_scan_token(MINUS)) return true;
         return false;
     }
 
@@ -2641,27 +2548,23 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
         xsp = jj_scanpos;
         if (jj_3R_62()) {
             jj_scanpos = xsp;
-            if (jj_3R_63())
-                return true;
+            if (jj_3R_63()) return true;
         }
         return false;
     }
 
     private boolean jj_3R_62() {
-        if (jj_scan_token(PLUS))
-            return true;
+        if (jj_scan_token(PLUS)) return true;
         return false;
     }
 
     private boolean jj_3R_100() {
-        if (jj_scan_token(FALSE))
-            return true;
+        if (jj_scan_token(FALSE)) return true;
         return false;
     }
 
     private boolean jj_3R_99() {
-        if (jj_scan_token(TRUE))
-            return true;
+        if (jj_scan_token(TRUE)) return true;
         return false;
     }
 
@@ -2670,15 +2573,13 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
         xsp = jj_scanpos;
         if (jj_3R_99()) {
             jj_scanpos = xsp;
-            if (jj_3R_100())
-                return true;
+            if (jj_3R_100()) return true;
         }
         return false;
     }
 
     private boolean jj_3R_51() {
-        if (jj_3R_58())
-            return true;
+        if (jj_3R_58()) return true;
         Token xsp;
         while (true) {
             xsp = jj_scanpos;
@@ -2691,38 +2592,32 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
     }
 
     private boolean jj_3R_52() {
-        if (jj_scan_token(CONCAT))
-            return true;
+        if (jj_scan_token(CONCAT)) return true;
         return false;
     }
 
     private boolean jj_3R_85() {
-        if (jj_3R_96())
-            return true;
+        if (jj_3R_96()) return true;
         return false;
     }
 
     private boolean jj_3R_84() {
-        if (jj_3R_95())
-            return true;
+        if (jj_3R_95()) return true;
         return false;
     }
 
     private boolean jj_3R_83() {
-        if (jj_3R_94())
-            return true;
+        if (jj_3R_94()) return true;
         return false;
     }
 
     private boolean jj_3R_82() {
-        if (jj_3R_93())
-            return true;
+        if (jj_3R_93()) return true;
         return false;
     }
 
     private boolean jj_3R_46() {
-        if (jj_3R_51())
-            return true;
+        if (jj_3R_51()) return true;
         Token xsp;
         while (true) {
             xsp = jj_scanpos;
@@ -2739,8 +2634,7 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
         xsp = jj_scanpos;
         if (jj_scan_token(31)) {
             jj_scanpos = xsp;
-            if (jj_scan_token(32))
-                return true;
+            if (jj_scan_token(32)) return true;
         }
         return false;
     }
@@ -2756,8 +2650,7 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
                     jj_scanpos = xsp;
                     if (jj_3R_84()) {
                         jj_scanpos = xsp;
-                        if (jj_3R_85())
-                            return true;
+                        if (jj_3R_85()) return true;
                     }
                 }
             }
@@ -2766,8 +2659,7 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
     }
 
     private boolean jj_3R_81() {
-        if (jj_3R_92())
-            return true;
+        if (jj_3R_92()) return true;
         return false;
     }
 
@@ -2776,17 +2668,14 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
         xsp = jj_scanpos;
         if (jj_scan_token(33)) {
             jj_scanpos = xsp;
-            if (jj_scan_token(34))
-                return true;
+            if (jj_scan_token(34)) return true;
         }
         return false;
     }
 
     private boolean jj_3R_23() {
-        if (jj_scan_token(COLON))
-            return true;
-        if (jj_scan_token(IDENTIFIER))
-            return true;
+        if (jj_scan_token(COLON)) return true;
+        if (jj_scan_token(IDENTIFIER)) return true;
         return false;
     }
 
@@ -2795,8 +2684,7 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
         xsp = jj_scanpos;
         if (jj_scan_token(27)) {
             jj_scanpos = xsp;
-            if (jj_scan_token(28))
-                return true;
+            if (jj_scan_token(28)) return true;
         }
         return false;
     }
@@ -2810,8 +2698,7 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
                 jj_scanpos = xsp;
                 if (jj_3R_55()) {
                     jj_scanpos = xsp;
-                    if (jj_3R_56())
-                        return true;
+                    if (jj_3R_56()) return true;
                 }
             }
         }
@@ -2823,21 +2710,18 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
         xsp = jj_scanpos;
         if (jj_scan_token(29)) {
             jj_scanpos = xsp;
-            if (jj_scan_token(30))
-                return true;
+            if (jj_scan_token(30)) return true;
         }
         return false;
     }
 
     private boolean jj_3R_24() {
-        if (jj_3R_28())
-            return true;
+        if (jj_3R_28()) return true;
         return false;
     }
 
     private boolean jj_3R_42() {
-        if (jj_3R_46())
-            return true;
+        if (jj_3R_46()) return true;
         Token xsp;
         while (true) {
             xsp = jj_scanpos;
@@ -2854,21 +2738,17 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
         xsp = jj_scanpos;
         if (jj_scan_token(37)) {
             jj_scanpos = xsp;
-            if (jj_scan_token(38))
-                return true;
+            if (jj_scan_token(38)) return true;
         }
         return false;
     }
 
     private boolean jj_3R_19() {
-        if (jj_scan_token(IDENTIFIER))
-            return true;
+        if (jj_scan_token(IDENTIFIER)) return true;
         Token xsp;
         xsp = jj_scanpos;
-        if (jj_3R_23())
-            jj_scanpos = xsp;
-        if (jj_3R_24())
-            return true;
+        if (jj_3R_23()) jj_scanpos = xsp;
+        if (jj_3R_24()) return true;
         while (true) {
             xsp = jj_scanpos;
             if (jj_3R_24()) {
@@ -2884,8 +2764,7 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
         xsp = jj_scanpos;
         if (jj_3R_48()) {
             jj_scanpos = xsp;
-            if (jj_3R_49())
-                return true;
+            if (jj_3R_49()) return true;
         }
         return false;
     }
@@ -2895,8 +2774,7 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
         xsp = jj_scanpos;
         if (jj_scan_token(35)) {
             jj_scanpos = xsp;
-            if (jj_scan_token(36))
-                return true;
+            if (jj_scan_token(36)) return true;
         }
         return false;
     }
@@ -2906,15 +2784,13 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
         xsp = jj_scanpos;
         if (jj_scan_token(41)) {
             jj_scanpos = xsp;
-            if (jj_scan_token(42))
-                return true;
+            if (jj_scan_token(42)) return true;
         }
         return false;
     }
 
     private boolean jj_3R_39() {
-        if (jj_3R_42())
-            return true;
+        if (jj_3R_42()) return true;
         Token xsp;
         while (true) {
             xsp = jj_scanpos;
@@ -2927,14 +2803,12 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
     }
 
     private boolean jj_3R_29() {
-        if (jj_scan_token(IDENTIFIER))
-            return true;
+        if (jj_scan_token(IDENTIFIER)) return true;
         return false;
     }
 
     private boolean jj_3R_35() {
-        if (jj_3R_39())
-            return true;
+        if (jj_3R_39()) return true;
         Token xsp;
         while (true) {
             xsp = jj_scanpos;
@@ -2947,14 +2821,12 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
     }
 
     private boolean jj_3R_102() {
-        if (jj_3R_37())
-            return true;
+        if (jj_3R_37()) return true;
         return false;
     }
 
     private boolean jj_3R_21() {
-        if (jj_3R_27())
-            return true;
+        if (jj_3R_27()) return true;
         return false;
     }
 
@@ -2963,22 +2835,19 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
         xsp = jj_scanpos;
         if (jj_scan_token(43)) {
             jj_scanpos = xsp;
-            if (jj_scan_token(44))
-                return true;
+            if (jj_scan_token(44)) return true;
         }
         return false;
     }
 
     private boolean jj_3R_22() {
-        if (jj_3R_27())
-            return true;
+        if (jj_3R_27()) return true;
         return false;
     }
 
     private Token jj_consume_token(int kind) throws ParseException {
         Token oldToken;
-        if ((oldToken = token).next != null)
-            token = token.next;
+        if ((oldToken = token).next != null) token = token.next;
         else
             token = token.next = token_source.getNextToken();
         jj_ntk = -1;
@@ -2989,8 +2858,7 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
                 for (int i = 0; i < jj_2_rtns.length; i++) {
                     JJCalls c = jj_2_rtns[i];
                     while (c != null) {
-                        if (c.gen < jj_gen)
-                            c.first = null;
+                        if (c.gen < jj_gen) c.first = null;
                         c = c.next;
                     }
                 }
@@ -3029,20 +2897,16 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
                 i++;
                 tok = tok.next;
             }
-            if (tok != null)
-                jj_add_error_token(kind, i);
+            if (tok != null) jj_add_error_token(kind, i);
         }
-        if (jj_scanpos.kind != kind)
-            return true;
-        if (jj_la == 0 && jj_scanpos == jj_lastpos)
-            throw jj_ls;
+        if (jj_scanpos.kind != kind) return true;
+        if (jj_la == 0 && jj_scanpos == jj_lastpos) throw jj_ls;
         return false;
     }
 
     /** Get the next Token. */
     final public Token getNextToken() {
-        if (token.next != null)
-            token = token.next;
+        if (token.next != null) token = token.next;
         else
             token = token.next = token_source.getNextToken();
         jj_ntk = -1;
@@ -3054,8 +2918,7 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
     final public Token getToken(int index) {
         Token t = token;
         for (int i = 0; i < index; i++) {
-            if (t.next != null)
-                t = t.next;
+            if (t.next != null) t = t.next;
             else
                 t = t.next = token_source.getNextToken();
         }
@@ -3077,8 +2940,7 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
     private int jj_endpos;
 
     private void jj_add_error_token(int kind, int pos) {
-        if (pos >= 100)
-            return;
+        if (pos >= 100) return;
         if (pos == jj_endpos + 1) {
             jj_lasttokens[jj_endpos++] = kind;
         }
@@ -3099,8 +2961,7 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
                     break jj_entries_loop;
                 }
             }
-            if (pos != 0)
-                jj_lasttokens[(jj_endpos = pos) - 1] = kind;
+            if (pos != 0) jj_lasttokens[(jj_endpos = pos) - 1] = kind;
         }
     }
 
@@ -3142,12 +3003,10 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
     }
 
     /** Enable tracing. */
-    final public void enable_tracing() {
-    }
+    final public void enable_tracing() {}
 
     /** Disable tracing. */
-    final public void disable_tracing() {
-    }
+    final public void disable_tracing() {}
 
     private void jj_rescan_token() {
         jj_rescan = true;
@@ -3180,8 +3039,7 @@ public class ELParser implements ELParserTreeConstants, ELParserConstants {
                     p = p.next;
                 } while (p != null);
             }
-            catch (LookaheadSuccess ls) {
-            }
+            catch (LookaheadSuccess ls) {}
         }
         jj_rescan = false;
     }
