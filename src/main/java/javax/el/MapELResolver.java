@@ -171,7 +171,7 @@ public class MapELResolver extends ELResolver {
         return null;
     }
 
-    static private Class<?> theUnmodifiableMapClass = Collections.unmodifiableMap(new HashMap<Object, Object>()).getClass();
+    static private Class<?> theUnmodifiableMapClass = Collections.unmodifiableMap(new HashMap<>()).getClass();
 
     /**
      * If the base object is a map, attempts to set the value associated with the

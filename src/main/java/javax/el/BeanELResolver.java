@@ -17,6 +17,8 @@
 
 package javax.el;
 
+import static javax.el.ELUtil.invokeMethod;
+
 import java.beans.BeanInfo;
 import java.beans.FeatureDescriptor;
 import java.beans.Introspector;
@@ -361,9 +363,10 @@ public class BeanELResolver extends ELResolver {
             return null;
         }
 
-        final Object ret = ELUtil.invokeMethod(Objects.requireNonNull(context), //
-                                               ELUtil.findMethod(base.getClass(), method.toString(), paramTypes, params, false), base,
-                                               params);
+        final Object ret = invokeMethod(Objects.requireNonNull(context),
+                                        ELUtil.findMethod(base.getClass(), method.toString(), paramTypes, params, false),
+                                        base,
+                                        params);
 
         context.setPropertyResolved(base, method);
         return ret;
