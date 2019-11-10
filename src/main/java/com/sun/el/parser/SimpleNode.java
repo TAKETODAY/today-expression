@@ -47,6 +47,7 @@ import javax.el.PropertyNotWritableException;
 import javax.el.ValueReference;
 
 import com.sun.el.lang.ELSupport;
+import com.sun.el.lang.EvaluationContext;
 import com.sun.el.util.MessageFactory;
 
 /**
@@ -140,23 +141,23 @@ public abstract class SimpleNode extends ELSupport implements Node {
         this.image = image;
     }
 
-    public Class<?> getType(ELContext ctx) throws ELException {
+    public Class<?> getType(EvaluationContext ctx) throws ELException {
         throw new UnsupportedOperationException();
     }
 
-    public Object getValue(ELContext ctx) throws ELException {
+    public Object getValue(EvaluationContext ctx) throws ELException {
         throw new UnsupportedOperationException();
     }
 
-    public ValueReference getValueReference(ELContext ctx) throws ELException {
+    public ValueReference getValueReference(EvaluationContext ctx) throws ELException {
         return null;
     }
 
-    public boolean isReadOnly(ELContext ctx) throws ELException {
+    public boolean isReadOnly(EvaluationContext ctx) throws ELException {
         return true;
     }
 
-    public void setValue(ELContext ctx, Object value) throws ELException {
+    public void setValue(EvaluationContext ctx, Object value) throws ELException {
         throw new PropertyNotWritableException(MessageFactory.get("error.syntax.set"));
     }
 
@@ -165,16 +166,16 @@ public abstract class SimpleNode extends ELSupport implements Node {
         final Node[] children = this.children;
         if (children != null && children.length > 0) {
             for (int i = 0; i < children.length; i++) {
-                this.children[i].accept(visitor, context);
+                children[i].accept(visitor, context);
             }
         }
     }
 
-    public Object invoke(ELContext ctx, Class<?>[] paramTypes, Object[] paramValues) throws ELException {
+    public Object invoke(EvaluationContext ctx, Class<?>[] paramTypes, Object[] paramValues) throws ELException {
         throw new UnsupportedOperationException();
     }
 
-    public MethodInfo getMethodInfo(ELContext ctx, Class<?>[] paramTypes) throws ELException {
+    public MethodInfo getMethodInfo(EvaluationContext ctx, Class<?>[] paramTypes) throws ELException {
         throw new UnsupportedOperationException();
     }
 

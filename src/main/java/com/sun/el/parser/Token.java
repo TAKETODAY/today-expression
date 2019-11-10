@@ -45,7 +45,6 @@ import java.io.Serializable;
 /**
  * Describes the input token stream.
  */
-
 @SuppressWarnings("serial")
 public class Token implements Serializable {
 
